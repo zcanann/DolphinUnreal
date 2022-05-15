@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <ProjectOutputs>
+    <ProjectOutput>
+      <FullPath>C:\Projects\DolphinTAS\Plugins\DolphinUnreal\ThirdParty\dolphin\Build\x64\Release\SCMRevGen\bin\SCMRevGen</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>C:\Projects\DolphinTAS\Plugins\DolphinUnreal\ThirdParty\dolphin\Build\x64\Release\Languages\bin\Languages</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>C:\Projects\DolphinTAS\Plugins\DolphinUnreal\ThirdParty\x64\Release\dolphinapi.dll</FullPath>
+    </ProjectOutput>
+  </ProjectOutputs>
+  <ContentFiles />
+  <SatelliteDlls />
+  <NonRecipeFileRefs />
+</Project>

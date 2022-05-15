@@ -1,3 +1,21 @@
+
+// Lib dependencies
+#pragma comment(lib, "Winmm.lib")
+#pragma comment(lib, "ws2_32.lib")
+#pragma comment(lib, "iphlpapi.lib")
+#pragma comment(lib, "shlwapi.lib")
+#pragma comment(lib, "setupapi.lib")
+#pragma comment(lib, "opengl32.lib")
+#pragma comment(lib, "glu32.lib")
+#pragma comment(lib, "avcodec.lib")
+#pragma comment(lib, "avformat.lib")
+#pragma comment(lib, "avutil.lib")
+#pragma comment(lib, "swresample.lib")
+#pragma comment(lib, "swscale.lib")
+#pragma comment(lib, "Bcrypt.lib")
+#pragma comment(lib, "cubeb.lib")
+#pragma comment(lib, "Avrt.lib")
+
 // Dolphin includes
 #include <cstddef>
 #include <cstdio>
@@ -110,7 +128,7 @@ std::unique_ptr<GBAHostInterface> Host_CreateGBAHost(std::weak_ptr<HW::GBA::Core
     return nullptr;
 }
 
-int APIENTRY WinMain(HINSTANCE hInst, HINSTANCE hInstPrev, PSTR cmdline, int cmdshow)
+void DolphinInit()
 {
     std::optional<std::string> save_state_path = { };
     const std::list<std::string> paths_list = { };
@@ -158,5 +176,25 @@ int APIENTRY WinMain(HINSTANCE hInst, HINSTANCE hInstPrev, PSTR cmdline, int cmd
     Core::Shutdown();
     // s_platform.reset();
     UICommon::Shutdown();*/
-    return 1;
 }
+
+BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReserved)
+{
+    switch (ul_reason_for_call)
+    {
+        case DLL_PROCESS_ATTACH:
+        {
+            DolphinInit();
+            break;
+        }
+        case DLL_THREAD_ATTACH:
+        case DLL_THREAD_DETACH:
+        case DLL_PROCESS_DETACH:
+        {
+            break;
+        }
+    }
+
+    return TRUE;
+}
+

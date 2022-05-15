@@ -4,14 +4,18 @@
 #include "framework.h"
 #include "dolphin-api.h"
 
-// This is the constructor of a class that has been exported.
-CDolphinAPI::CDolphinAPI()
-{
-    return;
-}
+
+// This is an example of an exported variable
+DOLPHINAPI_API int ndolphinapi=0;
 
 // This is an example of an exported function.
-DOLPHINAPI_API int GlobalFunc(void)
+DOLPHINAPI_API int fndolphinapi(void)
 {
-    return 1;
+    return 0;
+}
+
+// This is the constructor of a class that has been exported.
+Cdolphinapi::Cdolphinapi()
+{
+    return;
 }
