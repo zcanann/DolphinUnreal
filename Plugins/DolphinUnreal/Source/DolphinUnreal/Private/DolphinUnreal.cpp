@@ -4,15 +4,14 @@
 #include "Core.h"
 #include "Modules/ModuleManager.h"
 #include "Interfaces/IPluginManager.h"
-#include "DolphinUnrealLibrary/ExampleLibrary.h"
+
+#include "dolphin-api.h"
 
 #define LOCTEXT_NAMESPACE "FDolphinUnrealModule"
 
 void FDolphinUnrealModule::StartupModule()
 {
 	// This code will execute after your module is loaded into memory; the exact timing is specified in the .uplugin file per-module
-
-	// Get the base directory of this plugin
 	FString BaseDir = IPluginManager::Get().FindPlugin("DolphinUnreal")->GetBaseDir();
 
 	// Add on the relative location of the third party dll and load it
@@ -30,7 +29,7 @@ void FDolphinUnrealModule::StartupModule()
 	if (DolphinAPIHandle)
 	{
 		// Call the test function in the third party library that opens a message box
-		ExampleLibraryFunction();
+		// int why = GlobalFunction();
 	}
 	else
 	{

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\dolphin\Source\VSProps\Base.Macros.props" />
+  <Import Project="dolphin\Source\VSProps\Base.Macros.props" />
   <Import Project="$(ExternalsDir)ExternalsReferenceAll.props" />
   <Import Project="$(VSPropsDir)Configuration.Application.props" />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -26,6 +26,7 @@
     <ProjectGuid>{038daaac-5ae4-473a-b2b5-5d99436432d0}</ProjectGuid>
     <RootNamespace>dolphinapi</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>DolphinAPI</ProjectName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
@@ -71,6 +72,7 @@
       <PreprocessorDefinitions>NDEBUG;DOLPHINAPI_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <TreatWarningAsError>false</TreatWarningAsError>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(VcpkgRoot)include;$(ProjectDir)/include;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -80,7 +82,7 @@
       <EnableUAC>false</EnableUAC>
       <AdditionalDependencies>%(AdditionalDependencies);$(VcpkgRoot)lib\*.lib;</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(ExternalsDir)FFmpeg-bin\$(Platform)\lib;%(AdditionalLibraryDirectories);$(VcpkgRoot)lib;$(VcpkgRoot)lib\manual-link</AdditionalLibraryDirectories>
-      <OutputFile>$(SolutionDir)/../Binaries/ThirdParty/DolphinAPI/Win64/DolphinAPI.dll</OutputFile>
+      <OutputFile>$(SolutionDir)/../../Binaries/ThirdParty/DolphinAPI/Win64/DolphinAPI.dll</OutputFile>
       <AdditionalOptions>/experimental:deterministic %(AdditionalOptions) /DLL</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
@@ -88,21 +90,21 @@
     <None Include="cpp.hint" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="dolphin-api.h" />
-    <ClInclude Include="framework.h" />
+    <ClInclude Include="include/dolphin-api.h" />
+    <ClInclude Include="include/framework.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="dllmain.cpp" />
-    <ClCompile Include="dolphin-api.cpp" />
+    <ClCompile Include="source/dllmain.cpp" />
+    <ClCompile Include="source/dolphin-api.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\dolphin\Languages\Languages.vcxproj">
+    <ProjectReference Include="dolphin\Languages\Languages.vcxproj">
       <Project>{0e033be3-2e08-428e-9ae9-bc673efa12b5}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\dolphin\Source\Core\Common\SCMRevGen.vcxproj">
+    <ProjectReference Include="dolphin\Source\Core\Common\SCMRevGen.vcxproj">
       <Project>{41279555-f94f-4ebc-99de-af863c10c5c4}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\dolphin\Source\Core\DolphinLib.vcxproj">
+    <ProjectReference Include="dolphin\Source\Core\DolphinLib.vcxproj">
       <Project>{d79392f7-06d6-4b4b-a39f-4d587c215d3a}</Project>
     </ProjectReference>
   </ItemGroup>

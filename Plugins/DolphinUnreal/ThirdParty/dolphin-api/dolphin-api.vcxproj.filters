@@ -18,18 +18,18 @@
     <None Include="cpp.hint" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="framework.h">
+    <ClInclude Include="include/framework.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="dolphin-api.h">
+    <ClInclude Include="include/dolphin-api.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="dolphin-api.cpp">
+    <ClCompile Include="source/dolphin-api.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="dllmain.cpp">
+    <ClCompile Include="source/dllmain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
