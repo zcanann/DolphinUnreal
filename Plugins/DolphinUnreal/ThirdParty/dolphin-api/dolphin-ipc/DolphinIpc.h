@@ -7,11 +7,38 @@
 #include "DolphinIpcInstanceData.h"
 #include "DolphinIpcServerData.h"
 
+#include <atomic>
+#include <iostream>
+#include <chrono>
+#include <cstddef>
+#include <signal.h>
+#include <streambuf>
+#include <string>
+#include <thread>
+
+#include "libipc/ipc.h"
+
+typedef ipc::chan<ipc::relat::single, ipc::relat::single, ipc::trans::unicast> IpcChannel;
+
 class DolphinIPC
 {
-	DolphinIPC();
+public:
+	DolphinIPC(const std::string& uniqueChannelId);
+	~DolphinIPC();
 
-	static void ipcSendToInstance(DolphinIpcInstanceData params);
-	static void ipcSendToServer(DolphinIpcServerData params);
-	static void ipcListen();
+	void ipcSendToInstance(DolphinIpcInstanceData params);
+	void ipcSendToServer(DolphinIpcServerData params);
+	void ipcListen();
+
+private:
+	template<class T>
+	void ipcSendData(IpcChannel* channel, T params);
+
+	ipc::byte_t _sharedBuffer[1024 * 16];
+	std::atomic<bool> _exitRequested{ false };
+	IpcChannel* _clientToServer = nullptr;
+	IpcChannel* _serverToClient = nullptr;
+
+	static const std::string ChannelNameClientBase;
+	static const std::string ChannelNameServerBase;
 };

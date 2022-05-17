@@ -1,16 +1,5 @@
 #include "DolphinIPC.h"
 
-// IPC includes
-#include <signal.h>
-
-#include <atomic>
-#include <iostream>
-#include <chrono>
-#include <cstddef>
-#include <streambuf>
-#include <string>
-#include <thread>
-
 #include "cereal/cereal.hpp"
 #include "cereal/access.hpp"
 #include "cereal/types/common.hpp"
@@ -20,15 +9,25 @@
 #include "cereal/types/memory.hpp"
 #include "cereal/archives/binary.hpp"
 
-#include "libipc/ipc.h"
+const std::string DolphinIPC::ChannelNameClientBase = "dol-c2s-";
+const std::string DolphinIPC::ChannelNameServerBase = "dol-s2c-";
 
-constexpr char const channelName[] = "dol-ipc";
-constexpr std::size_t const min_sz = 128;
-constexpr std::size_t const max_sz = 1024 * 16;
+DolphinIPC::DolphinIPC(const std::string& uniqueChannelId)
+{
+    std::string uniqueClientChannel = ChannelNameClientBase + uniqueChannelId;
+    std::string uniqueServerChannel = ChannelNameServerBase + uniqueChannelId;
 
-ipc::chan<ipc::relat::single, ipc::relat::multi, ipc::trans::broadcast> channel{ channelName };
-ipc::byte_t sharedBuffer[max_sz];
-std::atomic<bool> exitRequested{ false };
+    _clientToServer = new IpcChannel(uniqueClientChannel.c_str());
+    _serverToClient = new IpcChannel(uniqueServerChannel.c_str());
+}
+
+DolphinIPC::~DolphinIPC()
+{
+    delete(_clientToServer);
+    delete(_serverToClient);
+    _clientToServer = nullptr;
+    _serverToClient = nullptr;
+}
 
 struct MemoryStream : std::streambuf
 {
@@ -41,25 +40,35 @@ struct MemoryStream : std::streambuf
 
 void DolphinIPC::ipcSendToInstance(DolphinIpcInstanceData params)
 {
-    if (channel.reconnect(ipc::sender))
+    ipcSendData(_serverToClient, params);
+}
+
+void DolphinIPC::ipcSendToServer(DolphinIpcServerData params)
+{
+    ipcSendData(_clientToServer, params);
+}
+
+template<class T>
+void DolphinIPC::ipcSendData(IpcChannel* channel, T params)
+{
+    if (channel == nullptr || channel->reconnect(ipc::sender))
     {
-        MemoryStream memoryStream = MemoryStream((char*)&sharedBuffer, sizeof(sharedBuffer));
+        MemoryStream memoryStream = MemoryStream((char*)&_sharedBuffer, sizeof(_sharedBuffer));
         std::ostream out(&memoryStream);
         cereal::BinaryOutputArchive archive(out);
 
         archive(params);
-        // params.save(archive);
 
-        if (!exitRequested.load(std::memory_order_acquire))
+        if (!_exitRequested.load(std::memory_order_acquire))
         {
-            if (!channel.send(ipc::buff_t(sharedBuffer, memoryStream.written())))
+            if (!channel->send(ipc::buff_t(_sharedBuffer, memoryStream.written())))
             {
                 std::cerr << __func__ << ": send failed.\n";
                 std::cout << __func__ << ": waiting for receiver...\n";
-                if (!channel.wait_for_recv(1))
+                if (!channel->wait_for_recv(1))
                 {
                     std::cerr << __func__ << ": wait receiver failed.\n";
-                    exitRequested.store(true, std::memory_order_release);
+                    _exitRequested.store(true, std::memory_order_release);
                     // break;
                 }
             }
@@ -74,14 +83,17 @@ void DolphinIPC::ipcSendToInstance(DolphinIpcInstanceData params)
 
 void DolphinIPC::ipcListen()
 {
-    if (channel.reconnect(ipc::receiver))
+    if (_serverToClient != nullptr
+        && _clientToServer != nullptr
+        && _serverToClient->reconnect(ipc::receiver)
+        && _clientToServer->reconnect(ipc::receiver))
     {
-        while (!exitRequested.load(std::memory_order_acquire))
+        while (!_exitRequested.load(std::memory_order_acquire))
         {
-            ipc::buff_t msg = channel.recv();
-            std::string dat{ msg.get<char const*>(), msg.size() - 1 };
+            ipc::buff_t rawData = _serverToClient->recv();
+            std::string dat{ rawData.get<char const*>(), rawData.size() - 1 };
 
-            if (msg.empty())
+            if (rawData.empty())
             {
                 break;
             }
