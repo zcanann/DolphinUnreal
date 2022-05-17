@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Projects\DolphinTAS\Plugins\DolphinUnreal\ThirdParty\dolphin-api\Externals\cpp-ipc\CMakeFiles\b9b2a5910b823dca40ad7dd1efa94be2\generate.stamp.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{D88FE2F1-798B-30A0-B809-A9D6C62F1257}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

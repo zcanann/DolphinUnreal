@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="dolphin\Source\VSProps\Base.Macros.props" />
   <Import Project="$(ExternalsDir)ExternalsReferenceAll.props" />
@@ -90,14 +90,16 @@
     <None Include="cpp.hint" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include/dolphin-api.h" />
-    <ClInclude Include="include/framework.h" />
+    <ClInclude Include="include\DolphinAPI.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source/dllmain.cpp" />
-    <ClCompile Include="source/dolphin-api.cpp" />
+    <ClCompile Include="source\DolphinAPI.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="dolphin-instance\DolphinInstance.vcxproj">
+      <Project>{974e563d-23f8-4e8f-9083-f62876b04e09}</Project>
+    </ProjectReference>
     <ProjectReference Include="dolphin\Languages\Languages.vcxproj">
       <Project>{0e033be3-2e08-428e-9ae9-bc673efa12b5}</Project>
     </ProjectReference>

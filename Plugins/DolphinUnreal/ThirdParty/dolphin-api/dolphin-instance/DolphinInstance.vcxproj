@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <Import Project="..\dolphin\Source\VSProps\Base.Macros.props" />
+  <Import Project="$(VSPropsDir)Base.Targets.props" />
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{974E563D-23F8-4E8F-9083-F62876B04E09}</ProjectGuid>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <Import Project="$(VSPropsDir)Configuration.Application.props" />
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings" />
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VSPropsDir)Base.props" />
+    <Import Project="$(VSPropsDir)PCHUse.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <ItemDefinitionGroup>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <AdditionalLibraryDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ExternalsDir)FFmpeg-bin\$(Platform)\lib;%(AdditionalLibraryDirectories);$(ProjectDir)/../Externals/cpp-ipc/lib/Release/;</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ExternalsDir)FFmpeg-bin\$(Platform)\lib;%(AdditionalLibraryDirectories);$(ProjectDir)/../Externals/cpp-ipc/lib/Release/;</AdditionalLibraryDirectories>
+    </Link>
+    <ClCompile>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ExternalsDir)zstd\lib;%(AdditionalIncludeDirectories);</AdditionalIncludeDirectories>
+    </ClCompile>
+    <ClCompile>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ExternalsDir)zstd\lib;%(AdditionalIncludeDirectories);</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <Import Project="$(ExternalsDir)ExternalsReferenceAll.props" />
+  <ItemGroup>
+    <ClCompile Include="MainNoGUI.cpp" />
+    <ClCompile Include="Platform.cpp" />
+    <ClCompile Include="PlatformHeadless.cpp" />
+    <ClCompile Include="PlatformWin32.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+  <!--Copy the .exe to binary output folder-->
+  <ItemGroup>
+    <SourceFiles Include="$(TargetPath)" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Platform.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Manifest Include="DolphinInstance.exe.manifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="DolphinInstance.rc" />
+  </ItemGroup>
+  <Target Name="AfterBuild" Inputs="@(SourceFiles)" Outputs="@(SourceFiles -> '$(BinaryOutputDir)%(Filename)%(Extension)')">
+    <Message Text="Copy: @(SourceFiles) -&gt; $(BinaryOutputDir)" Importance="High" />
+    <Copy SourceFiles="@(SourceFiles)" DestinationFolder="$(BinaryOutputDir)" />
+  </Target>
+</Project>
