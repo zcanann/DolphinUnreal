@@ -2,6 +2,7 @@
 
 #include "DolphinUnreal.h"
 #include "Interfaces/IPluginManager.h"
+#include "Misc/MonitoredProcess.h"
 #include "Misc/Paths.h"
 
 #include "dolphin-ipc/DolphinIpc.h"
@@ -20,40 +21,18 @@ UDolphinInstance::UDolphinInstance(const FObjectInitializer& ObjectInitializer)
 
 void UDolphinInstance::Initialize(FDolphinGraphicsSettings InGraphicsSettings, FDolphinRuntimeSettings InRuntimeSettings)
 {
-    static FString ContentDirectory = IPluginManager::Get().FindPlugin(TEXT("DolphinUnreal"))->GetContentDir();
+    static FString ContentDirectory = FPaths::ConvertRelativePathToFull(IPluginManager::Get().FindPlugin(TEXT("DolphinUnreal"))->GetContentDir());
     InstanceId = MakeInstanceId();
 	// DolphinIPCInstance = new DolphinIPC(TCHAR_TO_UTF8(*InstanceId));
 
     FString DolphinPath = FPaths::Combine(ContentDirectory, TEXT("DolphinInstance.exe"));
     FString GamePath = TEXT("C:/Dolphin/Games/Star Fox Adventures (USA) (v1.00).iso");
     FString Params = FString::Format(TEXT("\"{0}\" -p win32 channelId={1}"), { GamePath, InstanceId });
-    bool bLaunchDetached = true;
     bool bLaunchHidden = false;
-    bool bLaunchReallyHidden = false;
-    uint32 OutProcessId;
-    int32 PriorityModifier = 0;
-    FString OptionalWorkingDirectory;
-    void* PipeWriteChild = nullptr;
-    void* PipeReadChild = nullptr;
-    void* PipeStdErrChild = nullptr;
+    bool bCreatePipes = true;
 
-    DolphinProcess = FPlatformProcess::CreateProc(
-        *DolphinPath,
-        *Params,
-
-        bLaunchDetached,
-        bLaunchHidden,
-        bLaunchReallyHidden,
-
-        &OutProcessId,
-        PriorityModifier,
-        *OptionalWorkingDirectory,
-
-        PipeWriteChild,
-        PipeReadChild,
-        PipeStdErrChild
-    );
-
+    DolphinProcess = TSharedPtr<FMonitoredProcess>(new FMonitoredProcess(DolphinPath, Params, bLaunchHidden, bCreatePipes));
+    DolphinProcess->Launch();
 }
 
 UDolphinInstance::~UDolphinInstance()

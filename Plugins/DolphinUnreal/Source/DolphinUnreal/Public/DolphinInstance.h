@@ -26,6 +26,7 @@ public:
 };
 
 class DolphinIPC;
+class FMonitoredProcess;
 
 UCLASS(BlueprintType)
 class UDolphinInstance : public UObject
@@ -42,5 +43,5 @@ private:
 
 	FString InstanceId;
 	DolphinIPC* DolphinIPCInstance = nullptr;
-	FProcHandle DolphinProcess;
+	TSharedPtr<FMonitoredProcess> DolphinProcess = nullptr;
 };

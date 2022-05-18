@@ -1,9 +1,9 @@
 #pragma once
 
+#include "DolphinInstance.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
-#include "DolphinUnrealBlueprintLibrary.generated.h"
 
-class UDolphinInstance;
+#include "DolphinUnrealBlueprintLibrary.generated.h"
 
 UCLASS()
 class UDolphinUnrealBlueprintLibrary : public UBlueprintFunctionLibrary
