@@ -19,6 +19,8 @@ DolphinIPC::DolphinIPC(const std::string& uniqueChannelId)
 
     _clientToServer = new IpcChannel(uniqueClientChannel.c_str());
     _serverToClient = new IpcChannel(uniqueServerChannel.c_str());
+
+    ipcListen();
 }
 
 DolphinIPC::~DolphinIPC()
@@ -83,25 +85,49 @@ void DolphinIPC::ipcSendData(IpcChannel* channel, T params)
 
 void DolphinIPC::ipcListen()
 {
-    if (_serverToClient != nullptr
-        && _clientToServer != nullptr
-        && _serverToClient->reconnect(ipc::receiver)
-        && _clientToServer->reconnect(ipc::receiver))
-    {
-        while (!_exitRequested.load(std::memory_order_acquire))
-        {
-            ipc::buff_t rawData = _serverToClient->recv();
-            std::string dat{ rawData.get<char const*>(), rawData.size() - 1 };
-
-            if (rawData.empty())
+    std::thread clientToServerListener{
+        [=] {
+            if (_clientToServer != nullptr && _clientToServer->reconnect(ipc::receiver))
             {
-                break;
+                while (!_exitRequested.load(std::memory_order_acquire))
+                {
+                    ipc::buff_t rawData = _clientToServer->recv();
+                    std::string dat{ rawData.get<char const*>(), rawData.size() - 1 };
+
+                    if (rawData.empty())
+                    {
+                        break;
+                    }
+                }
             }
+            else
+            {
+                std::cerr << __func__ << ": client to server connect failed.\n";
+            }
+            std::cout << __func__ << ": client to server quit...\n";
         }
-    }
-    else
-    {
-        std::cerr << __func__ << ": connect failed.\n";
-    }
-    std::cout << __func__ << ": quit...\n";
+    };
+
+    std::thread serverToClientListener{
+        [=] {
+            if (_serverToClient != nullptr && _serverToClient->reconnect(ipc::receiver))
+            {
+                while (!_exitRequested.load(std::memory_order_acquire))
+                {
+                    ipc::buff_t rawData = _serverToClient->recv();
+                    std::string dat{ rawData.get<char const*>(), rawData.size() - 1 };
+
+                    if (rawData.empty())
+                    {
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                std::cerr << __func__ << ": server to client connect failed.\n";
+            }
+            std::cout << __func__ << ": server to client quit...\n";
+        }
+    };
 }

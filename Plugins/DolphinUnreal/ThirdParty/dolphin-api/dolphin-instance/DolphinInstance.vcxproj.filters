@@ -1,13 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project>
   <ItemGroup>
-    <ClCompile Include="Platform.cpp" />
-    <ClCompile Include="PlatformHeadless.cpp" />
+    <ClCompile Include="Instance.cpp" />
+    <ClCompile Include="InstanceHeadless.cpp" />
     <ClCompile Include="MainNoGUI.cpp" />
-    <ClCompile Include="PlatformWin32.cpp" />
+    <ClCompile Include="InstanceWin32.cpp" />
+    <ClCompile Include="IpcCommandHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Platform.h" />
+    <ClInclude Include="Instance.h" />
+    <ClInclude Include="IpcCommandHandler.h" />
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="DolphinInstance.exe.manifest" />

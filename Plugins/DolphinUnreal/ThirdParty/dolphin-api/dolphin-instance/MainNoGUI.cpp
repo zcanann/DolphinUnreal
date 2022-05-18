@@ -3,7 +3,7 @@
 
 #pragma comment(lib, "ipc.lib")
 
-#include "DolphinNoGUI/Platform.h"
+#include "Instance.h"
 
 #include <OptionParser.h>
 #include <cstddef>
@@ -37,7 +37,7 @@
 #include "VideoCommon/RenderBase.h"
 #include "VideoCommon/VideoBackendBase.h"
 
-static std::unique_ptr<Platform> s_platform;
+static std::unique_ptr<Instance> PlatformInstance;
 
 static void signal_handler(int)
 {
@@ -50,7 +50,7 @@ static void signal_handler(int)
   }
 #endif
 
-  s_platform->RequestShutdown();
+  PlatformInstance->RequestShutdown();
 }
 
 std::vector<std::string> Host_GetPreferredLocales()
@@ -75,12 +75,12 @@ static Common::Event s_update_main_frame_event;
 void Host_Message(HostMessageID id)
 {
   if (id == HostMessageID::WMUserStop)
-    s_platform->Stop();
+    PlatformInstance->Stop();
 }
 
 void Host_UpdateTitle(const std::string& title)
 {
-  s_platform->SetTitle(title);
+  PlatformInstance->SetTitle(title);
 }
 
 void Host_UpdateDisasmDialog()
@@ -98,7 +98,7 @@ void Host_RequestRenderWindowSize(int width, int height)
 
 bool Host_RendererHasFocus()
 {
-  return s_platform->IsWindowFocused();
+  return PlatformInstance->IsWindowFocused();
 }
 
 bool Host_RendererHasFullFocus()
@@ -109,7 +109,7 @@ bool Host_RendererHasFullFocus()
 
 bool Host_RendererIsFullscreen()
 {
-  return s_platform->IsWindowFullscreen();
+  return PlatformInstance->IsWindowFullscreen();
 }
 
 void Host_YieldToUI()
@@ -128,173 +128,188 @@ std::unique_ptr<GBAHostInterface> Host_CreateGBAHost(std::weak_ptr<HW::GBA::Core
   return nullptr;
 }
 
-static std::unique_ptr<Platform> GetPlatform(const optparse::Values& options)
+static std::unique_ptr<Instance> GetInstance(const optparse::Values& options)
 {
-  std::string platform_name = static_cast<const char*>(options.get("platform"));
+    std::string platformName = static_cast<const char*>(options.get("platform"));
+    std::string channelId = static_cast<const char*>(options.get("channelId"));
 
-#if HAVE_X11
-  if (platform_name == "x11" || platform_name.empty())
-    return Platform::CreateX11Platform();
-#endif
+    #if HAVE_X11
+        if (platformName == "x11" || platformName.empty())
+            return Instance::CreateX11Instance(channelId);
+    #endif
 
-#ifdef __linux__
-  if (platform_name == "fbdev" || platform_name.empty())
-    return Platform::CreateFBDevPlatform();
-#endif
+    #ifdef __linux__
+        if (platformName == "fbdev" || platformName.empty())
+            return Instance::CreateFBDevInstance(channelId);
+    #endif
 
-#ifdef _WIN32
-  if (platform_name == "win32" || platform_name.empty())
-    return Platform::CreateWin32Platform();
-#endif
+    #ifdef _WIN32
+        if (platformName == "win32" || platformName.empty())
+            return Instance::CreateWin32Instance(channelId);
+    #endif
 
-  if (platform_name == "headless" || platform_name.empty())
-    return Platform::CreateHeadlessPlatform();
+    if (platformName == "headless" || platformName.empty())
+        return Instance::CreateHeadlessInstance(channelId);
 
-  return nullptr;
+    return nullptr;
 }
 
 #ifdef _WIN32
 #define main app_main
 #endif
 
+std::unique_ptr<optparse::OptionParser> createParser()
+{
+    auto parser = CommandLineParse::CreateParser(CommandLineParse::ParserOptions::OmitGUIOptions);
+    parser->add_option("-p", "--platform")
+        .action("store")
+        .help("Window platform to use [%choices]")
+        .choices({
+        "headless"
+        #ifdef __linux__
+        , "fbdev"
+        #endif
+        #if HAVE_X11
+        , "x11"
+        #endif
+        #ifdef _WIN32
+        , "win32"
+        #endif
+    });
+
+    return parser;
+}
+
 int main(int argc, char* argv[])
 {
-  auto parser = CommandLineParse::CreateParser(CommandLineParse::ParserOptions::OmitGUIOptions);
-  parser->add_option("-p", "--platform")
-      .action("store")
-      .help("Window platform to use [%choices]")
-      .choices({
-        "headless"
-#ifdef __linux__
-            ,
-            "fbdev"
-#endif
-#if HAVE_X11
-            ,
-            "x11"
-#endif
-#ifdef _WIN32
-            ,
-            "win32"
-#endif
-      });
+    std::unique_ptr<optparse::OptionParser> parser = createParser();
+    optparse::Values& options = CommandLineParse::ParseArguments(parser.get(), argc, argv);
+    std::vector<std::string> args = parser->args();
 
-  optparse::Values& options = CommandLineParse::ParseArguments(parser.get(), argc, argv);
-  std::vector<std::string> args = parser->args();
-
-  std::optional<std::string> save_state_path;
-  if (options.is_set("save_state"))
-  {
-    save_state_path = static_cast<const char*>(options.get("save_state"));
-  }
-
-  std::unique_ptr<BootParameters> boot;
-  bool game_specified = false;
-  if (options.is_set("exec"))
-  {
-    const std::list<std::string> paths_list = options.all("exec");
-    const std::vector<std::string> paths{std::make_move_iterator(std::begin(paths_list)),
-                                         std::make_move_iterator(std::end(paths_list))};
-    boot = BootParameters::GenerateFromFile(
-        paths, BootSessionData(save_state_path, DeleteSavestateAfterBoot::No));
-    game_specified = true;
-  }
-  else if (options.is_set("nand_title"))
-  {
-    const std::string hex_string = static_cast<const char*>(options.get("nand_title"));
-    if (hex_string.length() != 16)
+    std::optional<std::string> channelId;
+    if (options.is_set("channelId"))
     {
-      fprintf(stderr, "Invalid title ID\n");
-      parser->print_help();
-      return 1;
+        channelId = static_cast<const char*>(options.get("channelId"));
     }
-    const u64 title_id = std::stoull(hex_string, nullptr, 16);
-    boot = std::make_unique<BootParameters>(BootParameters::NANDTitle{title_id});
-  }
-  else if (args.size())
-  {
-    boot = BootParameters::GenerateFromFile(
+
+    std::optional<std::string> save_state_path;
+    if (options.is_set("save_state"))
+    {
+        save_state_path = static_cast<const char*>(options.get("save_state"));
+    }
+
+    std::unique_ptr<BootParameters> boot;
+    bool game_specified = false;
+    if (options.is_set("exec"))
+    {
+        const std::list<std::string> paths_list = options.all("exec");
+        const std::vector<std::string> paths{std::make_move_iterator(std::begin(paths_list)),
+        std::make_move_iterator(std::end(paths_list))};
+        boot = BootParameters::GenerateFromFile(
+        paths, BootSessionData(save_state_path, DeleteSavestateAfterBoot::No));
+        game_specified = true;
+    }
+    else if (options.is_set("nand_title"))
+    {
+        const std::string hex_string = static_cast<const char*>(options.get("nand_title"));
+        if (hex_string.length() != 16)
+        {
+            fprintf(stderr, "Invalid title ID\n");
+            parser->print_help();
+            return 1;
+        }
+
+        const u64 title_id = std::stoull(hex_string, nullptr, 16);
+        boot = std::make_unique<BootParameters>(BootParameters::NANDTitle{title_id});
+    }
+    else if (args.size())
+    {
+        boot = BootParameters::GenerateFromFile(
         args.front(), BootSessionData(save_state_path, DeleteSavestateAfterBoot::No));
-    args.erase(args.begin());
-    game_specified = true;
-  }
-  else
-  {
-    parser->print_help();
-    return 0;
-  }
+        args.erase(args.begin());
+        game_specified = true;
+    }
+    else
+    {
+        parser->print_help();
+        return 0;
+    }
 
-  std::string user_directory;
-  if (options.is_set("user"))
-    user_directory = static_cast<const char*>(options.get("user"));
+    std::string user_directory;
+    if (options.is_set("user"))
+    {
+        user_directory = static_cast<const char*>(options.get("user"));
+    }
 
-  UICommon::SetUserDirectory(user_directory);
-  UICommon::Init();
-  GCAdapter::Init();
+    UICommon::SetUserDirectory(user_directory);
+    UICommon::Init();
+    GCAdapter::Init();
 
-  s_platform = GetPlatform(options);
-  if (!s_platform || !s_platform->Init())
-  {
-    fprintf(stderr, "No platform found, or failed to initialize.\n");
-    return 1;
-  }
+    PlatformInstance = GetInstance(options);
+    if (!PlatformInstance || !PlatformInstance->Init())
+    {
+        fprintf(stderr, "No platform found, or failed to initialize.\n");
+        return 1;
+    }
 
-  if (save_state_path && !game_specified)
-  {
-    fprintf(stderr, "A save state cannot be loaded without specifying a game to launch.\n");
-    return 1;
-  }
+    if (save_state_path && !game_specified)
+    {
+        fprintf(stderr, "A save state cannot be loaded without specifying a game to launch.\n");
+        return 1;
+    }
 
-  Core::AddOnStateChangedCallback([](Core::State state) {
+    Core::AddOnStateChangedCallback([](Core::State state) {
     if (state == Core::State::Uninitialized)
-      s_platform->Stop();
-  });
+    PlatformInstance->Stop();
+    });
 
-#ifdef _WIN32
-  signal(SIGINT, signal_handler);
-  signal(SIGTERM, signal_handler);
-#else
-  // Shut down cleanly on SIGINT and SIGTERM
-  struct sigaction sa;
-  sa.sa_handler = signal_handler;
-  sigemptyset(&sa.sa_mask);
-  sa.sa_flags = SA_RESETHAND;
-  sigaction(SIGINT, &sa, nullptr);
-  sigaction(SIGTERM, &sa, nullptr);
-#endif
+    #ifdef _WIN32
+        signal(SIGINT, signal_handler);
+        signal(SIGTERM, signal_handler);
+    #else
+        // Shut down cleanly on SIGINT and SIGTERM
+        struct sigaction sa;
+        sa.sa_handler = signal_handler;
+        sigemptyset(&sa.sa_mask);
+        sa.sa_flags = SA_RESETHAND;
+        sigaction(SIGINT, &sa, nullptr);
+        sigaction(SIGTERM, &sa, nullptr);
+    #endif
 
-  DolphinAnalytics::Instance().ReportDolphinStart("nogui");
+    DolphinAnalytics::Instance().ReportDolphinStart("nogui");
 
-  if (!BootManager::BootCore(std::move(boot), s_platform->GetWindowSystemInfo()))
-  {
-    fprintf(stderr, "Could not boot the specified file\n");
-    return 1;
-  }
+    if (!BootManager::BootCore(std::move(boot), PlatformInstance->GetWindowSystemInfo()))
+    {
+        fprintf(stderr, "Could not boot the specified file\n");
+        return 1;
+    }
 
-#ifdef USE_DISCORD_PRESENCE
-  Discord::UpdateDiscordPresence();
-#endif
+    #ifdef USE_DISCORD_PRESENCE
+        Discord::UpdateDiscordPresence();
+    #endif
 
-  s_platform->MainLoop();
-  Core::Stop();
+    PlatformInstance->MainLoop();
+    Core::Stop();
 
-  Core::Shutdown();
-  s_platform.reset();
-  UICommon::Shutdown();
+    Core::Shutdown();
+    PlatformInstance.reset();
+    UICommon::Shutdown();
 
-  return 0;
+    return 0;
 }
 
 #ifdef _WIN32
 int wmain(int, wchar_t*[], wchar_t*[])
 {
-  std::vector<std::string> args = CommandLineToUtf8Argv(GetCommandLineW());
-  const int argc = static_cast<int>(args.size());
-  std::vector<char*> argv(args.size());
-  for (size_t i = 0; i < args.size(); ++i)
-    argv[i] = args[i].data();
+    std::vector<std::string> args = CommandLineToUtf8Argv(GetCommandLineW());
+    const int argc = static_cast<int>(args.size());
+    std::vector<char*> argv(args.size());
+    for (size_t i = 0; i < args.size(); ++i)
+    {
+        argv[i] = args[i].data();
+    }
 
-  return main(argc, argv.data());
+    return main(argc, argv.data());
 }
 
 #undef main

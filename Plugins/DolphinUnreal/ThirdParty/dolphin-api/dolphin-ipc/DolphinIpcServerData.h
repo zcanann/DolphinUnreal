@@ -8,7 +8,24 @@
 enum class DolphinServerIpcCall
 {
 	Null,
+	DolphinServer_OnClientConnected,
 	DolphinServer_OnClientTerminated,
+};
+
+struct DolphinServer_OnClientConnected
+{
+	std::string _params;
+
+	template <class Archive>
+	void save(Archive& ar) const
+	{
+		ar(_params);
+	}
+	template <class Archive>
+	void load(Archive& ar)
+	{
+		ar(_params);
+	}
 };
 
 struct DolphinServer_OnClientTerminated
@@ -33,6 +50,7 @@ struct DolphinIpcServerData
 
 	union
 	{
+		DolphinServer_OnClientConnected* _onClientConnectedParams;;
 		DolphinServer_OnClientTerminated* _onClientTerminatedParams;
 	} _params;
 
@@ -41,6 +59,7 @@ struct DolphinIpcServerData
 	{
 		switch (_call)
 		{
+			case DolphinServerIpcCall::DolphinServer_OnClientConnected: ar(_call, *_params._onClientConnectedParams); break;
 			case DolphinServerIpcCall::DolphinServer_OnClientTerminated: ar(_call, *_params._onClientTerminatedParams); break;
 			case DolphinServerIpcCall::Null: default: break;
 		}
@@ -53,6 +72,12 @@ struct DolphinIpcServerData
 
 		switch (_call)
 		{
+			case DolphinServerIpcCall::DolphinServer_OnClientConnected:
+			{
+				_params._onClientConnectedParams = new DolphinServer_OnClientConnected();
+				ar(*(_params._onClientConnectedParams));
+				break;
+			}
 			case DolphinServerIpcCall::DolphinServer_OnClientTerminated:
 			{
 				_params._onClientTerminatedParams = new DolphinServer_OnClientTerminated();

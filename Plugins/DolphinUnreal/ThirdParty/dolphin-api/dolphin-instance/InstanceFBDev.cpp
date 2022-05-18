@@ -3,7 +3,7 @@
 
 #include <unistd.h>
 
-#include "DolphinNoGUI/Platform.h"
+#include "Instance.h"
 
 #include "Common/MsgHandler.h"
 #include "Core/ConfigManager.h"
@@ -25,10 +25,11 @@
 
 namespace
 {
-class PlatformFBDev : public Platform
+class InstanceFBDev : public Instance
 {
 public:
-  ~PlatformFBDev() override;
+  InstanceFBDev(const std::string& channelId);
+  ~InstanceFBDev() override;
 
   bool Init() override;
   void SetTitle(const std::string& string) override;
@@ -42,13 +43,17 @@ private:
   int m_fb_fd = -1;
 };
 
-PlatformFBDev::~PlatformFBDev()
+InstanceFBDev::InstanceFBDev(const std::string& channelId) : Instance(channelId)
+{
+}
+
+InstanceFBDev::~InstanceFBDev()
 {
   if (m_fb_fd >= 0)
     close(m_fb_fd);
 }
 
-bool PlatformFBDev::Init()
+bool InstanceFBDev::Init()
 {
   if (!OpenFramebuffer())
     return false;
@@ -56,7 +61,7 @@ bool PlatformFBDev::Init()
   return true;
 }
 
-bool PlatformFBDev::OpenFramebuffer()
+bool InstanceFBDev::OpenFramebuffer()
 {
   m_fb_fd = open("/dev/fb0", O_RDWR);
   if (m_fb_fd < 0)
@@ -68,12 +73,12 @@ bool PlatformFBDev::OpenFramebuffer()
   return true;
 }
 
-void PlatformFBDev::SetTitle(const std::string& string)
+void InstanceFBDev::SetTitle(const std::string& string)
 {
   std::fprintf(stdout, "%s\n", string.c_str());
 }
 
-void PlatformFBDev::MainLoop()
+void InstanceFBDev::MainLoop()
 {
   while (IsRunning())
   {
@@ -85,7 +90,7 @@ void PlatformFBDev::MainLoop()
   }
 }
 
-WindowSystemInfo PlatformFBDev::GetWindowSystemInfo() const
+WindowSystemInfo InstanceFBDev::GetWindowSystemInfo() const
 {
   WindowSystemInfo wsi;
   wsi.type = WindowSystemType::FBDev;
@@ -96,7 +101,7 @@ WindowSystemInfo PlatformFBDev::GetWindowSystemInfo() const
 }
 }  // namespace
 
-std::unique_ptr<Platform> Platform::CreateFBDevPlatform()
+std::unique_ptr<Instance> Instance::CreateFBDevInstance(const std::string& channelId)
 {
-  return std::make_unique<PlatformFBDev>();
+  return std::make_unique<InstanceFBDev>(channelId);
 }

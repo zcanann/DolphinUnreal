@@ -9,7 +9,7 @@
 #include <X11/X.h>
 static constexpr auto X_None = None;
 
-#include "DolphinNoGUI/Platform.h"
+#include "Instance.h"
 
 #include "Common/MsgHandler.h"
 #include "Core/Config/MainSettings.h"
@@ -33,10 +33,11 @@ static constexpr auto X_None = None;
 
 namespace
 {
-class PlatformX11 : public Platform
+class InstanceX11 : public Instance
 {
 public:
-  ~PlatformX11() override;
+  InstanceX11(const std::string& channelId);
+  ~InstanceX11() override;
 
   bool Init() override;
   void SetTitle(const std::string& string) override;
@@ -61,7 +62,11 @@ private:
   unsigned int m_window_height = Config::Get(Config::MAIN_RENDER_WINDOW_HEIGHT);
 };
 
-PlatformX11::~PlatformX11()
+InstanceX11::InstanceX11(const std::string& channelId) : Instance(channelId)
+{
+}
+
+InstanceX11::~InstanceX11()
 {
 #ifdef HAVE_XRANDR
   delete m_xrr_config;
@@ -76,7 +81,7 @@ PlatformX11::~PlatformX11()
   }
 }
 
-bool PlatformX11::Init()
+bool InstanceX11::Init()
 {
   XInitThreads();
   m_display = XOpenDisplay(nullptr);
@@ -140,12 +145,12 @@ bool PlatformX11::Init()
   return true;
 }
 
-void PlatformX11::SetTitle(const std::string& string)
+void InstanceX11::SetTitle(const std::string& string)
 {
   XStoreName(m_display, m_window, string.c_str());
 }
 
-void PlatformX11::MainLoop()
+void InstanceX11::MainLoop()
 {
   while (IsRunning())
   {
@@ -159,7 +164,7 @@ void PlatformX11::MainLoop()
   }
 }
 
-WindowSystemInfo PlatformX11::GetWindowSystemInfo() const
+WindowSystemInfo InstanceX11::GetWindowSystemInfo() const
 {
   WindowSystemInfo wsi;
   wsi.type = WindowSystemType::X11;
@@ -169,7 +174,7 @@ WindowSystemInfo PlatformX11::GetWindowSystemInfo() const
   return wsi;
 }
 
-void PlatformX11::UpdateWindowPosition()
+void InstanceX11::UpdateWindowPosition()
 {
   if (m_window_fullscreen)
     return;
@@ -180,7 +185,7 @@ void PlatformX11::UpdateWindowPosition()
                &m_window_height, &borderDummy, &depthDummy);
 }
 
-void PlatformX11::ProcessEvents()
+void InstanceX11::ProcessEvents()
 {
   XEvent event;
   KeySym key;
@@ -272,7 +277,7 @@ void PlatformX11::ProcessEvents()
 }
 }  // namespace
 
-std::unique_ptr<Platform> Platform::CreateX11Platform()
+std::unique_ptr<Instance> Instance::CreateX11Instance(const std::string& channelId)
 {
-  return std::make_unique<PlatformX11>();
+  return std::make_unique<InstanceX11>(channelId);
 }

@@ -22,18 +22,19 @@
       <AdditionalLibraryDirectories Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ExternalsDir)FFmpeg-bin\$(Platform)\lib;%(AdditionalLibraryDirectories);$(ProjectDir)/../Externals/cpp-ipc/lib/Release/;</AdditionalLibraryDirectories>
     </Link>
     <ClCompile>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ExternalsDir)zstd\lib;%(AdditionalIncludeDirectories);</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ExternalsDir)zstd\lib;%(AdditionalIncludeDirectories);../;../dolphin-ipc/external;../Externals/;../Externals/cpp-ipc/include;</AdditionalIncludeDirectories>
     </ClCompile>
     <ClCompile>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ExternalsDir)zstd\lib;%(AdditionalIncludeDirectories);</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ExternalsDir)zstd\lib;%(AdditionalIncludeDirectories);../;../dolphin-ipc/external;../Externals/;../Externals/cpp-ipc/include;</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <Import Project="$(ExternalsDir)ExternalsReferenceAll.props" />
   <ItemGroup>
+    <ClCompile Include="IpcCommandHandler.cpp" />
     <ClCompile Include="MainNoGUI.cpp" />
-    <ClCompile Include="Platform.cpp" />
-    <ClCompile Include="PlatformHeadless.cpp" />
-    <ClCompile Include="PlatformWin32.cpp" />
+    <ClCompile Include="Instance.cpp" />
+    <ClCompile Include="InstanceHeadless.cpp" />
+    <ClCompile Include="InstanceWin32.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
@@ -43,7 +44,8 @@
     <SourceFiles Include="$(TargetPath)" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Platform.h" />
+    <ClInclude Include="IpcCommandHandler.h" />
+    <ClInclude Include="Instance.h" />
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="DolphinInstance.exe.manifest" />
@@ -53,6 +55,11 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DolphinInstance.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\dolphin-ipc\dolphin-ipc.vcxproj">
+      <Project>{92404eec-8f15-4974-b689-82ded9983641}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Target Name="AfterBuild" Inputs="@(SourceFiles)" Outputs="@(SourceFiles -> '$(BinaryOutputDir)%(Filename)%(Extension)')">
     <Message Text="Copy: @(SourceFiles) -&gt; $(BinaryOutputDir)" Importance="High" />
