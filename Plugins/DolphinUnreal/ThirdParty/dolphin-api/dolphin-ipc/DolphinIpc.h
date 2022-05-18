@@ -4,6 +4,9 @@
 #define WIN32_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers
 #endif // !WIN32_LEAN_AND_MEAN
 
+// Prevent errors in cereal that propagate to Unreal where __GNUC__ is not defined
+#define __GNUC__ 0
+
 #include "DolphinIpcInstanceData.h"
 #include "DolphinIpcServerData.h"
 

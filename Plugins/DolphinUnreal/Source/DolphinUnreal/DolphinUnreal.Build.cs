@@ -57,13 +57,17 @@ public class DolphinUnreal : ModuleRules
 			new string[]
 			{
 				"Core",
-				"Projects"
+				"Projects",
 			}
 		);
 
 		PrivateDependencyModuleNames.AddRange(
 			new string[]
 			{
+				"CoreUObject",
+				"Engine",
+				"Slate",
+				"SlateCore",
 			}
 		);
 		

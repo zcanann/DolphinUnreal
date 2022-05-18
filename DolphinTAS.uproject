@@ -26,6 +26,14 @@
 				"Mac",
 				"Linux"
 			]
+		},
+		{
+			"Name": "TempPlugin",
+			"Enabled": false
+		},
+		{
+			"Name": "UObjectPlugin",
+			"Enabled": false
 		}
 	]
 }

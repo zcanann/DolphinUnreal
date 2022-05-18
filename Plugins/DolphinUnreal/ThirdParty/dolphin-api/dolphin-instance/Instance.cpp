@@ -16,12 +16,15 @@ namespace ProcessorInterface
 
 Instance::Instance(const std::string& channelId)
 {
-    _ipcCommandHandler = new IpcCommandHandler(channelId);
+    // _ipcCommandHandler = new IpcCommandHandler(channelId);
 }
 
 Instance::~Instance()
 {
-    delete(_ipcCommandHandler);
+    if (_ipcCommandHandler != nullptr)
+    {
+        delete(_ipcCommandHandler);
+    }
 }
 
 bool Instance::Init()

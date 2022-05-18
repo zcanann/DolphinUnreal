@@ -7,18 +7,24 @@
 
 #define LOCTEXT_NAMESPACE "FDolphinUnrealModule"
 
+const FName FDolphinUnrealModule::Name = FName("DolphinUnreal");
+
 void FDolphinUnrealModule::StartupModule()
 {
 }
 
 void FDolphinUnrealModule::ShutdownModule()
 {
-	// This function may be called during shutdown to clean up your module.  For modules that support dynamic reloading,
-	// we call this function before unloading the module.
+}
 
-	// Free the dll handle
-	FPlatformProcess::FreeDllHandle(DolphinAPIHandle);
-	DolphinAPIHandle = nullptr;
+void FDolphinUnrealModule::SetDefaultDolphinInstance(UDolphinInstance* InDefaultDolphinInstance)
+{
+	DefaultDolphinInstance = InDefaultDolphinInstance;
+}
+
+UDolphinInstance* FDolphinUnrealModule::GetDefaultDolphinInstance() const
+{
+	return DefaultDolphinInstance;
 }
 
 #undef LOCTEXT_NAMESPACE
