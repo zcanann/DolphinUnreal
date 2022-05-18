@@ -7,19 +7,39 @@ using UnrealBuildTool;
 
 public class DolphinUnreal : ModuleRules
 {
+	private struct IncludePath
+    {
+		public string Path { get; set; }
+
+		public bool IsRecursive { get; set; }
+
+		public IncludePath(string path, bool isRecursive)
+		{
+			this.Path = path;
+			this.IsRecursive = isRecursive;
+		}
+	};
+
 	public DolphinUnreal(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
 
 		LoadLibrary(
 			Target,
+			new IncludePath[]
+			{
+				new IncludePath("ThirdParty/dolphin-api/", false),
+				new IncludePath("ThirdParty/dolphin-api/dolphin-ipc/", false),
+				new IncludePath("ThirdParty/dolphin-api/dolphin-ipc/external/", false),
+				new IncludePath("ThirdParty/dolphin-api/dolphin-ipc/external/cereal", false),
+				new IncludePath("ThirdParty/dolphin-api/dolphin-ipc/external/cpp-ipc/include", false),
+			},
 			new string[]
 			{
-				"ThirdParty/dolphin-api/include/",
-			},
-			"Binaries/ThirdParty/DolphinAPI/Win64/DolphinAPI.lib"
+				"ThirdParty/dolphin-api/dolphin-ipc/external/cpp-ipc/lib/Release/ipc.lib",
+				"ThirdParty/dolphin-api/Build/x64/Release/DolphinIPC.lib",
+			}
 		);
-
 
 		PublicIncludePaths.AddRange(
 			new string[]
@@ -87,17 +107,17 @@ public class DolphinUnreal : ModuleRules
 		throw new Exception(message);
 	}
 
-	private void LoadLibrary(ReadOnlyTargetRules target, string[] includePaths, string libraryPath, bool recursiveSearch = true)
+	private void LoadLibrary(ReadOnlyTargetRules target, IncludePath[] includePaths, string[] libraryPaths)
 	{
-		foreach (string includePath in includePaths)
+		foreach (IncludePath includePath in includePaths)
 		{
-			string fullIncludePath = Path.Combine(PluginPath, includePath).Replace("\\", "/");
+			string fullIncludePath = Path.Combine(PluginPath, includePath.Path).Replace("\\", "/");
 
-			if (recursiveSearch)
+			PublicIncludePaths.Add(fullIncludePath);
+
+			if (includePath.IsRecursive)
 			{
 				string[] subPaths = Directory.GetDirectories(fullIncludePath, "*", SearchOption.AllDirectories);
-
-				PublicIncludePaths.Add(fullIncludePath);
 
 				foreach (string path in subPaths)
 				{
@@ -107,22 +127,25 @@ public class DolphinUnreal : ModuleRules
 		}
 
 		// Get the build path
-		var fullLibraryPath = Path.Combine(PluginPath, libraryPath);
-		if (!File.Exists(fullLibraryPath))
+		foreach (string libraryPath in libraryPaths)
 		{
-			Fail("Invalid build path: " + fullLibraryPath + " (Did you build the 3rdparty module already?)");
-		}
+			var fullLibraryPath = Path.Combine(PluginPath, libraryPath);
+			if (!File.Exists(fullLibraryPath))
+			{
+				Fail("Invalid build path: " + fullLibraryPath + " (Did you build the 3rdparty module already?)");
+			}
 
-		// Found a library; add it to the dependencies list
-		if (fullLibraryPath.EndsWith(".lib"))
-		{
-			PublicAdditionalLibraries.Add(fullLibraryPath);
-		}
-		else
-		{
-			PublicAdditionalLibraries.Add(fullLibraryPath);
-		}
+			// Found a library; add it to the dependencies list
+			if (fullLibraryPath.EndsWith(".lib"))
+			{
+				PublicAdditionalLibraries.Add(fullLibraryPath);
+			}
+			else
+			{
+				PublicAdditionalLibraries.Add(fullLibraryPath);
+			}
 
-		Trace("Added library: {0}", fullLibraryPath);
+			Trace("Added library: {0}", fullLibraryPath);
+		}
 	}
 }

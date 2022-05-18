@@ -1,6 +1,7 @@
 #include "IpcCommandHandler.h"
 
 #include "dolphin-ipc/DolphinIpc.h"
+#include "dolphin-ipc/DolphinIpcInstance.h"
 #include "dolphin-ipc/DolphinIpcInstanceData.h"
 
 DolphinIPC* IpcCommandHandler::_dolphinIPC = nullptr;
