@@ -1,0 +1,126 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Projects\DolphinTAS\Plugins\DolphinUnreal\ThirdParty\dolphin-api\dolphin-ipc\external\cpp-ipc\src\libipc\buffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\DolphinTAS\Plugins\DolphinUnreal\ThirdParty\dolphin-api\dolphin-ipc\external\cpp-ipc\src\libipc\ipc.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\DolphinTAS\Plugins\DolphinUnreal\ThirdParty\dolphin-api\dolphin-ipc\external\cpp-ipc\src\libipc\pool_alloc.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\DolphinTAS\Plugins\DolphinUnreal\ThirdParty\dolphin-api\dolphin-ipc\external\cpp-ipc\src\libipc\shm.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\DolphinTAS\Plugins\DolphinUnreal\ThirdParty\dolphin-api\dolphin-ipc\external\cpp-ipc\src\libipc\sync\condition.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\DolphinTAS\Plugins\DolphinUnreal\ThirdParty\dolphin-api\dolphin-ipc\external\cpp-ipc\src\libipc\sync\mutex.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\DolphinTAS\Plugins\DolphinUnreal\ThirdParty\dolphin-api\dolphin-ipc\external\cpp-ipc\src\libipc\sync\semaphore.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\DolphinTAS\Plugins\DolphinUnreal\ThirdParty\dolphin-api\dolphin-ipc\external\cpp-ipc\src\libipc\platform\platform.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Projects\DolphinTAS\Plugins\DolphinUnreal\ThirdParty\dolphin-api\dolphin-ipc\external\cpp-ipc\src\libipc\platform\platform.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="C:\Projects\DolphinTAS\Plugins\DolphinUnreal\ThirdParty\dolphin-api\dolphin-ipc\external\cpp-ipc\include\libipc\buffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\DolphinTAS\Plugins\DolphinUnreal\ThirdParty\dolphin-api\dolphin-ipc\external\cpp-ipc\include\libipc\condition.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\DolphinTAS\Plugins\DolphinUnreal\ThirdParty\dolphin-api\dolphin-ipc\external\cpp-ipc\include\libipc\def.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\DolphinTAS\Plugins\DolphinUnreal\ThirdParty\dolphin-api\dolphin-ipc\external\cpp-ipc\include\libipc\export.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\DolphinTAS\Plugins\DolphinUnreal\ThirdParty\dolphin-api\dolphin-ipc\external\cpp-ipc\include\libipc\ipc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\DolphinTAS\Plugins\DolphinUnreal\ThirdParty\dolphin-api\dolphin-ipc\external\cpp-ipc\include\libipc\mutex.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\DolphinTAS\Plugins\DolphinUnreal\ThirdParty\dolphin-api\dolphin-ipc\external\cpp-ipc\include\libipc\pool_alloc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\DolphinTAS\Plugins\DolphinUnreal\ThirdParty\dolphin-api\dolphin-ipc\external\cpp-ipc\include\libipc\rw_lock.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\DolphinTAS\Plugins\DolphinUnreal\ThirdParty\dolphin-api\dolphin-ipc\external\cpp-ipc\include\libipc\semaphore.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\DolphinTAS\Plugins\DolphinUnreal\ThirdParty\dolphin-api\dolphin-ipc\external\cpp-ipc\include\libipc\shm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\DolphinTAS\Plugins\DolphinUnreal\ThirdParty\dolphin-api\dolphin-ipc\external\cpp-ipc\src\libipc\circ\elem_array.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\DolphinTAS\Plugins\DolphinUnreal\ThirdParty\dolphin-api\dolphin-ipc\external\cpp-ipc\src\libipc\circ\elem_def.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\DolphinTAS\Plugins\DolphinUnreal\ThirdParty\dolphin-api\dolphin-ipc\external\cpp-ipc\src\libipc\memory\alloc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\DolphinTAS\Plugins\DolphinUnreal\ThirdParty\dolphin-api\dolphin-ipc\external\cpp-ipc\src\libipc\memory\allocator_wrapper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\DolphinTAS\Plugins\DolphinUnreal\ThirdParty\dolphin-api\dolphin-ipc\external\cpp-ipc\src\libipc\memory\resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\DolphinTAS\Plugins\DolphinUnreal\ThirdParty\dolphin-api\dolphin-ipc\external\cpp-ipc\src\libipc\memory\wrapper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\DolphinTAS\Plugins\DolphinUnreal\ThirdParty\dolphin-api\dolphin-ipc\external\cpp-ipc\src\libipc\platform\detail.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\DolphinTAS\Plugins\DolphinUnreal\ThirdParty\dolphin-api\dolphin-ipc\external\cpp-ipc\src\libipc\policy.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\DolphinTAS\Plugins\DolphinUnreal\ThirdParty\dolphin-api\dolphin-ipc\external\cpp-ipc\src\libipc\prod_cons.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\DolphinTAS\Plugins\DolphinUnreal\ThirdParty\dolphin-api\dolphin-ipc\external\cpp-ipc\src\libipc\queue.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\DolphinTAS\Plugins\DolphinUnreal\ThirdParty\dolphin-api\dolphin-ipc\external\cpp-ipc\src\libipc\utility\concept.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\DolphinTAS\Plugins\DolphinUnreal\ThirdParty\dolphin-api\dolphin-ipc\external\cpp-ipc\src\libipc\utility\id_pool.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\DolphinTAS\Plugins\DolphinUnreal\ThirdParty\dolphin-api\dolphin-ipc\external\cpp-ipc\src\libipc\utility\log.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\DolphinTAS\Plugins\DolphinUnreal\ThirdParty\dolphin-api\dolphin-ipc\external\cpp-ipc\src\libipc\utility\pimpl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\DolphinTAS\Plugins\DolphinUnreal\ThirdParty\dolphin-api\dolphin-ipc\external\cpp-ipc\src\libipc\utility\scope_guard.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\DolphinTAS\Plugins\DolphinUnreal\ThirdParty\dolphin-api\dolphin-ipc\external\cpp-ipc\src\libipc\utility\utility.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Projects\DolphinTAS\Plugins\DolphinUnreal\ThirdParty\dolphin-api\dolphin-ipc\external\cpp-ipc\src\libipc\waiter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Projects\DolphinTAS\Plugins\DolphinUnreal\ThirdParty\dolphin-api\dolphin-ipc\external\cpp-ipc\src\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{4B42A810-739E-331A-BC89-86B455DABDDA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{58DF83AB-F721-35A5-9659-637EF8816D6E}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

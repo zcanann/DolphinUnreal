@@ -126,7 +126,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(ProjectDir)/../Externals/cpp-ipc/include/;$(ProjectDir)/external/;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)/external/;$(ProjectDir)/external/cpp-ipc/include/;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -145,7 +145,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(ProjectDir)/../Externals/cpp-ipc/include/;$(ProjectDir)/external/;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)/external/;$(ProjectDir)/external/cpp-ipc/include/;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -249,11 +249,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DolphinIpc.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Externals\cpp-ipc\src\ipc.vcxproj">
-      <Project>{de0ccaa3-dd99-3605-9db5-000262d9d991}</Project>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="external\cereal\external\rapidxml\manual.html" />

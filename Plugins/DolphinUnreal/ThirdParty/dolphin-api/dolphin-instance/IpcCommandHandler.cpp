@@ -1,13 +1,13 @@
 #include "IpcCommandHandler.h"
 
-#include "dolphin-ipc/DolphinIPC.h"
-#include "dolphin-ipc/DolphinIPCInstance.h"
+#include "dolphin-ipc/DolphinIpc.h"
+#include "dolphin-ipc/DolphinIpcInstanceData.h"
 
 DolphinIPC* IpcCommandHandler::_dolphinIPC = nullptr;
 
 IpcCommandHandler::IpcCommandHandler(const std::string& channelId)
 {
-	IpcCommandHandler:_dolphinIPC = new DolphinIPC(channelId);
+	IpcCommandHandler::_dolphinIPC = new DolphinIPC(channelId);
 }
 
 IpcCommandHandler::~IpcCommandHandler()

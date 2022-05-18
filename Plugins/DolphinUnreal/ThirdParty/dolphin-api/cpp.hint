@@ -1,2 +1,0 @@
-#define DOLPHINAPI_API __declspec(dllexport)
-#define DOLPHINAPI_API __declspec(dllimport)

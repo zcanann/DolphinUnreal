@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Projects\DolphinTAS\Plugins\DolphinUnreal\ThirdParty\dolphin-api\dolphin-ipc\external\cpp-ipc\CMakeFiles\cba5b211952245a8283378c8bd6d8696\INSTALL_force.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{D7EA3CCF-92E6-3160-B78D-190848A5318F}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

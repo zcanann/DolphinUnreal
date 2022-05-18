@@ -22,10 +22,10 @@
       <AdditionalLibraryDirectories Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ExternalsDir)FFmpeg-bin\$(Platform)\lib;%(AdditionalLibraryDirectories);$(ProjectDir)/../Externals/cpp-ipc/lib/Release/;</AdditionalLibraryDirectories>
     </Link>
     <ClCompile>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ExternalsDir)zstd\lib;%(AdditionalIncludeDirectories);../;../dolphin-ipc/external;../Externals/;../Externals/cpp-ipc/include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ExternalsDir)zstd\lib;%(AdditionalIncludeDirectories);$(SolutionDir);$(SolutionDir)/dolphin-ipc/external/;$(SolutionDir)/dolphin-ipc/external/cpp-ipc/include/;</AdditionalIncludeDirectories>
     </ClCompile>
     <ClCompile>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ExternalsDir)zstd\lib;%(AdditionalIncludeDirectories);../;../dolphin-ipc/external;../Externals/;../Externals/cpp-ipc/include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ExternalsDir)zstd\lib;%(AdditionalIncludeDirectories);$(SolutionDir);$(SolutionDir)/dolphin-ipc/external/;$(SolutionDir)/dolphin-ipc/external/cpp-ipc/include/;</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <Import Project="$(ExternalsDir)ExternalsReferenceAll.props" />
@@ -59,6 +59,9 @@
   <ItemGroup>
     <ProjectReference Include="..\dolphin-ipc\dolphin-ipc.vcxproj">
       <Project>{92404eec-8f15-4974-b689-82ded9983641}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\dolphin-ipc\external\cpp-ipc\src\ipc.vcxproj">
+      <Project>{de0ccaa3-dd99-3605-9db5-000262d9d991}</Project>
     </ProjectReference>
   </ItemGroup>
   <Target Name="AfterBuild" Inputs="@(SourceFiles)" Outputs="@(SourceFiles -> '$(BinaryOutputDir)%(Filename)%(Extension)')">

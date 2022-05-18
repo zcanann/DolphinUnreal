@@ -1,0 +1,14 @@
+﻿  Building Custom Rule C:/Projects/DolphinTAS/Plugins/DolphinUnreal/ThirdParty/dolphin-api/dolphin-ipc/external/cpp-ipc/src/CMakeLists.txt
+  buffer.cpp
+  ipc.cpp
+C:\Projects\DolphinTAS\Plugins\DolphinUnreal\ThirdParty\dolphin-api\dolphin-ipc\external\cpp-ipc\src\libipc/waiter.h(65,42): warning C4834: discarding return value of function with 'nodiscard' attribute
+C:\Projects\DolphinTAS\Plugins\DolphinUnreal\ThirdParty\dolphin-api\dolphin-ipc\external\cpp-ipc\src\libipc/waiter.h(70,42): warning C4834: discarding return value of function with 'nodiscard' attribute
+  pool_alloc.cpp
+  shm.cpp
+  condition.cpp
+  mutex.cpp
+  semaphore.cpp
+  Generating Code...
+  platform.c
+  platform.cpp
+  ipc.vcxproj -> C:\Projects\DolphinTAS\Plugins\DolphinUnreal\ThirdParty\dolphin-api\dolphin-ipc\external\cpp-ipc\lib\Release\ipc.lib
