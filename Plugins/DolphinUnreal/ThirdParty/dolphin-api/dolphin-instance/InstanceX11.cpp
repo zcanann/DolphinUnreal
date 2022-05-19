@@ -36,7 +36,7 @@ namespace
 class InstanceX11 : public Instance
 {
 public:
-  InstanceX11(const std::string& channelId);
+  InstanceX11(const std::string& instanceId);
   ~InstanceX11() override;
 
   bool Init() override;
@@ -62,7 +62,7 @@ private:
   unsigned int m_window_height = Config::Get(Config::MAIN_RENDER_WINDOW_HEIGHT);
 };
 
-InstanceX11::InstanceX11(const std::string& channelId) : Instance(channelId)
+InstanceX11::InstanceX11(const std::string& instanceId) : Instance(instanceId)
 {
 }
 
@@ -277,7 +277,7 @@ void InstanceX11::ProcessEvents()
 }
 }  // namespace
 
-std::unique_ptr<Instance> Instance::CreateX11Instance(const std::string& channelId)
+std::unique_ptr<Instance> Instance::CreateX11Instance(const std::string& instanceId)
 {
-  return std::make_unique<InstanceX11>(channelId);
+  return std::make_unique<InstanceX11>(instanceId);
 }

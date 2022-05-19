@@ -1,1 +1,1 @@
-"Build/x64/Release/DolphinInstance.exe" "C:/Dolphin/Games/Star Fox Adventures (USA) (v1.00).iso" -p win32
+"Build/x64/Release/DolphinInstance.exe" "C:/Dolphin/Games/Star Fox Adventures (USA) (v1.00).iso" -p win32 -i 1234

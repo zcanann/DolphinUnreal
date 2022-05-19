@@ -14,7 +14,7 @@ class IpcCommandHandler;
 class Instance
 {
 public:
-	Instance(const std::string& channelId);
+	Instance(const std::string& instanceId);
 	virtual ~Instance();
 
 	bool IsRunning() const { return _running.IsSet(); }
@@ -33,17 +33,17 @@ public:
 	// Request an immediate shutdown.
 	void Stop();
 
-	static std::unique_ptr<Instance> CreateHeadlessInstance(const std::string& channelId);
+	static std::unique_ptr<Instance> CreateHeadlessInstance(const std::string& instanceId);
 #ifdef HAVE_X11
-	static std::unique_ptr<Instance> CreateX11Instance(const std::string& channelId);
+	static std::unique_ptr<Instance> CreateX11Instance(const std::string& instanceId);
 #endif
 
 #ifdef __linux__
-	static std::unique_ptr<Instance> CreateFBDevInstance(const std::string& channelId);
+	static std::unique_ptr<Instance> CreateFBDevInstance(const std::string& instanceId);
 #endif
 
 #ifdef _WIN32
-	static std::unique_ptr<Instance> CreateWin32Instance(const std::string& channelId);
+	static std::unique_ptr<Instance> CreateWin32Instance(const std::string& instanceId);
 #endif
 
 protected:

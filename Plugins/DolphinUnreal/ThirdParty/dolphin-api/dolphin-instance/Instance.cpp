@@ -14,9 +14,10 @@ namespace ProcessorInterface
     void PowerButton_Tap();
 }
 
-Instance::Instance(const std::string& channelId)
+Instance::Instance(const std::string& instanceId)
 {
-    _ipcCommandHandler = std::make_shared<IpcCommandHandler>(channelId);
+    _ipcCommandHandler = std::make_shared<IpcCommandHandler>();
+    _ipcCommandHandler->initializeChannels(instanceId);
 
     // Ipc post-connect callback
     DolphinIpcServerData ipcData;

@@ -19,7 +19,7 @@
 class InstanceWin32 : public Instance
 {
 public:
-    InstanceWin32(const std::string& channelId);
+    InstanceWin32(const std::string& instanceId);
     ~InstanceWin32() override;
 
     bool Init() override;
@@ -46,7 +46,7 @@ private:
     int _window_height = Config::Get(Config::MAIN_RENDER_WINDOW_HEIGHT);
 };
 
-InstanceWin32::InstanceWin32(const std::string& channelId) : Instance(channelId)
+InstanceWin32::InstanceWin32(const std::string& instanceId) : Instance(instanceId)
 {
 }
 
@@ -211,7 +211,7 @@ LRESULT InstanceWin32::WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam
     return 0;
 }
 
-std::unique_ptr<Instance> Instance::CreateWin32Instance(const std::string& channelId)
+std::unique_ptr<Instance> Instance::CreateWin32Instance(const std::string& instanceId)
 {
-    return std::make_unique<InstanceWin32>(channelId);
+    return std::make_unique<InstanceWin32>(instanceId);
 }

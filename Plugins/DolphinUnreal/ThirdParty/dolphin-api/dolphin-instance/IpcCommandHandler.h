@@ -7,7 +7,7 @@
 class IpcCommandHandler : public DolphinIpcHandlerBase
 {
 public:
-	IpcCommandHandler(const std::string& channelId);
+	IpcCommandHandler();
 	virtual ~IpcCommandHandler();
 
 private:

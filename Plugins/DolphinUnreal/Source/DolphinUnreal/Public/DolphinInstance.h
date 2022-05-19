@@ -1,6 +1,9 @@
 #pragma once
 
 #include "UObject/Object.h"
+
+#include "dolphin-ipc/DolphinIpcHandlerBase.h"
+
 #include "DolphinInstance.generated.h"
 
 USTRUCT(BlueprintType)
@@ -29,19 +32,19 @@ class DolphinIPC;
 class FMonitoredProcess;
 
 UCLASS(BlueprintType)
-class UDolphinInstance : public UObject
+class UDolphinInstance : public UObject, public DolphinIpcHandlerBase
 {
 	GENERATED_UCLASS_BODY()
 
 public:
 	UFUNCTION()
 	void Initialize(FDolphinGraphicsSettings InGraphicsSettings, FDolphinRuntimeSettings InRuntimeSettings);
-	~UDolphinInstance();
+	virtual ~UDolphinInstance();
 
 private:
+	void LaunchInstance();
 	FString MakeInstanceId() const;
 
 	FString InstanceId;
-	DolphinIPC* DolphinIPCInstance = nullptr;
 	TSharedPtr<FMonitoredProcess> DolphinProcess = nullptr;
 };

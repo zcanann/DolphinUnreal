@@ -135,25 +135,25 @@ std::unique_ptr<GBAHostInterface> Host_CreateGBAHost(std::weak_ptr<HW::GBA::Core
 static std::unique_ptr<Instance> GetInstance(const optparse::Values& options)
 {
     std::string platformName = static_cast<const char*>(options.get("platform"));
-    std::string channelId = std::to_string(getpid());
+    std::string instanceId = static_cast<const char*>(options.get("instanceId"));
 
     #if HAVE_X11
         if (platformName == "x11" || platformName.empty())
-            return Instance::CreateX11Instance(channelId);
+            return Instance::CreateX11Instance(instanceId);
     #endif
 
     #ifdef __linux__
         if (platformName == "fbdev" || platformName.empty())
-            return Instance::CreateFBDevInstance(channelId);
+            return Instance::CreateFBDevInstance(instanceId);
     #endif
 
     #ifdef _WIN32
         if (platformName == "win32" || platformName.empty())
-            return Instance::CreateWin32Instance(channelId);
+            return Instance::CreateWin32Instance(instanceId);
     #endif
 
     if (platformName == "headless" || platformName.empty())
-        return Instance::CreateHeadlessInstance(channelId);
+        return Instance::CreateHeadlessInstance(instanceId);
 
     return nullptr;
 }
@@ -180,6 +180,12 @@ std::unique_ptr<optparse::OptionParser> createParser()
         , "win32"
         #endif
     });
+
+    parser->add_option("-i", "--instanceId")
+        .action("append")
+        .metavar("<id>")
+        .type("string")
+        .help("A unique instance identifier used for creating IPC channels.");
 
     return parser;
 }

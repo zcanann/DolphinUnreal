@@ -28,8 +28,10 @@ typedef ipc::chan<ipc::relat::single, ipc::relat::single, ipc::trans::unicast> I
 class DolphinIpcHandlerBase
 {
 public:
-	DolphinIpcHandlerBase(const std::string& uniqueChannelId);
+	DolphinIpcHandlerBase();
 	virtual ~DolphinIpcHandlerBase();
+
+	void initializeChannels(const std::string& uniqueChannelId);
 
 	void ipcSendToServer(DolphinIpcServerData params);
 	void ipcSendToInstance(DolphinIpcInstanceData params);
@@ -41,25 +43,25 @@ protected:
 
 	// Server implemented functions
 protected:
-	virtual void DolphinServer_OnInstanceConnected(const DolphinParams_OnInstanceConnected& onClientConnectedParams) { NOT_IMPLEMENTED(); }
-	virtual void DolphinServer_OnInstanceTerminated(const DolphinParams_OnInstanceTerminated& onClientTerminatedParams) { NOT_IMPLEMENTED(); }
+	virtual void DolphinServer_OnInstanceConnected(const DolphinParams_OnInstanceConnected& onInstanceConnectedParams) { NOT_IMPLEMENTED(); }
+	virtual void DolphinServer_OnInstanceTerminated(const DolphinParams_OnInstanceTerminated& onInstanceTerminatedParams) { NOT_IMPLEMENTED(); }
 
 private:
 	template<class T>
 	void ipcSendData(IpcChannel* channel, T params);
 	void ipcListen();
 
-	void onClientToServerDataReceived(const DolphinIpcServerData& data);
-	void onServerToClientDataReceived(const DolphinIpcInstanceData& data);
+	void onInstanceToServerDataReceived(const DolphinIpcServerData& data);
+	void onServerToInstanceDataReceived(const DolphinIpcInstanceData& data);
 
 	ipc::byte_t _sharedBuffer[1024 * 16];
 	std::atomic<bool> _exitRequested{ false };
-	IpcChannel* _clientToServer = nullptr;
-	IpcChannel* _serverToClient = nullptr;
+	IpcChannel* _instanceToServer = nullptr;
+	IpcChannel* _serverToInstance = nullptr;
 
-	std::thread _clientListener;
+	std::thread _instanceListener;
 	std::thread _serverListener;
 	
-	static const std::string ChannelNameClientBase;
+	static const std::string ChannelNameInstanceBase;
 	static const std::string ChannelNameServerBase;
 };

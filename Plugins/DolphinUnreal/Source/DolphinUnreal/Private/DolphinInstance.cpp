@@ -5,10 +5,6 @@
 #include "Misc/MonitoredProcess.h"
 #include "Misc/Paths.h"
 
-#include "dolphin-ipc/DolphinIpc.h"
-#include "dolphin-ipc/DolphinIpcServer.h"
-#include "dolphin-ipc/DolphinIpcServerData.h"
-
 // STL
 #include <random>
 #include <string>
@@ -21,27 +17,28 @@ UDolphinInstance::UDolphinInstance(const FObjectInitializer& ObjectInitializer)
 
 void UDolphinInstance::Initialize(FDolphinGraphicsSettings InGraphicsSettings, FDolphinRuntimeSettings InRuntimeSettings)
 {
-    static FString ContentDirectory = FPaths::ConvertRelativePathToFull(IPluginManager::Get().FindPlugin(TEXT("DolphinUnreal"))->GetContentDir());
-    InstanceId = MakeInstanceId();
-	DolphinIPCInstance = new DolphinIPC(TCHAR_TO_UTF8(*InstanceId));
+    LaunchInstance();
+}
 
+UDolphinInstance::~UDolphinInstance()
+{
+}
+
+void UDolphinInstance::LaunchInstance()
+{
+    static FString ContentDirectory = FPaths::ConvertRelativePathToFull(IPluginManager::Get().FindPlugin(TEXT("DolphinUnreal"))->GetContentDir());
+
+    InstanceId = MakeInstanceId();
     FString DolphinPath = FPaths::Combine(ContentDirectory, TEXT("DolphinInstance.exe"));
     FString GamePath = TEXT("C:/Dolphin/Games/Star Fox Adventures (USA) (v1.00).iso");
-    FString Params = FString::Format(TEXT("\"{0}\" -p win32"), { GamePath, InstanceId });
+    FString Params = FString::Format(TEXT("\"{0}\" -p win32 -i {1}"), { GamePath, InstanceId });
     bool bLaunchHidden = false;
     bool bCreatePipes = true;
 
     DolphinProcess = TSharedPtr<FMonitoredProcess>(new FMonitoredProcess(DolphinPath, Params, bLaunchHidden, bCreatePipes));
     DolphinProcess->Launch();
-}
 
-UDolphinInstance::~UDolphinInstance()
-{
-	if (DolphinIPCInstance != nullptr)
-	{
-		delete(DolphinIPCInstance);
-		DolphinIPCInstance = nullptr;
-	}
+    initializeChannels(std::string(TCHAR_TO_UTF8(*InstanceId)));
 }
 
 FString UDolphinInstance::MakeInstanceId() const
@@ -67,9 +64,4 @@ FString UDolphinInstance::MakeInstanceId() const
         Result += Chars[dist(Rand)];
     }
     return Result;
-}
-
-void DolphinServer_OnClientTerminated(const std::string& param)
-{
-
 }

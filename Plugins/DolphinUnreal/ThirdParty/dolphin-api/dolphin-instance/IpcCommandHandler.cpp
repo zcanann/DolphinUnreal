@@ -2,7 +2,7 @@
 
 #include "dolphin-ipc/DolphinIpcInstanceData.h"
 
-IpcCommandHandler::IpcCommandHandler(const std::string& channelId) : DolphinIpcHandlerBase(channelId)
+IpcCommandHandler::IpcCommandHandler() : DolphinIpcHandlerBase()
 {
 }
 
