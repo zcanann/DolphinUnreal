@@ -32,13 +32,47 @@ void UDolphinInstance::LaunchInstance()
     FString DolphinPath = FPaths::Combine(ContentDirectory, TEXT("DolphinInstance.exe"));
     FString GamePath = TEXT("C:/Dolphin/Games/Star Fox Adventures (USA) (v1.00).iso");
     FString Params = FString::Format(TEXT("\"{0}\" -p win32 -i {1}"), { GamePath, InstanceId });
+
     bool bLaunchHidden = false;
     bool bCreatePipes = true;
+
+    initializeChannels(std::string(TCHAR_TO_UTF8(*InstanceId)));
 
     DolphinProcess = TSharedPtr<FMonitoredProcess>(new FMonitoredProcess(DolphinPath, Params, bLaunchHidden, bCreatePipes));
     DolphinProcess->Launch();
 
-    initializeChannels(std::string(TCHAR_TO_UTF8(*InstanceId)));
+    /*
+    bool bLaunchDetached = true;
+    bool bLaunchHidden = false;
+    bool bLaunchReallyHidden = false;
+
+    uint32 OutProcessID = 0;
+    uint32 PriorityModifier = 0;
+    FString OptionalWorkingDirectory;
+
+    DolphinProcHandle = FPlatformProcess::CreateProc(
+        *DolphinPath,
+        *Params,
+        bLaunchDetached,
+        bLaunchHidden,
+        bLaunchReallyHidden,
+        &OutProcessID,
+        PriorityModifier,
+        (OptionalWorkingDirectory != "") ? *OptionalWorkingDirectory : nullptr,
+        nullptr,
+        nullptr
+    );
+    */
+}
+
+void UDolphinInstance::DolphinServer_OnInstanceConnected(const DolphinParams_OnInstanceConnected& onInstanceConnectedParams)
+{
+    int debug = 5;
+}
+
+void UDolphinInstance::DolphinServer_OnInstanceTerminated(const DolphinParams_OnInstanceTerminated& onInstanceTerminatedParams)
+{
+    int debug = 5;
 }
 
 FString UDolphinInstance::MakeInstanceId() const

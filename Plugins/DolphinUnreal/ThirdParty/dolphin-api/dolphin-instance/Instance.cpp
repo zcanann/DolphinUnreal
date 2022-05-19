@@ -20,10 +20,12 @@ Instance::Instance(const std::string& instanceId)
     _ipcCommandHandler->initializeChannels(instanceId);
 
     // Ipc post-connect callback
+    /*
     DolphinIpcServerData ipcData;
     auto data = std::shared_ptr<DolphinParams_OnInstanceConnected>(new DolphinParams_OnInstanceConnected());
     ipcData._params._onInstanceConnectedParams = data.get();
     _ipcCommandHandler->ipcSendToServer(ipcData);
+    */
 }
 
 Instance::~Instance()

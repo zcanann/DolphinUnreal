@@ -44,7 +44,7 @@ void DolphinIpcHandlerBase::initializeChannels(const std::string& uniqueChannelI
     _instanceToServer = new IpcChannel(uniqueInstanceChannel.c_str());
     _serverToInstance = new IpcChannel(uniqueServerChannel.c_str());
 
-    ipcListen();
+    // ipcListen();
 }
 
 void DolphinIpcHandlerBase::ipcSendToInstance(DolphinIpcInstanceData params)
@@ -101,21 +101,19 @@ void DolphinIpcHandlerBase::ipcListen()
             {
                 while (!_exitRequested.load(std::memory_order_acquire))
                 {
-                    ipc::buff_t rawData = _instanceToServer->recv();
+                    ipc::buff_t rawData = _instanceToServer->try_recv();
 
-                    if (rawData.empty())
+                    if (!rawData.empty())
                     {
-                        break;
+                        MemoryStream memoryStream = MemoryStream((char*)&rawData, rawData.size());
+                        std::istream in(&memoryStream);
+                        cereal::BinaryInputArchive archive(in);
+                        DolphinIpcInstanceData data;
+
+                        archive(data);
+
+                        onServerToInstanceDataReceived(data);
                     }
-
-                    MemoryStream memoryStream = MemoryStream((char*)&rawData, rawData.size());
-                    std::istream in(&memoryStream);
-                    cereal::BinaryInputArchive archive(in);
-                    DolphinIpcInstanceData data;
-
-                    archive(data);
-
-                    onServerToInstanceDataReceived(data);
                 }
             }
             else
@@ -134,21 +132,19 @@ void DolphinIpcHandlerBase::ipcListen()
             {
                 while (!_exitRequested.load(std::memory_order_acquire))
                 {
-                    ipc::buff_t rawData = _instanceToServer->recv();
+                    ipc::buff_t rawData = _instanceToServer->try_recv();
 
-                    if (rawData.empty())
+                    if (!rawData.empty())
                     {
-                        break;
+                        MemoryStream memoryStream = MemoryStream((char*)&rawData, rawData.size());
+                        std::istream in(&memoryStream);
+                        cereal::BinaryInputArchive archive(in);
+                        DolphinIpcServerData data;
+
+                        archive(data);
+
+                        onInstanceToServerDataReceived(data);
                     }
-
-                    MemoryStream memoryStream = MemoryStream((char*)&rawData, rawData.size());
-                    std::istream in(&memoryStream);
-                    cereal::BinaryInputArchive archive(in);
-                    DolphinIpcServerData data;
-
-                    archive(data);
-
-                    onInstanceToServerDataReceived(data);
                 }
             }
             else
@@ -158,6 +154,9 @@ void DolphinIpcHandlerBase::ipcListen()
             std::cout << __func__ << ": server to client quit...\n";
         }
     };
+
+    _instanceListener.detach();
+    _serverListener.detach();
 }
 
 void DolphinIpcHandlerBase::onInstanceToServerDataReceived(const DolphinIpcServerData& data)
@@ -174,8 +173,8 @@ void DolphinIpcHandlerBase::onServerToInstanceDataReceived(const DolphinIpcInsta
 {
     switch (data._call)
     {
-    case DolphinInstanceIpcCall::DolphinInstance_Connect: DolphinInstance_Connect(*data._params._connectParams); break;
-    case DolphinInstanceIpcCall::DolphinInstance_LoadGame: DolphinInstance_LoadGame(*data._params._loadGameParams); break;
-    case DolphinInstanceIpcCall::Null: default: break;
+        case DolphinInstanceIpcCall::DolphinInstance_Connect: DolphinInstance_Connect(*data._params._connectParams); break;
+        case DolphinInstanceIpcCall::DolphinInstance_LoadGame: DolphinInstance_LoadGame(*data._params._loadGameParams); break;
+        case DolphinInstanceIpcCall::Null: default: break;
     }
 }

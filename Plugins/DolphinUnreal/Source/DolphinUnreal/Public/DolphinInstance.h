@@ -28,8 +28,8 @@ public:
 	float Speed = 1.0f;
 };
 
-class DolphinIPC;
 class FMonitoredProcess;
+struct FProcHandle;
 
 UCLASS(BlueprintType)
 class UDolphinInstance : public UObject, public DolphinIpcHandlerBase
@@ -41,10 +41,15 @@ public:
 	void Initialize(FDolphinGraphicsSettings InGraphicsSettings, FDolphinRuntimeSettings InRuntimeSettings);
 	virtual ~UDolphinInstance();
 
+protected:
+	virtual void DolphinServer_OnInstanceConnected(const DolphinParams_OnInstanceConnected& onInstanceConnectedParams) override;
+	virtual void DolphinServer_OnInstanceTerminated(const DolphinParams_OnInstanceTerminated& onInstanceTerminatedParams) override;
+
 private:
 	void LaunchInstance();
 	FString MakeInstanceId() const;
 
 	FString InstanceId;
 	TSharedPtr<FMonitoredProcess> DolphinProcess = nullptr;
+	FProcHandle DolphinProcHandle;
 };
