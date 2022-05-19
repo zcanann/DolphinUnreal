@@ -3,6 +3,10 @@
 
 #pragma comment(lib, "ipc.lib")
 
+// Compile fix for debug mode
+#undef FMT_USE_NONTYPE_TEMPLATE_PARAMETERS
+#define FMT_USE_NONTYPE_TEMPLATE_PARAMETERS 0
+
 #include "Instance.h"
 
 #include <OptionParser.h>
@@ -131,7 +135,7 @@ std::unique_ptr<GBAHostInterface> Host_CreateGBAHost(std::weak_ptr<HW::GBA::Core
 static std::unique_ptr<Instance> GetInstance(const optparse::Values& options)
 {
     std::string platformName = static_cast<const char*>(options.get("platform"));
-    std::string channelId = static_cast<const char*>(options.get("channelId"));
+    std::string channelId = std::to_string(getpid());
 
     #if HAVE_X11
         if (platformName == "x11" || platformName.empty())
@@ -185,12 +189,6 @@ int main(int argc, char* argv[])
     std::unique_ptr<optparse::OptionParser> parser = createParser();
     optparse::Values& options = CommandLineParse::ParseArguments(parser.get(), argc, argv);
     std::vector<std::string> args = parser->args();
-
-    std::optional<std::string> channelId;
-    if (options.is_set("channelId"))
-    {
-        channelId = static_cast<const char*>(options.get("channelId"));
-    }
 
     std::optional<std::string> save_state_path;
     if (options.is_set("save_state"))

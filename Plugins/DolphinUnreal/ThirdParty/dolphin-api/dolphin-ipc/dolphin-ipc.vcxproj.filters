@@ -15,13 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="DolphinIpc.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DolphinIpcInstance.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DolphinIpcServer.h">
+    <ClInclude Include="DolphinIpcHandlerBase.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="external\cereal\archives\adapters.hpp">
@@ -287,7 +281,7 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="DolphinIpc.cpp">
+    <ClCompile Include="DolphinIpcHandlerBase.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

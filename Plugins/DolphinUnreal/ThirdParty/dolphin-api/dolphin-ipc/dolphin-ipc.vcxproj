@@ -43,7 +43,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
@@ -158,10 +158,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="DolphinIpcInstance.h" />
-    <ClInclude Include="DolphinIpc.h" />
+    <ClInclude Include="DolphinIpcHandlerBase.h" />
     <ClInclude Include="DolphinIpcInstanceData.h" />
-    <ClInclude Include="DolphinIpcServer.h" />
     <ClInclude Include="DolphinIpcServerData.h" />
     <ClInclude Include="external\cereal\access.hpp" />
     <ClInclude Include="external\cereal\archives\adapters.hpp" />
@@ -250,7 +248,7 @@
     <ClInclude Include="external\cereal\version.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="DolphinIpc.cpp" />
+    <ClCompile Include="DolphinIpcHandlerBase.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="external\cereal\external\rapidxml\manual.html" />

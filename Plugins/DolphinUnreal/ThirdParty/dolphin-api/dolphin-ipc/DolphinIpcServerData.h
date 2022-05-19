@@ -8,11 +8,11 @@
 enum class DolphinServerIpcCall
 {
 	Null,
-	DolphinServer_OnClientConnected,
-	DolphinServer_OnClientTerminated,
+	DolphinServer_OnInstanceConnected,
+	DolphinServer_OnInstanceTerminated,
 };
 
-struct DolphinServer_OnClientConnected
+struct DolphinParams_OnInstanceConnected
 {
 	std::string _params;
 
@@ -28,7 +28,7 @@ struct DolphinServer_OnClientConnected
 	}
 };
 
-struct DolphinServer_OnClientTerminated
+struct DolphinParams_OnInstanceTerminated
 {
 	std::string _params;
 
@@ -50,8 +50,8 @@ struct DolphinIpcServerData
 
 	union
 	{
-		DolphinServer_OnClientConnected* _onClientConnectedParams;;
-		DolphinServer_OnClientTerminated* _onClientTerminatedParams;
+		DolphinParams_OnInstanceConnected* _onInstanceConnectedParams;
+		DolphinParams_OnInstanceTerminated* _onInstanceTerminatedParams;
 	} _params;
 
 	template <class Archive>
@@ -59,8 +59,8 @@ struct DolphinIpcServerData
 	{
 		switch (_call)
 		{
-			case DolphinServerIpcCall::DolphinServer_OnClientConnected: ar(_call, *_params._onClientConnectedParams); break;
-			case DolphinServerIpcCall::DolphinServer_OnClientTerminated: ar(_call, *_params._onClientTerminatedParams); break;
+			case DolphinServerIpcCall::DolphinServer_OnInstanceConnected: ar(_call, *_params._onInstanceConnectedParams); break;
+			case DolphinServerIpcCall::DolphinServer_OnInstanceTerminated: ar(_call, *_params._onInstanceTerminatedParams); break;
 			case DolphinServerIpcCall::Null: default: break;
 		}
 	}
@@ -72,19 +72,19 @@ struct DolphinIpcServerData
 
 		switch (_call)
 		{
-			case DolphinServerIpcCall::DolphinServer_OnClientConnected:
+			case DolphinServerIpcCall::DolphinServer_OnInstanceConnected:
 			{
-				_params._onClientConnectedParams = new DolphinServer_OnClientConnected();
-				ar(*(_params._onClientConnectedParams));
+				_params._onInstanceConnectedParams = new DolphinParams_OnInstanceConnected();
+				ar(*(_params._onInstanceConnectedParams));
 				break;
 			}
-			case DolphinServerIpcCall::DolphinServer_OnClientTerminated:
+			case DolphinServerIpcCall::DolphinServer_OnInstanceTerminated:
 			{
-				_params._onClientTerminatedParams = new DolphinServer_OnClientTerminated();
-				ar(*(_params._onClientTerminatedParams));
+				_params._onInstanceTerminatedParams = new DolphinParams_OnInstanceTerminated();
+				ar(*(_params._onInstanceTerminatedParams));
 				break;
 			}
-			case DolphinServerIpcCall::NONE: default: break;
+			case DolphinServerIpcCall::Null: default: break;
 		}
 	}
 };

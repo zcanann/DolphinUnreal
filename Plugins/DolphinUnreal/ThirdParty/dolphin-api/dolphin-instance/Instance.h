@@ -49,7 +49,7 @@ public:
 protected:
 	void UpdateRunningFlag();
 
-	IpcCommandHandler* _ipcCommandHandler = nullptr;
+	std::shared_ptr<IpcCommandHandler> _ipcCommandHandler = nullptr;
 
 	Common::Flag _running{true};
 	Common::Flag _shutdown_requested{false};

@@ -26,9 +26,14 @@
       <SubSystem>Console</SubSystem>
       <AdditionalLibraryDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ExternalsDir)FFmpeg-bin\$(Platform)\lib;%(AdditionalLibraryDirectories);$(ProjectDir)/../Externals/cpp-ipc/lib/Release/;</AdditionalLibraryDirectories>
       <AdditionalLibraryDirectories Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ExternalsDir)FFmpeg-bin\$(Platform)\lib;%(AdditionalLibraryDirectories);$(ProjectDir)/../Externals/cpp-ipc/lib/Release/;</AdditionalLibraryDirectories>
+      <EnableCOMDATFolding Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </EnableCOMDATFolding>
     </Link>
     <ClCompile>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ExternalsDir)zstd\lib;%(AdditionalIncludeDirectories);$(SolutionDir);$(SolutionDir)/dolphin-ipc/external/;$(SolutionDir)/dolphin-ipc/external/cpp-ipc/include/;</AdditionalIncludeDirectories>
+      <DebugInformationFormat Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">ProgramDatabase</DebugInformationFormat>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ExternalsDir)zstd\lib;%(AdditionalIncludeDirectories);$(SolutionDir);$(SolutionDir)/dolphin-ipc/external/;$(SolutionDir)/dolphin-ipc/external/cpp-ipc/include/;</AdditionalIncludeDirectories>

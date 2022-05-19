@@ -23,11 +23,11 @@ void UDolphinInstance::Initialize(FDolphinGraphicsSettings InGraphicsSettings, F
 {
     static FString ContentDirectory = FPaths::ConvertRelativePathToFull(IPluginManager::Get().FindPlugin(TEXT("DolphinUnreal"))->GetContentDir());
     InstanceId = MakeInstanceId();
-	// DolphinIPCInstance = new DolphinIPC(TCHAR_TO_UTF8(*InstanceId));
+	DolphinIPCInstance = new DolphinIPC(TCHAR_TO_UTF8(*InstanceId));
 
     FString DolphinPath = FPaths::Combine(ContentDirectory, TEXT("DolphinInstance.exe"));
     FString GamePath = TEXT("C:/Dolphin/Games/Star Fox Adventures (USA) (v1.00).iso");
-    FString Params = FString::Format(TEXT("\"{0}\" -p win32 channelId={1}"), { GamePath, InstanceId });
+    FString Params = FString::Format(TEXT("\"{0}\" -p win32"), { GamePath, InstanceId });
     bool bLaunchHidden = false;
     bool bCreatePipes = true;
 

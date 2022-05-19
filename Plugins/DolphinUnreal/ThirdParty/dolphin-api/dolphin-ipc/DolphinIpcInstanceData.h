@@ -76,11 +76,11 @@ struct DolphinIpcInstanceData
 				_params._connectParams = new DolphinParams_Connect();
 				ar(*(_params._connectParams));
 				break;
-			case DolphinInstanceIpcCall::INT_KEY_MAP:
+			case DolphinInstanceIpcCall::DolphinInstance_LoadGame:
 				_params._loadGameParams = new DolphinParams_LoadGame();
 				ar(*(_params._loadGameParams));
 				break;
-			case DolphinInstanceIpcCall::NONE: default: break;
+			case DolphinInstanceIpcCall::Null: default: break;
 		}
 	}
 };

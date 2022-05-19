@@ -1,35 +1,21 @@
 #include "IpcCommandHandler.h"
 
-#include "dolphin-ipc/DolphinIpc.h"
-#include "dolphin-ipc/DolphinIpcInstance.h"
 #include "dolphin-ipc/DolphinIpcInstanceData.h"
 
-DolphinIPC* IpcCommandHandler::_dolphinIPC = nullptr;
-
-IpcCommandHandler::IpcCommandHandler(const std::string& channelId)
+IpcCommandHandler::IpcCommandHandler(const std::string& channelId) : DolphinIpcHandlerBase(channelId)
 {
-	IpcCommandHandler::_dolphinIPC = new DolphinIPC(channelId);
 }
 
 IpcCommandHandler::~IpcCommandHandler()
 {
-	if (_dolphinIPC != nullptr)
-	{
-		delete(_dolphinIPC);
-		_dolphinIPC = nullptr;
-	}
 }
 
-void DolphinInstance_Connect(const DolphinParams_Connect& connectParams)
+void IpcCommandHandler::DolphinInstance_Connect(const DolphinParams_Connect& connectParams)
 {
-	// Ipc post-connect callback
-	DolphinIpcServerData ipcData;
-	auto data = std::shared_ptr<DolphinServer_OnClientConnected>(new DolphinServer_OnClientConnected());
-	ipcData._params._onClientConnectedParams = data.get();
-	IpcCommandHandler::_dolphinIPC->ipcSendToServer(ipcData);
+
 }
 
-void DolphinInstance_LoadGame(const DolphinParams_LoadGame& loadGameParams)
+void IpcCommandHandler::DolphinInstance_LoadGame(const DolphinParams_LoadGame& loadGameParams)
 {
 
 }

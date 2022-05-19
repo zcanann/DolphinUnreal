@@ -16,15 +16,17 @@ namespace ProcessorInterface
 
 Instance::Instance(const std::string& channelId)
 {
-    // _ipcCommandHandler = new IpcCommandHandler(channelId);
+    _ipcCommandHandler = std::make_shared<IpcCommandHandler>(channelId);
+
+    // Ipc post-connect callback
+    DolphinIpcServerData ipcData;
+    auto data = std::shared_ptr<DolphinParams_OnInstanceConnected>(new DolphinParams_OnInstanceConnected());
+    ipcData._params._onInstanceConnectedParams = data.get();
+    _ipcCommandHandler->ipcSendToServer(ipcData);
 }
 
 Instance::~Instance()
 {
-    if (_ipcCommandHandler != nullptr)
-    {
-        delete(_ipcCommandHandler);
-    }
 }
 
 bool Instance::Init()
