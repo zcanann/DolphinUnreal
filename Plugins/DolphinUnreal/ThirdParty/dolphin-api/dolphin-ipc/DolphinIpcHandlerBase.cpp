@@ -57,18 +57,18 @@ void DolphinIpcHandlerBase::initializeChannels(const std::string& uniqueChannelI
     }
 }
 
-void DolphinIpcHandlerBase::ipcSendToInstance(DolphinIpcToInstanceData data)
+void DolphinIpcHandlerBase::ipcSendToInstance(const DolphinIpcToInstanceData& data)
 {
     ipcSendData(_serverToInstance, data);
 }
 
-void DolphinIpcHandlerBase::ipcSendToServer(DolphinIpcToServerData data)
+void DolphinIpcHandlerBase::ipcSendToServer(const DolphinIpcToServerData& data)
 {
     ipcSendData(_instanceToServer, data);
 }
 
 template<class T>
-void DolphinIpcHandlerBase::ipcSendData(ipc::channel* channel, T data)
+void DolphinIpcHandlerBase::ipcSendData(ipc::channel* channel, const T& data)
 {
     if (channel != nullptr)
     {

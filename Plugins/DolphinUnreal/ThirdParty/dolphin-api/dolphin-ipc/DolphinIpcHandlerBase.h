@@ -29,8 +29,8 @@ public:
 	void initializeChannels(const std::string& uniqueChannelId, bool isInstance);
 
 	void updateIpcListen();
-	void ipcSendToServer(DolphinIpcToServerData data);
-	void ipcSendToInstance(DolphinIpcToInstanceData data);
+	void ipcSendToServer(const DolphinIpcToServerData& data);
+	void ipcSendToInstance(const DolphinIpcToInstanceData& data);
 
 	// Instance implemented functions
 protected:
@@ -45,7 +45,7 @@ protected:
 
 private:
 	template<class T>
-	void ipcSendData(ipc::channel* channel, T params);
+	void ipcSendData(ipc::channel* channel, const T& params);
 
 
 	template<class T>

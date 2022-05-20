@@ -27,6 +27,10 @@ public:
 	virtual void SetTitle(const std::string& title);
 	virtual void MainLoop() = 0;
 
+	void InitControllers();
+	void ShutdownControllers();
+	void PrepareForTASInput();
+
 	virtual WindowSystemInfo GetWindowSystemInfo() const = 0;
 
 	// Requests a graceful shutdown, from SIGINT/SIGTERM.

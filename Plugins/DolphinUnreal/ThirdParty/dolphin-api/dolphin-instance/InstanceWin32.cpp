@@ -120,7 +120,7 @@ bool InstanceWin32::Init()
     }
 
     UpdateWindowPosition();
-    return true;
+    return Instance::Init();
 }
 
 void InstanceWin32::SetTitle(const std::string& string)
