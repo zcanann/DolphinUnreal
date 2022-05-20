@@ -9,8 +9,8 @@
 #include "cereal/types/memory.hpp"
 #include "cereal/archives/binary.hpp"
 
-const std::string DolphinIpcHandlerBase::ChannelNameInstanceBase = "dol-i2s-";
-const std::string DolphinIpcHandlerBase::ChannelNameServerBase = "dol-s2i-";
+const std::string DolphinIpcHandlerBase::ChannelNameInstanceToServerBase = "dol-i2s-";
+const std::string DolphinIpcHandlerBase::ChannelNameServerToInstanceBase = "dol-s2i-";
 
 DolphinIpcHandlerBase::DolphinIpcHandlerBase()
 {
@@ -18,31 +18,46 @@ DolphinIpcHandlerBase::DolphinIpcHandlerBase()
 
 DolphinIpcHandlerBase::~DolphinIpcHandlerBase()
 {
-    delete(_instanceToServer);
-    delete(_serverToInstance);
-    _instanceToServer = nullptr;
-    _serverToInstance = nullptr;
+    if (_instanceToServer)
+    {
+        delete(_instanceToServer);
+        _instanceToServer = nullptr;
+    }
+
+    if (_serverToInstance)
+    {
+        delete(_serverToInstance);
+        _serverToInstance = nullptr;
+    }
 }
 
 void DolphinIpcHandlerBase::initializeChannels(const std::string& uniqueChannelId, bool isInstance)
 {
-    std::string uniqueInstanceChannel = ChannelNameInstanceBase + uniqueChannelId;
-    std::string uniqueServerChannel = ChannelNameServerBase + uniqueChannelId;
+    std::string uniqueInstanceToServerChannel = ChannelNameInstanceToServerBase + uniqueChannelId;
+    std::string uniqueServerToInstanceChannel = ChannelNameServerToInstanceBase + uniqueChannelId;
     _isInstance = isInstance;
 
-    std::cout << __func__ << ": instance channel: " << uniqueInstanceChannel << std::endl;
-    std::cout << __func__ << ": server channel: " << uniqueServerChannel << std::endl;
+    std::cout << __func__ << ": instance channel: " << uniqueInstanceToServerChannel << std::endl;
+    std::cout << __func__ << ": server channel: " << uniqueServerToInstanceChannel << std::endl;
 
-    _instanceToServer = new ipc::channel(uniqueInstanceChannel.c_str(), ipc::sender | ipc::receiver); // isInstance ? ipc::sender : ipc::receiver);
-    _serverToInstance = new ipc::channel(uniqueInstanceChannel.c_str(), ipc::sender | ipc::receiver); // isInstance ? ipc::receiver : ipc::sender);
+    if (isInstance)
+    {
+        _instanceToServer = new ipc::channel(uniqueInstanceToServerChannel.c_str(), ipc::sender);
+        _serverToInstance = new ipc::channel(uniqueServerToInstanceChannel.c_str(), ipc::receiver);
+    }
+    else
+    {
+        _instanceToServer = new ipc::channel(uniqueInstanceToServerChannel.c_str(), ipc::receiver);
+        _serverToInstance = new ipc::channel(uniqueServerToInstanceChannel.c_str(), ipc::sender);
+    }
 }
 
-void DolphinIpcHandlerBase::ipcSendToInstance(DolphinIpcInstanceData data)
+void DolphinIpcHandlerBase::ipcSendToInstance(DolphinIpcToInstanceData data)
 {
     ipcSendData(_serverToInstance, data);
 }
 
-void DolphinIpcHandlerBase::ipcSendToServer(DolphinIpcServerData data)
+void DolphinIpcHandlerBase::ipcSendToServer(DolphinIpcToServerData data)
 {
     ipcSendData(_instanceToServer, data);
 }
@@ -69,55 +84,45 @@ void DolphinIpcHandlerBase::ipcSendData(ipc::channel* channel, T data)
     }
 }
 
-void DolphinIpcHandlerBase::updateIpcListen()
+template<class T>
+void DolphinIpcHandlerBase::ipcReadData(ipc::channel* channel, std::function<void(const T&)> onDeserialize)
 {
-    // if (_isInstance)
+    if (channel == nullptr)
     {
-        if (_serverToInstance)
-        {
-            ipc::buff_t rawData = _serverToInstance->try_recv();
-
-            if (!rawData.empty())
-            {
-                std::cout << __func__ << ": recv " << rawData.size() << " bytes" << std::endl;
-
-                DolphinIpcServerData data;
-                std::stringstream memoryStream(std::ios::binary | std::ios::out | std::ios::in);
-                cereal::BinaryOutputArchive bufferToMemoryStream = { memoryStream };
-                bufferToMemoryStream(cereal::binary_data(rawData.data(), rawData.size()));
-                cereal::BinaryInputArchive deserializer(memoryStream);
-                deserializer(data);
-
-                onInstanceToServerDataReceived(data);
-
-            }
-        }
+        return;
     }
-    // else
+
+    ipc::buff_t rawData = channel->try_recv();
+
+    while (!rawData.empty())
     {
-        if (_instanceToServer)
-        {
-            ipc::buff_t rawData = _instanceToServer->try_recv();
+        std::cout << __func__ << ": recv " << rawData.size() << " bytes" << std::endl;
 
-            if (!rawData.empty())
-            {
-                std::cout << __func__ << ": recv " << rawData.size() << " bytes" << std::endl;
+        T data;
+        std::stringstream memoryStream(std::ios::binary | std::ios::out | std::ios::in);
+        cereal::BinaryOutputArchive bufferToMemoryStream = { memoryStream };
+        bufferToMemoryStream(cereal::binary_data(rawData.data(), rawData.size()));
+        cereal::BinaryInputArchive deserializer(memoryStream);
+        deserializer(data);
+        onDeserialize(data);
 
-                /*
-                MemoryStream memoryStream = MemoryStream((char*)&rawData, rawData.size());
-                std::istream in(&memoryStream);
-                cereal::BinaryInputArchive iarchive(in);
-                DolphinIpcInstanceData data;
-
-                iarchive(data);
-
-                onServerToInstanceDataReceived(data);*/
-            }
-        }
+        rawData = channel->try_recv();
     }
 }
 
-void DolphinIpcHandlerBase::onInstanceToServerDataReceived(const DolphinIpcServerData& data)
+void DolphinIpcHandlerBase::updateIpcListen()
+{
+    if (_isInstance)
+    {
+        ipcReadData<DolphinIpcToInstanceData>(_serverToInstance, [=](const DolphinIpcToInstanceData& data) { onServerToInstanceDataReceived(data); });
+    }
+    else
+    {
+        ipcReadData<DolphinIpcToServerData>(_instanceToServer, [=](const DolphinIpcToServerData& data) { onInstanceToServerDataReceived(data); });
+    }
+}
+
+void DolphinIpcHandlerBase::onInstanceToServerDataReceived(const DolphinIpcToServerData& data)
 {
     switch (data._call)
     {
@@ -127,7 +132,7 @@ void DolphinIpcHandlerBase::onInstanceToServerDataReceived(const DolphinIpcServe
     }
 }
 
-void DolphinIpcHandlerBase::onServerToInstanceDataReceived(const DolphinIpcInstanceData& data)
+void DolphinIpcHandlerBase::onServerToInstanceDataReceived(const DolphinIpcToInstanceData& data)
 {
     switch (data._call)
     {

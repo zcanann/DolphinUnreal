@@ -12,7 +12,7 @@ enum class DolphinServerIpcCall
 	DolphinServer_OnInstanceTerminated,
 };
 
-struct DolphinParams_OnInstanceConnected
+struct ToServerParams_OnInstanceConnected
 {
 	std::string _params;
 
@@ -28,7 +28,7 @@ struct DolphinParams_OnInstanceConnected
 	}
 };
 
-struct DolphinParams_OnInstanceTerminated
+struct ToServerParams_OnInstanceTerminated
 {
 	std::string _params1;
 	std::string _params2;
@@ -47,14 +47,14 @@ struct DolphinParams_OnInstanceTerminated
 	}
 };
 
-struct DolphinIpcServerData
+struct DolphinIpcToServerData
 {
 	DolphinServerIpcCall _call = DolphinServerIpcCall::Null;
 
 	union
 	{
-		DolphinParams_OnInstanceConnected* _onInstanceConnectedParams;
-		DolphinParams_OnInstanceTerminated* _onInstanceTerminatedParams;
+		ToServerParams_OnInstanceConnected* _onInstanceConnectedParams;
+		ToServerParams_OnInstanceTerminated* _onInstanceTerminatedParams;
 	} _params;
 
 	template <class Archive>
@@ -79,13 +79,13 @@ struct DolphinIpcServerData
 		{
 			case DolphinServerIpcCall::DolphinServer_OnInstanceConnected:
 			{
-				_params._onInstanceConnectedParams = new DolphinParams_OnInstanceConnected();
+				_params._onInstanceConnectedParams = new ToServerParams_OnInstanceConnected();
 				ar(*(_params._onInstanceConnectedParams));
 				break;
 			}
 			case DolphinServerIpcCall::DolphinServer_OnInstanceTerminated:
 			{
-				_params._onInstanceTerminatedParams = new DolphinParams_OnInstanceTerminated();
+				_params._onInstanceTerminatedParams = new ToServerParams_OnInstanceTerminated();
 				ar(*(_params._onInstanceTerminatedParams));
 				break;
 			}

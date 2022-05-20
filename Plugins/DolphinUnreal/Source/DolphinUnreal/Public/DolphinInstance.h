@@ -32,7 +32,7 @@ class FMonitoredProcess;
 struct FProcHandle;
 
 UCLASS(BlueprintType)
-class UDolphinInstance : public UObject, public DolphinIpcHandlerBase
+class UDolphinInstance : public UObject, public DolphinIpcHandlerBase, public FTickableGameObject
 {
 	GENERATED_UCLASS_BODY()
 
@@ -41,9 +41,15 @@ public:
 	void Initialize(FDolphinGraphicsSettings InGraphicsSettings, FDolphinRuntimeSettings InRuntimeSettings);
 	virtual ~UDolphinInstance();
 
+	bool IsTickable() const override { return true; }
+	bool IsTickableInEditor() const override { return true; }
+	bool IsTickableWhenPaused() const override { return true; }
+	TStatId GetStatId() const override { return TStatId(); }
+	void Tick(float DeltaTime) override;
+
 protected:
-	virtual void DolphinServer_OnInstanceConnected(const DolphinParams_OnInstanceConnected& onInstanceConnectedParams) override;
-	virtual void DolphinServer_OnInstanceTerminated(const DolphinParams_OnInstanceTerminated& onInstanceTerminatedParams) override;
+	virtual void DolphinServer_OnInstanceConnected(const ToServerParams_OnInstanceConnected& onInstanceConnectedParams) override;
+	virtual void DolphinServer_OnInstanceTerminated(const ToServerParams_OnInstanceTerminated& onInstanceTerminatedParams) override;
 
 private:
 	void LaunchInstance();

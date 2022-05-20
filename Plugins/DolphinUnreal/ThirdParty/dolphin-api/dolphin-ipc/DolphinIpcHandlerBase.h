@@ -7,8 +7,8 @@
 // Prevent errors in cereal that propagate to Unreal where __GNUC__ is not defined
 #define __GNUC__ 0
 
-#include "DolphinIpcInstanceData.h"
-#include "DolphinIpcServerData.h"
+#include "DolphinIpcToInstanceData.h"
+#include "DolphinIpcToServerData.h"
 
 #include <atomic>
 #include <iostream>
@@ -32,31 +32,35 @@ public:
 	void initializeChannels(const std::string& uniqueChannelId, bool isInstance);
 
 	void updateIpcListen();
-	void ipcSendToServer(DolphinIpcServerData data);
-	void ipcSendToInstance(DolphinIpcInstanceData data);
+	void ipcSendToServer(DolphinIpcToServerData data);
+	void ipcSendToInstance(DolphinIpcToInstanceData data);
 
 	// Instance implemented functions
 protected:
-	virtual void DolphinInstance_Connect(const DolphinParams_Connect& connectParams) { NOT_IMPLEMENTED(); }
-	virtual void DolphinInstance_LoadGame(const DolphinParams_LoadGame& loadGameParams) { NOT_IMPLEMENTED(); }
+	virtual void DolphinInstance_Connect(const ToInstanceParams_Connect& connectParams) { NOT_IMPLEMENTED(); }
+	virtual void DolphinInstance_LoadGame(const ToInstanceParams_LoadGame& loadGameParams) { NOT_IMPLEMENTED(); }
 
 	// Server implemented functions
 protected:
-	virtual void DolphinServer_OnInstanceConnected(const DolphinParams_OnInstanceConnected& onInstanceConnectedParams) { NOT_IMPLEMENTED(); }
-	virtual void DolphinServer_OnInstanceTerminated(const DolphinParams_OnInstanceTerminated& onInstanceTerminatedParams) { NOT_IMPLEMENTED(); }
+	virtual void DolphinServer_OnInstanceConnected(const ToServerParams_OnInstanceConnected& onInstanceConnectedParams) { NOT_IMPLEMENTED(); }
+	virtual void DolphinServer_OnInstanceTerminated(const ToServerParams_OnInstanceTerminated& onInstanceTerminatedParams) { NOT_IMPLEMENTED(); }
 
 private:
 	template<class T>
 	void ipcSendData(ipc::channel* channel, T params);
 
-	void onInstanceToServerDataReceived(const DolphinIpcServerData& data);
-	void onServerToInstanceDataReceived(const DolphinIpcInstanceData& data);
+
+	template<class T>
+	void ipcReadData(ipc::channel* channel, std::function<void(const T&)> onDeserialize);
+
+	void onInstanceToServerDataReceived(const DolphinIpcToServerData& data);
+	void onServerToInstanceDataReceived(const DolphinIpcToInstanceData& data);
 
 	bool _isInstance = true;
 	ipc::byte_t _sendBuffer[1024 * 16];
 	ipc::channel* _instanceToServer = nullptr;
 	ipc::channel* _serverToInstance = nullptr;
 
-	static const std::string ChannelNameInstanceBase;
-	static const std::string ChannelNameServerBase;
+	static const std::string ChannelNameInstanceToServerBase;
+	static const std::string ChannelNameServerToInstanceBase;
 };

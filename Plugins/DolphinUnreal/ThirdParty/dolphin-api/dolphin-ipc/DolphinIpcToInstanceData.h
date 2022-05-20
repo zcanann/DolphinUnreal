@@ -12,7 +12,7 @@ enum class DolphinInstanceIpcCall
     DolphinInstance_LoadGame,
 };
 
-struct DolphinParams_Connect
+struct ToInstanceParams_Connect
 {
     std::string _channelName;
 
@@ -28,7 +28,7 @@ struct DolphinParams_Connect
 	}
 };
 
-struct DolphinParams_LoadGame
+struct ToInstanceParams_LoadGame
 {
     std::string _title;
 
@@ -44,14 +44,14 @@ struct DolphinParams_LoadGame
 	}
 };
 
-struct DolphinIpcInstanceData
+struct DolphinIpcToInstanceData
 {
     DolphinInstanceIpcCall _call = DolphinInstanceIpcCall::Null;
 
     union
     {
-        DolphinParams_Connect* _connectParams;
-        DolphinParams_LoadGame* _loadGameParams;
+        ToInstanceParams_Connect* _connectParams;
+        ToInstanceParams_LoadGame* _loadGameParams;
     } _params;
 
 	template <class Archive>
@@ -75,11 +75,11 @@ struct DolphinIpcInstanceData
 		switch (_call)
 		{
 			case DolphinInstanceIpcCall::DolphinInstance_Connect:
-				_params._connectParams = new DolphinParams_Connect();
+				_params._connectParams = new ToInstanceParams_Connect();
 				ar(*(_params._connectParams));
 				break;
 			case DolphinInstanceIpcCall::DolphinInstance_LoadGame:
-				_params._loadGameParams = new DolphinParams_LoadGame();
+				_params._loadGameParams = new ToInstanceParams_LoadGame();
 				ar(*(_params._loadGameParams));
 				break;
 			case DolphinInstanceIpcCall::Null: default: break;

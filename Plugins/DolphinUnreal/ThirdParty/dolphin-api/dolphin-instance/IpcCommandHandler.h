@@ -11,6 +11,6 @@ public:
 	virtual ~IpcCommandHandler();
 
 private:
-	virtual void DolphinInstance_Connect(const DolphinParams_Connect& connectParams) override;
-	virtual void DolphinInstance_LoadGame(const DolphinParams_LoadGame& loadGameParams) override;
+	virtual void DolphinInstance_Connect(const ToInstanceParams_Connect& connectParams) override;
+	virtual void DolphinInstance_LoadGame(const ToInstanceParams_LoadGame& loadGameParams) override;
 };

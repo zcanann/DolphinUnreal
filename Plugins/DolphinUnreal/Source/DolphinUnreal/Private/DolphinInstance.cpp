@@ -34,7 +34,7 @@ void UDolphinInstance::LaunchInstance()
     FString Params = FString::Format(TEXT("\"{0}\" -p win32 -i {1}"), { GamePath, InstanceId });
 
     bool bLaunchHidden = false;
-    bool bCreatePipes = true;
+    bool bCreatePipes = false;
 
     initializeChannels(std::string(TCHAR_TO_UTF8(*InstanceId)), false);
 
@@ -59,20 +59,30 @@ void UDolphinInstance::LaunchInstance()
         &OutProcessID,
         PriorityModifier,
         (OptionalWorkingDirectory != "") ? *OptionalWorkingDirectory : nullptr,
-        nullptr,
         nullptr
     );
     */
 }
 
-void UDolphinInstance::DolphinServer_OnInstanceConnected(const DolphinParams_OnInstanceConnected& onInstanceConnectedParams)
+void UDolphinInstance::Tick(float DeltaTime)
 {
-    int debug = 5;
+    updateIpcListen();
 }
 
-void UDolphinInstance::DolphinServer_OnInstanceTerminated(const DolphinParams_OnInstanceTerminated& onInstanceTerminatedParams)
+void UDolphinInstance::DolphinServer_OnInstanceConnected(const ToServerParams_OnInstanceConnected& onInstanceConnectedParams)
 {
-    int debug = 5;
+    if (GEngine)
+    {
+        GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Some debug message!"));
+    }
+}
+
+void UDolphinInstance::DolphinServer_OnInstanceTerminated(const ToServerParams_OnInstanceTerminated& onInstanceTerminatedParams)
+{
+    if (GEngine)
+    {
+        GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Some debug message!"));
+    }
 }
 
 FString UDolphinInstance::MakeInstanceId() const
