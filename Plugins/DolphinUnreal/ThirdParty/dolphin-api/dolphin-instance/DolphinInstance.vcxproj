@@ -41,7 +41,6 @@
   </ItemDefinitionGroup>
   <Import Project="$(ExternalsDir)ExternalsReferenceAll.props" />
   <ItemGroup>
-    <ClCompile Include="IpcCommandHandler.cpp" />
     <ClCompile Include="MainNoGUI.cpp" />
     <ClCompile Include="Instance.cpp" />
     <ClCompile Include="InstanceHeadless.cpp" />
@@ -55,7 +54,6 @@
     <SourceFiles Include="$(TargetPath)" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="IpcCommandHandler.h" />
     <ClInclude Include="Instance.h" />
   </ItemGroup>
   <ItemGroup>

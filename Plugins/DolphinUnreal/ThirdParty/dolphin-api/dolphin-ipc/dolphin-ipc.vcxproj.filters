@@ -273,10 +273,10 @@
     <ClInclude Include="external\cereal\version.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="DolphinIpcServerData.h">
+    <ClInclude Include="DolphinIpcToServerData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="DolphinIpcInstanceData.h">
+    <ClInclude Include="DolphinIpcToInstanceData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

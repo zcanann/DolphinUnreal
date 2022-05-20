@@ -3,15 +3,17 @@
 
 #pragma once
 
-#include <memory>
-#include <string>
+#include "dolphin-ipc/DolphinIpcHandlerBase.h"
 
 #include "Common/Flag.h"
 #include "Common/WindowSystemInfo.h"
 
-class IpcCommandHandler;
+#include <memory>
+#include <string>
 
-class Instance
+class InstanceIpcHandler;
+
+class Instance : public DolphinIpcHandlerBase
 {
 public:
 	Instance(const std::string& instanceId);
@@ -47,9 +49,11 @@ public:
 #endif
 
 protected:
-	void UpdateRunningFlag();
+	virtual void DolphinInstance_WaitFrames(const ToInstanceParams_WaitFrames& waitFramesParam) override;
+	virtual void DolphinInstance_Connect(const ToInstanceParams_Connect& connectParams) override;
+	virtual void DolphinInstance_LoadGame(const ToInstanceParams_LoadGame& loadGameParams) override;
 
-	std::shared_ptr<IpcCommandHandler> _ipcCommandHandler = nullptr;
+	void UpdateRunningFlag();
 
 	Common::Flag _running{true};
 	Common::Flag _shutdown_requested{false};

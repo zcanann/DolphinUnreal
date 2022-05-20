@@ -1,5 +1,8 @@
 #include "DolphinIpcHandlerBase.h"
 
+// Prevent errors in cereal that propagate to Unreal where __GNUC__ is not defined
+#define __GNUC__ 0
+
 #include "cereal/cereal.hpp"
 #include "cereal/access.hpp"
 #include "cereal/types/common.hpp"
@@ -8,6 +11,8 @@
 #include "cereal/types/vector.hpp"
 #include "cereal/types/memory.hpp"
 #include "cereal/archives/binary.hpp"
+
+#undef __GNUC__
 
 const std::string DolphinIpcHandlerBase::ChannelNameInstanceToServerBase = "dol-i2s-";
 const std::string DolphinIpcHandlerBase::ChannelNameServerToInstanceBase = "dol-s2i-";

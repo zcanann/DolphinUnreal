@@ -4,9 +4,6 @@
 #define WIN32_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers
 #endif // !WIN32_LEAN_AND_MEAN
 
-// Prevent errors in cereal that propagate to Unreal where __GNUC__ is not defined
-#define __GNUC__ 0
-
 #include "DolphinIpcToInstanceData.h"
 #include "DolphinIpcToServerData.h"
 
@@ -37,6 +34,7 @@ public:
 
 	// Instance implemented functions
 protected:
+	virtual void DolphinInstance_WaitFrames(const ToInstanceParams_WaitFrames& waitFramesParam) { NOT_IMPLEMENTED(); }
 	virtual void DolphinInstance_Connect(const ToInstanceParams_Connect& connectParams) { NOT_IMPLEMENTED(); }
 	virtual void DolphinInstance_LoadGame(const ToInstanceParams_LoadGame& loadGameParams) { NOT_IMPLEMENTED(); }
 

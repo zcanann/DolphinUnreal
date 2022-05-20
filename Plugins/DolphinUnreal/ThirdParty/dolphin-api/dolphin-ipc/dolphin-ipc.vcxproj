@@ -159,8 +159,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="DolphinIpcHandlerBase.h" />
-    <ClInclude Include="DolphinIpcInstanceData.h" />
-    <ClInclude Include="DolphinIpcServerData.h" />
+    <ClInclude Include="DolphinIpcToInstanceData.h" />
+    <ClInclude Include="DolphinIpcToServerData.h" />
     <ClInclude Include="external\cereal\access.hpp" />
     <ClInclude Include="external\cereal\archives\adapters.hpp" />
     <ClInclude Include="external\cereal\archives\binary.hpp" />

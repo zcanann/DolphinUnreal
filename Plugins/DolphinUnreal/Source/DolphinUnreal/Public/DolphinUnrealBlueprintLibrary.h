@@ -11,8 +11,8 @@ class UDolphinUnrealBlueprintLibrary : public UBlueprintFunctionLibrary
 	GENERATED_UCLASS_BODY()
 
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Create Dolphin Instance", Keywords = "Create Initialize New Dolphin Instance"), Category = "Dolphin")
-		static UDolphinInstance* CreateDolphinInstance(bool bRegisterAsDefaultInstance = true,
-			FDolphinGraphicsSettings InGraphicsSettings = FDolphinGraphicsSettings(), FDolphinRuntimeSettings InRuntimeSettings = FDolphinRuntimeSettings());
+	static UDolphinInstance* CreateDolphinInstance(bool bRegisterAsDefaultInstance = true,
+		FDolphinGraphicsSettings InGraphicsSettings = FDolphinGraphicsSettings(), FDolphinRuntimeSettings InRuntimeSettings = FDolphinRuntimeSettings());
 
 	UFUNCTION(BlueprintPure, meta = (DisplayName = "Get Default Dolphin Instance", Keywords = "Get Defaul tDolphin Instance"), Category = "Dolphin")
 	static UDolphinInstance* GetDefaultDolphinInstance();

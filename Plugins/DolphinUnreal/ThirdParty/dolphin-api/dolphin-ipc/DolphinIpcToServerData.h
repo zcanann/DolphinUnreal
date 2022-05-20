@@ -49,6 +49,16 @@ struct ToServerParams_OnInstanceTerminated
 
 struct DolphinIpcToServerData
 {
+	~DolphinIpcToServerData()
+	{
+		switch (_call)
+		{
+			case DolphinServerIpcCall::DolphinServer_OnInstanceConnected: delete _params._onInstanceConnectedParams; break;
+			case DolphinServerIpcCall::DolphinServer_OnInstanceTerminated: delete _params._onInstanceTerminatedParams; break;
+			case DolphinServerIpcCall::Null: default: break;
+		}
+	}
+
 	DolphinServerIpcCall _call = DolphinServerIpcCall::Null;
 
 	union

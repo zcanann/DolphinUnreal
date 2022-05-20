@@ -137,7 +137,6 @@ void InstanceWin32::MainLoop()
         ProcessEvents();
         UpdateWindowPosition();
 
-        // TODO: Is this sleep appropriate?
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
 }
@@ -194,7 +193,9 @@ LRESULT InstanceWin32::WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam
         case WM_SIZE:
         {
             if (g_renderer)
-            g_renderer->ResizeSurface();
+            {
+                g_renderer->ResizeSurface();
+            }
             break;
         }
         case WM_CLOSE:

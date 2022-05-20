@@ -8,8 +8,25 @@
 enum class DolphinInstanceIpcCall
 {
     Null,
+	ToInstanceParams_WaitFrames,
     DolphinInstance_Connect,
     DolphinInstance_LoadGame,
+};
+
+struct ToInstanceParams_WaitFrames
+{
+	int _frames;
+
+	template <class Archive>
+	void save(Archive& ar) const
+	{
+		ar(_frames);
+	}
+	template <class Archive>
+	void load(Archive& ar)
+	{
+		ar(_frames);
+	}
 };
 
 struct ToInstanceParams_Connect
@@ -50,7 +67,8 @@ struct DolphinIpcToInstanceData
 
     union
     {
-        ToInstanceParams_Connect* _connectParams;
+		ToInstanceParams_WaitFrames* _waitFramesParams;
+		ToInstanceParams_Connect* _connectParams;
         ToInstanceParams_LoadGame* _loadGameParams;
     } _params;
 
@@ -61,6 +79,7 @@ struct DolphinIpcToInstanceData
 
 		switch (_call)
 		{
+			case DolphinInstanceIpcCall::ToInstanceParams_WaitFrames: ar(*_params._waitFramesParams); break;
 			case DolphinInstanceIpcCall::DolphinInstance_Connect: ar(*_params._connectParams); break;
 			case DolphinInstanceIpcCall::DolphinInstance_LoadGame: ar(*_params._loadGameParams); break;
 			case DolphinInstanceIpcCall::Null: default: break;
@@ -74,6 +93,10 @@ struct DolphinIpcToInstanceData
 
 		switch (_call)
 		{
+			case DolphinInstanceIpcCall::ToInstanceParams_WaitFrames:
+				_params._waitFramesParams = new ToInstanceParams_WaitFrames();
+				ar(*(_params._waitFramesParams));
+				break;
 			case DolphinInstanceIpcCall::DolphinInstance_Connect:
 				_params._connectParams = new ToInstanceParams_Connect();
 				ar(*(_params._connectParams));

@@ -47,13 +47,14 @@ public:
 	TStatId GetStatId() const override { return TStatId(); }
 	void Tick(float DeltaTime) override;
 
+	void WaitFrames(int32 Frames);
+
 protected:
 	virtual void DolphinServer_OnInstanceConnected(const ToServerParams_OnInstanceConnected& onInstanceConnectedParams) override;
 	virtual void DolphinServer_OnInstanceTerminated(const ToServerParams_OnInstanceTerminated& onInstanceTerminatedParams) override;
 
 private:
 	void LaunchInstance();
-	FString MakeInstanceId() const;
 
 	FString InstanceId;
 	TSharedPtr<FMonitoredProcess> DolphinProcess = nullptr;
