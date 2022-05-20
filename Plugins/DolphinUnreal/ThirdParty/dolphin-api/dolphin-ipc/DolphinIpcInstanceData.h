@@ -57,10 +57,12 @@ struct DolphinIpcInstanceData
 	template <class Archive>
 	void save(Archive& ar) const
 	{
+		ar(_call);
+
 		switch (_call)
 		{
-			case DolphinInstanceIpcCall::DolphinInstance_Connect: ar(_call, *_params._connectParams); break;
-			case DolphinInstanceIpcCall::DolphinInstance_LoadGame: ar(_call, *_params._loadGameParams); break;
+			case DolphinInstanceIpcCall::DolphinInstance_Connect: ar(*_params._connectParams); break;
+			case DolphinInstanceIpcCall::DolphinInstance_LoadGame: ar(*_params._loadGameParams); break;
 			case DolphinInstanceIpcCall::Null: default: break;
 		}
 	}

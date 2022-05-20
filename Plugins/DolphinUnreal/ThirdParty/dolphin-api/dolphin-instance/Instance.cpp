@@ -17,15 +17,15 @@ namespace ProcessorInterface
 Instance::Instance(const std::string& instanceId)
 {
     _ipcCommandHandler = std::make_shared<IpcCommandHandler>();
-    _ipcCommandHandler->initializeChannels(instanceId);
+    _ipcCommandHandler->initializeChannels(instanceId, true);
 
     // Ipc post-connect callback
-    /*
     DolphinIpcServerData ipcData;
+    ipcData._call = DolphinServerIpcCall::DolphinServer_OnInstanceConnected;
     auto data = std::shared_ptr<DolphinParams_OnInstanceConnected>(new DolphinParams_OnInstanceConnected());
+    data->_params = "123";
     ipcData._params._onInstanceConnectedParams = data.get();
     _ipcCommandHandler->ipcSendToServer(ipcData);
-    */
 }
 
 Instance::~Instance()
@@ -43,6 +43,8 @@ void Instance::SetTitle(const std::string& title)
 
 void Instance::UpdateRunningFlag()
 {
+    _ipcCommandHandler->updateIpcListen();
+
     if (_shutdown_requested.TestAndClear())
     {
         const auto ios = IOS::HLE::GetIOS();

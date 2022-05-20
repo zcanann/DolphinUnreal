@@ -36,7 +36,7 @@ void UDolphinInstance::LaunchInstance()
     bool bLaunchHidden = false;
     bool bCreatePipes = true;
 
-    initializeChannels(std::string(TCHAR_TO_UTF8(*InstanceId)));
+    initializeChannels(std::string(TCHAR_TO_UTF8(*InstanceId)), false);
 
     DolphinProcess = TSharedPtr<FMonitoredProcess>(new FMonitoredProcess(DolphinPath, Params, bLaunchHidden, bCreatePipes));
     DolphinProcess->Launch();

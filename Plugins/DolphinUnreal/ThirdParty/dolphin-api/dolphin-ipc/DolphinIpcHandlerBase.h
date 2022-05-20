@@ -21,8 +21,6 @@
 
 #include "libipc/ipc.h"
 
-typedef ipc::chan<ipc::relat::single, ipc::relat::single, ipc::trans::unicast> IpcChannel;
-
 #define NOT_IMPLEMENTED() std::cout << "CALLED UNIMPLEMENTED HANDLER FUNC" << std::endl;
 
 class DolphinIpcHandlerBase
@@ -31,10 +29,11 @@ public:
 	DolphinIpcHandlerBase();
 	virtual ~DolphinIpcHandlerBase();
 
-	void initializeChannels(const std::string& uniqueChannelId);
+	void initializeChannels(const std::string& uniqueChannelId, bool isInstance);
 
-	void ipcSendToServer(DolphinIpcServerData params);
-	void ipcSendToInstance(DolphinIpcInstanceData params);
+	void updateIpcListen();
+	void ipcSendToServer(DolphinIpcServerData data);
+	void ipcSendToInstance(DolphinIpcInstanceData data);
 
 	// Instance implemented functions
 protected:
@@ -48,20 +47,16 @@ protected:
 
 private:
 	template<class T>
-	void ipcSendData(IpcChannel* channel, T params);
-	void ipcListen();
+	void ipcSendData(ipc::channel* channel, T params);
 
 	void onInstanceToServerDataReceived(const DolphinIpcServerData& data);
 	void onServerToInstanceDataReceived(const DolphinIpcInstanceData& data);
 
-	ipc::byte_t _sharedBuffer[1024 * 16];
-	std::atomic<bool> _exitRequested{ false };
-	IpcChannel* _instanceToServer = nullptr;
-	IpcChannel* _serverToInstance = nullptr;
+	bool _isInstance = true;
+	ipc::byte_t _sendBuffer[1024 * 16];
+	ipc::channel* _instanceToServer = nullptr;
+	ipc::channel* _serverToInstance = nullptr;
 
-	std::thread _instanceListener;
-	std::thread _serverListener;
-	
 	static const std::string ChannelNameInstanceBase;
 	static const std::string ChannelNameServerBase;
 };

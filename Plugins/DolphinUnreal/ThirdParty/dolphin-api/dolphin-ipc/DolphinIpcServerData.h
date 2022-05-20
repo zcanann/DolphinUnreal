@@ -30,17 +30,20 @@ struct DolphinParams_OnInstanceConnected
 
 struct DolphinParams_OnInstanceTerminated
 {
-	std::string _params;
+	std::string _params1;
+	std::string _params2;
 
 	template <class Archive>
 	void save(Archive& ar) const
 	{
-		ar(_params);
+		ar(_params1);
+		ar(_params2);
 	}
 	template <class Archive>
 	void load(Archive& ar)
 	{
-		ar(_params);
+		ar(_params1);
+		ar(_params2);
 	}
 };
 
@@ -57,10 +60,12 @@ struct DolphinIpcServerData
 	template <class Archive>
 	void save(Archive& ar) const
 	{
+		ar(_call);
+
 		switch (_call)
 		{
-			case DolphinServerIpcCall::DolphinServer_OnInstanceConnected: ar(_call, *_params._onInstanceConnectedParams); break;
-			case DolphinServerIpcCall::DolphinServer_OnInstanceTerminated: ar(_call, *_params._onInstanceTerminatedParams); break;
+			case DolphinServerIpcCall::DolphinServer_OnInstanceConnected: ar(*_params._onInstanceConnectedParams); break;
+			case DolphinServerIpcCall::DolphinServer_OnInstanceTerminated: ar(*_params._onInstanceTerminatedParams); break;
 			case DolphinServerIpcCall::Null: default: break;
 		}
 	}
@@ -69,7 +74,7 @@ struct DolphinIpcServerData
 	void load(Archive& ar)
 	{
 		ar(_call);
-
+		
 		switch (_call)
 		{
 			case DolphinServerIpcCall::DolphinServer_OnInstanceConnected:

@@ -9,17 +9,8 @@
 #include "cereal/types/memory.hpp"
 #include "cereal/archives/binary.hpp"
 
-struct MemoryStream : std::streambuf
-{
-    MemoryStream(char* buffer, size_t size)
-    {
-        setp(buffer, buffer + size);
-    }
-    size_t written() { return pptr() - pbase(); }
-};
-
-const std::string DolphinIpcHandlerBase::ChannelNameInstanceBase = "dol-c2s-";
-const std::string DolphinIpcHandlerBase::ChannelNameServerBase = "dol-s2c-";
+const std::string DolphinIpcHandlerBase::ChannelNameInstanceBase = "dol-i2s-";
+const std::string DolphinIpcHandlerBase::ChannelNameServerBase = "dol-s2i-";
 
 DolphinIpcHandlerBase::DolphinIpcHandlerBase()
 {
@@ -33,55 +24,43 @@ DolphinIpcHandlerBase::~DolphinIpcHandlerBase()
     _serverToInstance = nullptr;
 }
 
-void DolphinIpcHandlerBase::initializeChannels(const std::string& uniqueChannelId)
+void DolphinIpcHandlerBase::initializeChannels(const std::string& uniqueChannelId, bool isInstance)
 {
     std::string uniqueInstanceChannel = ChannelNameInstanceBase + uniqueChannelId;
     std::string uniqueServerChannel = ChannelNameServerBase + uniqueChannelId;
+    _isInstance = isInstance;
 
     std::cout << __func__ << ": instance channel: " << uniqueInstanceChannel << std::endl;
     std::cout << __func__ << ": server channel: " << uniqueServerChannel << std::endl;
 
-    _instanceToServer = new IpcChannel(uniqueInstanceChannel.c_str());
-    _serverToInstance = new IpcChannel(uniqueServerChannel.c_str());
-
-    // ipcListen();
+    _instanceToServer = new ipc::channel(uniqueInstanceChannel.c_str(), ipc::sender | ipc::receiver); // isInstance ? ipc::sender : ipc::receiver);
+    _serverToInstance = new ipc::channel(uniqueInstanceChannel.c_str(), ipc::sender | ipc::receiver); // isInstance ? ipc::receiver : ipc::sender);
 }
 
-void DolphinIpcHandlerBase::ipcSendToInstance(DolphinIpcInstanceData params)
+void DolphinIpcHandlerBase::ipcSendToInstance(DolphinIpcInstanceData data)
 {
-    ipcSendData(_serverToInstance, params);
+    ipcSendData(_serverToInstance, data);
 }
 
-void DolphinIpcHandlerBase::ipcSendToServer(DolphinIpcServerData params)
+void DolphinIpcHandlerBase::ipcSendToServer(DolphinIpcServerData data)
 {
-    ipcSendData(_instanceToServer, params);
+    ipcSendData(_instanceToServer, data);
 }
 
 template<class T>
-void DolphinIpcHandlerBase::ipcSendData(IpcChannel* channel, T params)
+void DolphinIpcHandlerBase::ipcSendData(ipc::channel* channel, T data)
 {
-    if (channel != nullptr || channel->reconnect(ipc::sender))
+    if (channel != nullptr)
     {
-        MemoryStream memoryStream = MemoryStream((char*)&_sharedBuffer, sizeof(_sharedBuffer));
-        std::ostream out(&memoryStream);
-        cereal::BinaryOutputArchive archive(out);
+        std::stringstream memoryStream(std::ios::binary | std::ios::out | std::ios::in);
+        cereal::BinaryOutputArchive serializer = { memoryStream };
+        serializer(data);
+        std::vector<uint8_t> buffer = std::vector<uint8_t>(std::istream_iterator<uint8_t>(memoryStream), std::istream_iterator<uint8_t>());
 
-        archive(params);
-
-        if (!_exitRequested.load(std::memory_order_acquire))
+        std::cout << __func__ << ": try send..." << std::endl;
+        if (channel->try_send(ipc::buff_t(buffer.data(), buffer.size())))
         {
-            if (!channel->send(ipc::buff_t(_sharedBuffer, memoryStream.written())))
-            {
-                std::cerr << __func__ << ": send failed." << std::endl;
-                std::cout << __func__ << ": waiting for receiver..." << std::endl;
-                if (!channel->wait_for_recv(1))
-                {
-                    std::cerr << __func__ << ": wait receiver failed." << std::endl;
-                    _exitRequested.store(true, std::memory_order_release);
-                    // break;
-                }
-            }
-            // std::this_thread::yield();
+            std::cout << __func__ << ": sent " << buffer.size() << " bytes" << std::endl;
         }
     }
     else
@@ -90,73 +69,52 @@ void DolphinIpcHandlerBase::ipcSendData(IpcChannel* channel, T params)
     }
 }
 
-void DolphinIpcHandlerBase::ipcListen()
+void DolphinIpcHandlerBase::updateIpcListen()
 {
-    _instanceListener = std::thread
+    // if (_isInstance)
     {
-        [=]
+        if (_serverToInstance)
         {
-            std::cout << __func__ << ": Listening for client to server events" << std::endl;
-            if (_instanceToServer != nullptr && _instanceToServer->reconnect(ipc::receiver))
+            ipc::buff_t rawData = _serverToInstance->try_recv();
+
+            if (!rawData.empty())
             {
-                while (!_exitRequested.load(std::memory_order_acquire))
-                {
-                    ipc::buff_t rawData = _instanceToServer->try_recv();
+                std::cout << __func__ << ": recv " << rawData.size() << " bytes" << std::endl;
 
-                    if (!rawData.empty())
-                    {
-                        MemoryStream memoryStream = MemoryStream((char*)&rawData, rawData.size());
-                        std::istream in(&memoryStream);
-                        cereal::BinaryInputArchive archive(in);
-                        DolphinIpcInstanceData data;
+                DolphinIpcServerData data;
+                std::stringstream memoryStream(std::ios::binary | std::ios::out | std::ios::in);
+                cereal::BinaryOutputArchive bufferToMemoryStream = { memoryStream };
+                bufferToMemoryStream(cereal::binary_data(rawData.data(), rawData.size()));
+                cereal::BinaryInputArchive deserializer(memoryStream);
+                deserializer(data);
 
-                        archive(data);
+                onInstanceToServerDataReceived(data);
 
-                        onServerToInstanceDataReceived(data);
-                    }
-                }
             }
-            else
-            {
-                std::cerr << __func__ << ": client to server connect failed." << std::endl;
-            }
-            std::cout << __func__ << ": client to server quit..." << std::endl;
         }
-    };
-    _serverListener = std::thread
+    }
+    // else
     {
-        [=]
+        if (_instanceToServer)
         {
-            std::cout << __func__ << ": Listening for server to client events" << std::endl;
-            if (_serverToInstance != nullptr && _serverToInstance->reconnect(ipc::receiver))
+            ipc::buff_t rawData = _instanceToServer->try_recv();
+
+            if (!rawData.empty())
             {
-                while (!_exitRequested.load(std::memory_order_acquire))
-                {
-                    ipc::buff_t rawData = _instanceToServer->try_recv();
+                std::cout << __func__ << ": recv " << rawData.size() << " bytes" << std::endl;
 
-                    if (!rawData.empty())
-                    {
-                        MemoryStream memoryStream = MemoryStream((char*)&rawData, rawData.size());
-                        std::istream in(&memoryStream);
-                        cereal::BinaryInputArchive archive(in);
-                        DolphinIpcServerData data;
+                /*
+                MemoryStream memoryStream = MemoryStream((char*)&rawData, rawData.size());
+                std::istream in(&memoryStream);
+                cereal::BinaryInputArchive iarchive(in);
+                DolphinIpcInstanceData data;
 
-                        archive(data);
+                iarchive(data);
 
-                        onInstanceToServerDataReceived(data);
-                    }
-                }
+                onServerToInstanceDataReceived(data);*/
             }
-            else
-            {
-                std::cerr << __func__ << ": server to client connect failed.\n";
-            }
-            std::cout << __func__ << ": server to client quit...\n";
         }
-    };
-
-    _instanceListener.detach();
-    _serverListener.detach();
+    }
 }
 
 void DolphinIpcHandlerBase::onInstanceToServerDataReceived(const DolphinIpcServerData& data)
@@ -165,7 +123,7 @@ void DolphinIpcHandlerBase::onInstanceToServerDataReceived(const DolphinIpcServe
     {
         case DolphinServerIpcCall::DolphinServer_OnInstanceConnected: DolphinServer_OnInstanceConnected(*data._params._onInstanceConnectedParams); break;
         case DolphinServerIpcCall::DolphinServer_OnInstanceTerminated: DolphinServer_OnInstanceTerminated(*data._params._onInstanceTerminatedParams); break;
-        case DolphinServerIpcCall::Null: default: break;
+        case DolphinServerIpcCall::Null: default: std::cout << "NULL instance => server call!" << std::endl; break;
     }
 }
 
@@ -175,6 +133,6 @@ void DolphinIpcHandlerBase::onServerToInstanceDataReceived(const DolphinIpcInsta
     {
         case DolphinInstanceIpcCall::DolphinInstance_Connect: DolphinInstance_Connect(*data._params._connectParams); break;
         case DolphinInstanceIpcCall::DolphinInstance_LoadGame: DolphinInstance_LoadGame(*data._params._loadGameParams); break;
-        case DolphinInstanceIpcCall::Null: default: break;
+        case DolphinInstanceIpcCall::Null: default: std::cout << "NULL server => instance call!" << std::endl; break;
     }
 }
