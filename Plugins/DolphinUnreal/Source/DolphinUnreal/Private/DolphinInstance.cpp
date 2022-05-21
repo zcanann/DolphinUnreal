@@ -31,12 +31,13 @@ void UDolphinInstance::Tick(float DeltaTime)
 
 void UDolphinInstance::WaitFrames(int32 Frames)
 {
+    /*
     DolphinIpcToInstanceData ipcData;
     ToServerParams_OnInstanceConnected* data = new ToServerParams_OnInstanceConnected();
     data->_params = "123";
-    ipcData._call = DolphinServerIpcCall::DolphinServer_OnInstanceConnected;
+    ipcData._call = DolphinInstanceIpcCall::DolphinServer_OnInstanceConnected;
     ipcData._params._onInstanceConnectedParams = data;
-    ipcSendToServer(ipcData);
+    ipcSendToServer(ipcData);*/
 }
 
 void UDolphinInstance::DolphinServer_OnInstanceConnected(const ToServerParams_OnInstanceConnected& onInstanceConnectedParams)

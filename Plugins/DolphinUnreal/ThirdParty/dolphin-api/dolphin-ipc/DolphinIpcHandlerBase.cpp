@@ -1,7 +1,7 @@
 #include "DolphinIpcHandlerBase.h"
 
 // Prevent errors in cereal that propagate to Unreal where __GNUC__ is not defined
-#define __GNUC__ 0
+#define __GNUC__ (false)
 
 #include "cereal/cereal.hpp"
 #include "cereal/access.hpp"

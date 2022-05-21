@@ -68,6 +68,12 @@ public class DolphinUnreal : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
+				"EditorStyle",
+				"UnrealEd",
+				"GraphEditor",
+				"BlueprintGraph",
+				"Kismet",
+				"KismetCompiler",
 			}
 		);
 		

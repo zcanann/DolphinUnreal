@@ -2,6 +2,8 @@
 
 #include "UObject/Object.h"
 
+// Prevent errors in cereal that propagate to Unreal where __GNUC__ is not defined
+#define __GNUC__ (false)
 #include "dolphin-ipc/DolphinIpcHandlerBase.h"
 
 #include "DolphinInstance.generated.h"

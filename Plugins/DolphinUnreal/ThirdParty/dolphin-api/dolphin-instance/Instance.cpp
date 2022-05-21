@@ -114,21 +114,22 @@ void Instance::PrepareForTASInput()
     Movie::SetReadOnly(false);
     Movie::SetGCInputManip([this](GCPadStatus* pad_status, int controller_id)
     {
-        static int piss = 5;
+        static int debug = 5;
         if (pad_status)
         {
             // pad_status->triggerRight = 255;
             // pad_status->button |= PadButton::PAD_TRIGGER_R;
 
-            if (piss-- < 0)
+            if (debug-- < 0)
             {
                 pad_status->button |= PadButton::PAD_BUTTON_A;
                 pad_status->button |= PadButton::PAD_BUTTON_START;
-                piss = 5;
+                debug = 5;
             }
         }
     });
 
+    /*
     Movie::ControllerTypeArray controllers { };
     Movie::WiimoteEnabledArray wiimotes { };
 
@@ -153,7 +154,7 @@ void Instance::PrepareForTASInput()
     }
 
     // TODO: Potentially enable this if we want to support dumping DTM files
-    // Movie::BeginRecordingInput(controllers, wiimotes);
+    // Movie::BeginRecordingInput(controllers, wiimotes);*/
 }
 
 void Instance::DolphinInstance_WaitFrames(const ToInstanceParams_WaitFrames& waitFramesParam)
