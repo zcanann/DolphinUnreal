@@ -3,10 +3,10 @@
 
 #include "K2Node.h"
 
-#include "K2Node_InputSleeve.generated.h"
+#include "K2Node_InputSheet.generated.h"
 
 UCLASS( )
-class UK2Node_InputSleeve : public UK2Node
+class UK2Node_InputSheet : public UK2Node
 {
 	GENERATED_BODY( )
 public:
