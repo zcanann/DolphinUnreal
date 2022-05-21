@@ -2,6 +2,8 @@
 
 #include "CoreMinimal.h"
 
+#include "Serialization/Archive.h"
+
 #include "FrameInput.generated.h"
 
 UENUM(BlueprintType)
@@ -35,6 +37,9 @@ struct FFrameInput
 
 public:
 	static FString GetSimpleName(EFrameInputButton FrameInputButton);
+	static FText GetToolTip(EFrameInputButton FrameInputButton, int32 InFrame);
+	void ToggleButton(EFrameInputButton InFrameInputButton, bool bIsChecked);
+	bool IsButtonToggled(EFrameInputButton InFrameInputButton);
 
 	UPROPERTY(BlueprintReadWrite)
 	bool bButtonA = false;
@@ -79,8 +84,38 @@ public:
 	uint8 TriggerRight = 0;
 
 	UPROPERTY(BlueprintReadWrite)
-	uint8 MainStickLeft = 0;
+	uint8 MainStickX = 0;
 
 	UPROPERTY(BlueprintReadWrite)
-	uint8 CStickLeft = 0;
+	uint8 MainStickY = 0;
+
+	UPROPERTY(BlueprintReadWrite)
+	uint8 CStickX = 0;
+
+	UPROPERTY(BlueprintReadWrite)
+	uint8 CStickY = 0;
 };
+
+FORCEINLINE FArchive& operator <<(FArchive& Ar, FFrameInput& InFrameInput)
+{
+	Ar << InFrameInput.bButtonA;
+	Ar << InFrameInput.bButtonB;
+	Ar << InFrameInput.bButtonX;
+	Ar << InFrameInput.bButtonY;
+	Ar << InFrameInput.bButtonZ;
+	Ar << InFrameInput.bButtonDUp;
+	Ar << InFrameInput.bButtonDDown;
+	Ar << InFrameInput.bButtonDLeft;
+	Ar << InFrameInput.bButtonDRight;
+	Ar << InFrameInput.bButtonStart;
+	Ar << InFrameInput.bButtonL;
+	Ar << InFrameInput.bButtonR;
+	Ar << InFrameInput.TriggerLeft;
+	Ar << InFrameInput.TriggerRight;
+	Ar << InFrameInput.MainStickX;
+	Ar << InFrameInput.MainStickY;
+	Ar << InFrameInput.CStickX;
+	Ar << InFrameInput.CStickY;
+
+	return Ar;
+}

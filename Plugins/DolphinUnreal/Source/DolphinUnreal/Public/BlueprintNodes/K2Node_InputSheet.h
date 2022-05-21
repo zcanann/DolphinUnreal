@@ -8,15 +8,22 @@
 
 #include "K2Node_InputSheet.generated.h"
 
+class UDolphinInstance;
+
 UCLASS()
 class UK2Node_InputSheet : public UK2Node
 {
 	GENERATED_BODY()
 public:
 	// Pin Accessors
+	UE_NODISCARD UEdGraphPin* GetTargetPin() const;
 	UE_NODISCARD UEdGraphPin* GetInputsPin() const;
 	UE_NODISCARD UEdGraphPin* GetCompletedPin() const;
 
+	//~ Begin UObject Interface
+	virtual void Serialize(FArchive& Ar) override;
+	//~ End UObject Interface
+	
 	// K2Node API
 	virtual UE_NODISCARD bool IsNodeSafeToIgnore() const override { return true; }
 	virtual void GetMenuActions(FBlueprintActionDatabaseRegistrar& ActionRegistrar) const override;
@@ -32,13 +39,14 @@ public:
 	virtual void PinConnectionListChanged(UEdGraphPin* Pin) override;
 	virtual void PostPasteNode() override;
 
-private:
 	// Pin Names
+	static const FName TargetPinName;
 	static const FName InputsPinName;
 	static const FName CompletedPinName;
-
-	TArray<FFrameInput> FrameInputs;
-
+private:
 	// Determine if there is any configuration options that shouldn't be allowed
 	UE_NODISCARD bool CheckForErrors(const FKismetCompilerContext& CompilerContext);
+
+	UDolphinInstance* DolphinInstance = nullptr;
+	TArray<FFrameInput> FrameInputs;
 };

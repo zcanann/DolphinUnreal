@@ -3,6 +3,7 @@
 
 #include "BlueprintNodes/CoreTechK2Utilities.h"
 #include "BlueprintNodes/SInputSheet.h"
+#include "DolphinInstance.h"
 
 // BlueprintGraph
 #include "K2Node_AssignmentStatement.h"
@@ -20,6 +21,7 @@
 
 #define LOCTEXT_NAMESPACE "K2Node_InputSheet"
 
+const FName UK2Node_InputSheet::TargetPinName(TEXT("TargetPin"));
 const FName UK2Node_InputSheet::InputsPinName(TEXT("InputsPin"));
 const FName UK2Node_InputSheet::CompletedPinName(TEXT("CompletedPin"));
 
@@ -29,6 +31,12 @@ void UK2Node_InputSheet::AllocateDefaultPins()
 
 	// Execution pin
 	CreatePin(EGPD_Input, UEdGraphSchema_K2::PC_Exec, UEdGraphSchema_K2::PN_Execute);
+
+	const auto TargetPin = CreatePin(EGPD_Input, UEdGraphSchema_K2::PC_Object, UDolphinInstance::StaticClass(), TargetPinName);
+	TargetPin->PinType.bIsConst = true;
+	TargetPin->PinType.bIsReference = true;
+	TargetPin->PinFriendlyName = LOCTEXT("TargetPin_FriendlyName", "Target");
+	CoreTechK2Utilities::SetPinToolTip(TargetPin, LOCTEXT("TargetPin_Tooltip", "The Dolphin Instance on which to perform the inputs"));
 
 	const auto InputsPin = CreatePin(EGPD_Input, UEdGraphSchema_K2::PC_Struct, InputsPinName);
 	InputsPin->PinType.ContainerType = EPinContainerType::Array;
@@ -41,10 +49,26 @@ void UK2Node_InputSheet::AllocateDefaultPins()
 	CompletedPin->PinFriendlyName = LOCTEXT("CompletedPin_FriendlyName", " ");
 	CompletedPin->PinToolTip = LOCTEXT("CompletedPin_Tooltip", "Execution once all frames have been processed").ToString();
 
-	AdvancedPinDisplay = ENodeAdvancedPins::Hidden;
+	AdvancedPinDisplay = ENodeAdvancedPins::NoPins;
 
 	// Initialize 30 items
-	FrameInputs.AddZeroed(30);
+	if (FrameInputs.IsEmpty())
+	{
+		FrameInputs.AddZeroed(30);
+	}
+}
+
+void UK2Node_InputSheet::Serialize(FArchive& Ar)
+{
+	if (Ar.IsLoading())
+	{
+		FrameInputs.Empty();
+	}
+
+	// Save/Load the frame inputs
+	Ar << FrameInputs;
+
+	Super::Serialize(Ar);
 }
 
 TSharedPtr<SGraphNode> UK2Node_InputSheet::CreateVisualWidget()
@@ -74,6 +98,7 @@ void UK2Node_InputSheet::ExpandNode(FKismetCompilerContext& CompilerContext, UEd
 	///////////////////////////////////////////////////////////////////////////////////
 	// Cache off versions of all our important pins
 	const auto ExecPin = GetExecPin();
+	const auto TargetPin = GetTargetPin();
 	const auto InputsPin = GetInputsPin();
 
 	///////////////////////////////////////////////////////////////////////////////////
@@ -93,6 +118,11 @@ void UK2Node_InputSheet::PinConnectionListChanged(UEdGraphPin* Pin)
 	Super::PinConnectionListChanged(Pin);
 }
 
+UEdGraphPin* UK2Node_InputSheet::GetTargetPin() const
+{
+	return FindPinChecked(TargetPinName);
+}
+
 UEdGraphPin* UK2Node_InputSheet::GetInputsPin() const
 {
 	return FindPinChecked(InputsPinName);
@@ -110,7 +140,8 @@ FText UK2Node_InputSheet::GetNodeTitle(ENodeTitleType::Type TitleType) const
 
 FText UK2Node_InputSheet::GetTooltipText() const
 {
-	return LOCTEXT("NodeToolTip", "A sheet of all inputs over a series of frames.");
+	// Best left empty to make it easier to mouse over checkboxes / fields without this tooltip getting in the way
+	return LOCTEXT("NodeToolTip", "");
 }
 
 FText UK2Node_InputSheet::GetMenuCategory() const

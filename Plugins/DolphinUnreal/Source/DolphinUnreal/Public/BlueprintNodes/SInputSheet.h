@@ -33,6 +33,10 @@ public:
 	virtual void CreateStandardPinWidget(UEdGraphPin* Pin) override;
 
 private:
+	FText GetCheckBoxTooltip(EFrameInputButton InFrameInputButton, int32 InIndex) const;
+	ECheckBoxState GetCheckState(EFrameInputButton InFrameInputButton, int32 InIndex) const;
+	void OnCheckStateToggled(ECheckBoxState NewState, EFrameInputButton InFrameInputButton, int32 InIndex);
+
 	bool bNeedsUpdate = false;
 	TArray<FFrameInput>* FrameInputs = nullptr;
 };
