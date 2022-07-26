@@ -21,20 +21,24 @@ class UDolphinUnrealBlueprintLibrary : public UBlueprintFunctionLibrary
 		FDolphinRuntimeSettings RuntimeSettings = FDolphinRuntimeSettings()
 	);
 
-	UFUNCTION(BlueprintPure, meta = (DisplayName = "Get Default Dolphin Instance", Keywords = "Get Defaul tDolphin Instance"), Category = "Dolphin")
+	UFUNCTION(BlueprintPure, meta = (DisplayName = "Get Default Dolphin Instance", Keywords = "Get Default Dolphin Instance"), Category = "Dolphin")
 	static UDolphinInstance* GetDefaultDolphinInstance();
 
+	UFUNCTION(BlueprintPure, meta = (DisplayName = "Get All Dolphin Instances", Keywords = "Get All Dolphin Instances"), Category = "Dolphin")
+	static TArray<UDolphinInstance*> GetDolphinInstances();
+
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Load Save State", Keywords = "Load Save State"), Category = "Dolphin")
-	static void LoadSaveState();
+	static void LoadSaveState(FString SaveName, UDolphinInstance* DolphinInstance);
 
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Create Save State", Keywords = "Create Save State"), Category = "Dolphin")
-	static void CreateSaveState();
-
-	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Wait Frames", Keywords = "Wait Skip Frames"), Category = "Dolphin")
-	static void WaitFrames(int32 Frames = 1, UDolphinInstance* DolphinInstance = nullptr);
+	static void CreateSaveState(FString SaveName, UDolphinInstance* DolphinInstance);
 
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Play Inputs", Keywords = "Play Input Frames"), Category = "Dolphin")
-	static void PlayInputs(UDataTable* FrameInputs, UDolphinInstance* DolphinInstance = nullptr);
+	static void PlayInputs(UDataTable* FrameInputsTable, UDolphinInstance* DolphinInstance = nullptr);
+
+	/*
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Wait Frames", Keywords = "Wait Skip Frames"), Category = "Dolphin")
+	static void WaitFrames(int32 Frames = 1, UDolphinInstance* DolphinInstance = nullptr);
 
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Press A", Keywords = "Press Input A"), Category = "Dolphin")
 	static void PressA(int32 Frames = 1, UDolphinInstance* DolphinInstance = nullptr);
@@ -79,5 +83,5 @@ class UDolphinUnrealBlueprintLibrary : public UBlueprintFunctionLibrary
 	static void CStickY(uint8 AnalogAmount = 255, int32 Frames = 1, UDolphinInstance* DolphinInstance = nullptr);
 
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Hold C-Stick X", Keywords = "Hold Analog Input C-Stick X"), Category = "Dolphin")
-	static void CStickX(uint8 AnalogAmount = 255, int32 Frames = 1, UDolphinInstance* DolphinInstance = nullptr);
+	static void CStickX(uint8 AnalogAmount = 255, int32 Frames = 1, UDolphinInstance* DolphinInstance = nullptr);*/
 };

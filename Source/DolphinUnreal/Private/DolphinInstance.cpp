@@ -5,9 +5,10 @@
 #include "Misc/Guid.h"
 #include "Misc/MonitoredProcess.h"
 #include "Misc/Paths.h"
-#include "Windows/WindowsPlatformProcess.h"
 
 #include "AssetTypes/IsoAsset.h"
+#include "FrameInput.h"
+#include "Platform/WindowsSimpleProcessSpawner.h"
 
 // STL
 #include <string>
@@ -24,10 +25,7 @@ void UDolphinInstance::Initialize(UIsoAsset* InIsoAsset, const FDolphinGraphicsS
 
 UDolphinInstance::~UDolphinInstance()
 {
-    if (DolphinProcHandle.IsValid())
-    {
-        FWindowsPlatformProcess::TerminateProc(DolphinProcHandle);
-    }
+    Terminate();
 }
 
 void UDolphinInstance::PausePIE(const bool bIsSimulating)
@@ -41,6 +39,12 @@ void UDolphinInstance::PausePIE(const bool bIsSimulating)
 void UDolphinInstance::Tick(float DeltaTime)
 {
     updateIpcListen();
+
+    // Send a heartbeat to the running instance
+    DolphinIpcToInstanceData ipcData;
+    std::shared_ptr<ToInstanceParams_Heartbeat> data = std::make_shared<ToInstanceParams_Heartbeat>();
+    ipcData._call = DolphinInstanceIpcCall::DolphinInstance_Heartbeat;
+    ipcSendToInstance(ipcData);
 }
 
 void UDolphinInstance::DolphinServer_OnInstanceConnected(const ToServerParams_OnInstanceConnected& OnInstanceConnectedParams)
@@ -51,6 +55,11 @@ void UDolphinInstance::DolphinServer_OnInstanceConnected(const ToServerParams_On
     }
 }
 
+void UDolphinInstance::DolphinServer_OnInstanceHeartbeatAcknowledged(const ToServerParams_OnInstanceHeartbeatAcknowledged& onInstanceHeartbeatAcknowledgedParams)
+{
+
+}
+
 void UDolphinInstance::DolphinServer_OnInstanceTerminated(const ToServerParams_OnInstanceTerminated& OnInstanceTerminatedParams)
 {
     if (GEngine)
@@ -59,48 +68,61 @@ void UDolphinInstance::DolphinServer_OnInstanceTerminated(const ToServerParams_O
     }
 }
 
+void UDolphinInstance::DolphinServer_OnInstanceRecordingStopped(const ToServerParams_OnInstanceRecordingStopped& onInstanceRecordingStopped)
+{
+
+}
+
 void UDolphinInstance::LaunchInstance(UIsoAsset* InIsoAsset, const FDolphinGraphicsSettings& InGraphicsSettings, const FDolphinRuntimeSettings& InRuntimeSettings)
 {
     static FString PluginContentDirectory = FPaths::ConvertRelativePathToFull(IPluginManager::Get().FindPlugin(TEXT("DolphinUnreal"))->GetContentDir());
     static FString ProjectContentDirectory = FPaths::ConvertRelativePathToFull(FPaths::ProjectContentDir());
 
     InstanceId = FGuid::NewGuid().ToString();
-    FString DolphinPath = FPaths::Combine(PluginContentDirectory, TEXT("DolphinInstance.exe"));
+    FString DolphinBinaryFolder = FPaths::Combine(PluginContentDirectory, TEXT("Dolphin/"));
+    FString DolphinBinaryPath = FPaths::Combine(DolphinBinaryFolder, TEXT("DolphinInstance.exe"));
     FString GamePath = InIsoAsset->Path;
     FString UserPath = FPaths::Combine(ProjectContentDirectory, "Dolphin");
     FString Params = FString::Format(TEXT("\"{0}\" -u \"{1}\" -p win32 -i {2}"), { GamePath, UserPath, InstanceId });
+    FString OptionalWorkingDirectory = DolphinBinaryFolder;
 
     initializeChannels(std::string(TCHAR_TO_UTF8(*InstanceId)), false);
 
-    bool bLaunchDetached = true;
-    bool bLaunchHidden = false;
-    bool bLaunchReallyHidden = false;
-
-    uint32 OutProcessID = 0;
-    uint32 PriorityModifier = 0;
-    FString OptionalWorkingDirectory;
-
-    DolphinProcHandle = FWindowsPlatformProcess::CreateProc(
-        *DolphinPath,
+    FWindowsSimpleProcessSpawner::CreateProc(
+        *DolphinBinaryPath,
         *Params,
-        bLaunchDetached,
-        bLaunchHidden,
-        bLaunchReallyHidden,
-        &OutProcessID,
-        PriorityModifier,
-        (OptionalWorkingDirectory != "") ? *OptionalWorkingDirectory : nullptr,
-        nullptr
+        (OptionalWorkingDirectory != "") ? *OptionalWorkingDirectory : nullptr
     );
 }
 
-void UDolphinInstance::Pause()
+void UDolphinInstance::RequestLoadSaveState(FString SaveName)
 {
-    bIsPaused = true;
+
 }
 
-void UDolphinInstance::Unpause()
+void UDolphinInstance::RequestCreateSaveState(FString SaveName)
+{
+
+}
+
+void UDolphinInstance::RequestPause()
+{
+    bIsPaused = true;
+
+    DolphinIpcToInstanceData ipcData;
+    std::shared_ptr<ToInstanceParams_PauseEmulation> data = std::make_shared<ToInstanceParams_PauseEmulation>();
+    ipcData._call = DolphinInstanceIpcCall::DolphinInstance_PauseEmulation;
+    ipcSendToInstance(ipcData);
+}
+
+void UDolphinInstance::RequestUnpause()
 {
     bIsPaused = false;
+
+    DolphinIpcToInstanceData ipcData;
+    std::shared_ptr<ToInstanceParams_UnpauseEmulation> data = std::make_shared<ToInstanceParams_UnpauseEmulation>();
+    ipcData._call = DolphinInstanceIpcCall::DolphinInstance_UnpauseEmulation;
+    ipcSendToInstance(ipcData);
 }
 
 bool UDolphinInstance::IsPaused() const
@@ -108,7 +130,7 @@ bool UDolphinInstance::IsPaused() const
     return bIsPaused;
 }
 
-void UDolphinInstance::StartRecording()
+void UDolphinInstance::RequestStartRecording()
 {
     bIsRecordingInput = true;
 
@@ -118,7 +140,7 @@ void UDolphinInstance::StartRecording()
     ipcSendToInstance(ipcData);
 }
 
-void UDolphinInstance::StopRecording()
+void UDolphinInstance::RequestStopRecording()
 {
     bIsRecordingInput = false;
 
@@ -131,4 +153,32 @@ void UDolphinInstance::StopRecording()
 bool UDolphinInstance::IsRecording() const
 {
     return bIsRecordingInput;
+}
+
+void UDolphinInstance::RequestPlayInputs(UDataTable* FrameInputsTable)
+{
+    if (FrameInputsTable == nullptr)
+    {
+        return;
+    }
+
+    TArray<FFrameInput*> FrameInputs;
+    FString ContextString = TEXT("PlayInputs");
+
+    FrameInputsTable->GetAllRows(ContextString, FrameInputs);
+
+    DolphinIpcToInstanceData ipcData;
+    std::shared_ptr<ToInstanceParams_StopRecordingInput> data = std::make_shared<ToInstanceParams_StopRecordingInput>();
+    ipcData._call = DolphinInstanceIpcCall::DolphinInstance_StopRecordingInput;
+    ipcSendToInstance(ipcData);
+}
+
+void UDolphinInstance::Terminate()
+{
+    DolphinIpcToInstanceData ipcData;
+    std::shared_ptr<ToInstanceParams_Terminate> data = std::make_shared<ToInstanceParams_Terminate>();
+    ipcData._call = DolphinInstanceIpcCall::DolphinInstance_Terminate;
+    ipcSendToInstance(ipcData);
+
+    ConditionalBeginDestroy();
 }

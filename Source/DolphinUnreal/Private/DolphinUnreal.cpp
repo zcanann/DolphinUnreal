@@ -7,15 +7,23 @@
 
 #define LOCTEXT_NAMESPACE "FDolphinUnrealModule"
 
-const FName FDolphinUnrealModule::Name = FName("DolphinUnreal");
+const FName FDolphinUnrealModule::ModuleName = FName("DolphinUnreal");
 
 void FDolphinUnrealModule::StartupModule()
 {
-	FEditorDelegates::PostPIEStarted.AddRaw(this, &FDolphinUnrealModule::PostPIEStarted);
 }
 
 void FDolphinUnrealModule::ShutdownModule()
 {
+}
+
+UDolphinInstance* FDolphinUnrealModule::CreateNewInstance()
+{
+	UDolphinInstance* Instance = NewObject<UDolphinInstance>();
+
+	DolphinInstances.Add(Instance);
+
+	return Instance;
 }
 
 void FDolphinUnrealModule::SetDefaultDolphinInstance(UDolphinInstance* InDefaultDolphinInstance)
@@ -28,8 +36,9 @@ UDolphinInstance* FDolphinUnrealModule::GetDefaultDolphinInstance() const
 	return DefaultDolphinInstance;
 }
 
-void FDolphinUnrealModule::PostPIEStarted(const bool bIsSimulating)
+TArray<UDolphinInstance*> FDolphinUnrealModule::GetDolphinInstances() const
 {
+	return DolphinInstances;
 }
 
 #undef LOCTEXT_NAMESPACE

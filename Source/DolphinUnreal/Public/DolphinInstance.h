@@ -48,34 +48,47 @@ public:
 	bool IsTickableWhenPaused() const override { return true; }
 	TStatId GetStatId() const override { return TStatId(); }
 	void Tick(float DeltaTime) override;
+	
+	UFUNCTION(BlueprintCallable)
+	void RequestLoadSaveState(FString SaveName);
+	
+	UFUNCTION(BlueprintCallable)
+	void RequestCreateSaveState(FString SaveName);
 
 	UFUNCTION(BlueprintCallable)
-	void Pause();
+	void RequestPause();
 
 	UFUNCTION(BlueprintCallable)
-	void Unpause();
+	void RequestUnpause();
 
 	UFUNCTION(BlueprintPure)
 	bool IsPaused() const;
 
 	UFUNCTION(BlueprintCallable)
-	void StartRecording();
+	void RequestStartRecording();
 
 	UFUNCTION(BlueprintCallable)
-	void StopRecording();
+	void RequestStopRecording();
 
 	UFUNCTION(BlueprintPure)
 	bool IsRecording() const;
 
+	UFUNCTION(BlueprintCallable)
+	void RequestPlayInputs(UDataTable* FrameInputsTable);
+
+	UFUNCTION(BlueprintCallable)
+	void Terminate();
+
 protected:
 	virtual void DolphinServer_OnInstanceConnected(const ToServerParams_OnInstanceConnected& OnInstanceConnectedParams) override;
+	virtual void DolphinServer_OnInstanceHeartbeatAcknowledged(const ToServerParams_OnInstanceHeartbeatAcknowledged& onInstanceHeartbeatAcknowledgedParams) override;
 	virtual void DolphinServer_OnInstanceTerminated(const ToServerParams_OnInstanceTerminated& OnInstanceTerminatedParams) override;
+	virtual void DolphinServer_OnInstanceRecordingStopped(const ToServerParams_OnInstanceRecordingStopped& onInstanceRecordingStopped) override;
 
 private:
 	void LaunchInstance(UIsoAsset* InIsoAsset, const FDolphinGraphicsSettings& InGraphicsSettings, const FDolphinRuntimeSettings& InRuntimeSettings);
 
 	FString InstanceId;
-	FProcHandle DolphinProcHandle;
 
 	bool bIsRecordingInput = false;
 	bool bIsPaused = false;

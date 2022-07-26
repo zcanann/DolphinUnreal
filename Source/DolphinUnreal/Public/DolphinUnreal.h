@@ -12,13 +12,14 @@ public:
 	virtual void StartupModule() override;
 	virtual void ShutdownModule() override;
 
+	UDolphinInstance* CreateNewInstance();
 	void SetDefaultDolphinInstance(UDolphinInstance* InDefaultDolphinInstance);
 	UDolphinInstance* GetDefaultDolphinInstance() const;
+	TArray<UDolphinInstance*> GetDolphinInstances() const;
 
-	static const FName Name;
+	static const FName ModuleName;
 
 private:
-	void PostPIEStarted(const bool bIsSimulating);
-
+	TArray<UDolphinInstance*> DolphinInstances;
 	UDolphinInstance* DefaultDolphinInstance = nullptr;
 };

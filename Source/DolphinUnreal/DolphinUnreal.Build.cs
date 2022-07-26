@@ -41,6 +41,8 @@ public class DolphinUnreal : ModuleRules
 			}
 		);
 
+		CopyDolphinInstanceBinary();
+
 		PublicIncludePaths.AddRange(
 			new string[]
 			{
@@ -156,6 +158,17 @@ public class DolphinUnreal : ModuleRules
 			}
 
 			Trace("Added library: {0}", fullLibraryPath);
+		}
+	}
+
+	private void CopyDolphinInstanceBinary()
+	{
+		string binaryReleasePath = Path.Combine(PluginPath, "ThirdParty/DolphinAPI/Build/x64/Release/DolphinInstance.exe");
+		string binaryContentPath = Path.Combine(PluginPath, "Content/Dolphin/DolphinInstance.exe");
+
+		if (File.Exists(binaryReleasePath))
+		{
+			File.Copy(binaryReleasePath, binaryContentPath, true);
 		}
 	}
 }
