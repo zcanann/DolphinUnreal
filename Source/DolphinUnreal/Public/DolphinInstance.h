@@ -41,6 +41,8 @@ public:
 	void Initialize(UIsoAsset* InIsoAsset, const FDolphinGraphicsSettings& InGraphicsSettings, const FDolphinRuntimeSettings& InRuntimeSettings);
 	virtual ~UDolphinInstance();
 
+	void PausePIE(const bool bIsSimulating);
+
 	bool IsTickable() const override { return true; }
 	bool IsTickableInEditor() const override { return true; }
 	bool IsTickableWhenPaused() const override { return true; }

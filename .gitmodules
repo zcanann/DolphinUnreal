@@ -1,0 +1,3 @@
+[submodule "ThirdParty/DolphinAPI"]
+	path = ThirdParty/DolphinAPI
+	url = git@github.com:zcanann/DolphinAPI.git

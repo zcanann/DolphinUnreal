@@ -14,7 +14,7 @@
 
 UDolphinInstance::UDolphinInstance(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
-
+    FEditorDelegates::PausePIE.AddUObject(this, &UDolphinInstance::PausePIE);
 }
 
 void UDolphinInstance::Initialize(UIsoAsset* InIsoAsset, const FDolphinGraphicsSettings& InGraphicsSettings, const FDolphinRuntimeSettings& InRuntimeSettings)
@@ -28,6 +28,14 @@ UDolphinInstance::~UDolphinInstance()
     {
         FWindowsPlatformProcess::TerminateProc(DolphinProcHandle);
     }
+}
+
+void UDolphinInstance::PausePIE(const bool bIsSimulating)
+{
+    DolphinIpcToInstanceData ipcData;
+    std::shared_ptr<ToInstanceParams_StopRecordingInput> data = std::make_shared<ToInstanceParams_StopRecordingInput>();
+    ipcData._call = DolphinInstanceIpcCall::DolphinInstance_StopRecordingInput;
+    ipcSendToInstance(ipcData);
 }
 
 void UDolphinInstance::Tick(float DeltaTime)

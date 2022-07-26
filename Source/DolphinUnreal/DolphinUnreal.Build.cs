@@ -28,16 +28,16 @@ public class DolphinUnreal : ModuleRules
 			Target,
 			new IncludePath[]
 			{
-				new IncludePath("ThirdParty/dolphin-api/", false),
-				new IncludePath("ThirdParty/dolphin-api/dolphin-ipc/", false),
-				new IncludePath("ThirdParty/dolphin-api/dolphin-ipc/external/", false),
-				new IncludePath("ThirdParty/dolphin-api/dolphin-ipc/external/cereal", false),
-				new IncludePath("ThirdParty/dolphin-api/dolphin-ipc/external/cpp-ipc/include", false),
+				new IncludePath("ThirdParty/DolphinAPI/", false),
+				new IncludePath("ThirdParty/DolphinAPI/dolphin-ipc/", false),
+				new IncludePath("ThirdParty/DolphinAPI/dolphin-ipc/external/", false),
+				new IncludePath("ThirdParty/DolphinAPI/dolphin-ipc/external/cereal", false),
+				new IncludePath("ThirdParty/DolphinAPI/dolphin-ipc/external/cpp-ipc/include", false),
 			},
 			new string[]
 			{
-				"ThirdParty/dolphin-api/dolphin-ipc/external/cpp-ipc/lib/Release/ipc.lib",
-				"ThirdParty/dolphin-api/Build/x64/Release/DolphinIPC.lib",
+				"ThirdParty/DolphinAPI/dolphin-ipc/external/cpp-ipc/lib/Release/ipc.lib",
+				"ThirdParty/DolphinAPI/Build/x64/Release/DolphinIPC.lib",
 			}
 		);
 
