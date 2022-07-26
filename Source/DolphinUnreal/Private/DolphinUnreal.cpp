@@ -11,6 +11,7 @@ const FName FDolphinUnrealModule::Name = FName("DolphinUnreal");
 
 void FDolphinUnrealModule::StartupModule()
 {
+	FEditorDelegates::PostPIEStarted.AddRaw(this, &FDolphinUnrealModule::PostPIEStarted);
 }
 
 void FDolphinUnrealModule::ShutdownModule()
@@ -25,6 +26,10 @@ void FDolphinUnrealModule::SetDefaultDolphinInstance(UDolphinInstance* InDefault
 UDolphinInstance* FDolphinUnrealModule::GetDefaultDolphinInstance() const
 {
 	return DefaultDolphinInstance;
+}
+
+void FDolphinUnrealModule::PostPIEStarted(const bool bIsSimulating)
+{
 }
 
 #undef LOCTEXT_NAMESPACE

@@ -43,17 +43,6 @@ void UDolphinInstance::Tick(float DeltaTime)
     updateIpcListen();
 }
 
-void UDolphinInstance::WaitFrames(int32 Frames)
-{
-    /*
-    DolphinIpcToInstanceData ipcData;
-    ToServerParams_OnInstanceConnected* data = new ToServerParams_OnInstanceConnected();
-    data->_params = "123";
-    ipcData._call = DolphinInstanceIpcCall::DolphinServer_OnInstanceConnected;
-    ipcData._params._onInstanceConnectedParams = data;
-    ipcSendToServer(ipcData);*/
-}
-
 void UDolphinInstance::DolphinServer_OnInstanceConnected(const ToServerParams_OnInstanceConnected& OnInstanceConnectedParams)
 {
     if (GEngine)
@@ -102,4 +91,44 @@ void UDolphinInstance::LaunchInstance(UIsoAsset* InIsoAsset, const FDolphinGraph
         (OptionalWorkingDirectory != "") ? *OptionalWorkingDirectory : nullptr,
         nullptr
     );
+}
+
+void UDolphinInstance::Pause()
+{
+    bIsPaused = true;
+}
+
+void UDolphinInstance::Unpause()
+{
+    bIsPaused = false;
+}
+
+bool UDolphinInstance::IsPaused() const
+{
+    return bIsPaused;
+}
+
+void UDolphinInstance::StartRecording()
+{
+    bIsRecordingInput = true;
+
+    DolphinIpcToInstanceData ipcData;
+    std::shared_ptr<ToInstanceParams_StartRecordingInput> data = std::make_shared<ToInstanceParams_StartRecordingInput>();
+    ipcData._call = DolphinInstanceIpcCall::DolphinInstance_StartRecordingInput;
+    ipcSendToInstance(ipcData);
+}
+
+void UDolphinInstance::StopRecording()
+{
+    bIsRecordingInput = false;
+
+    DolphinIpcToInstanceData ipcData;
+    std::shared_ptr<ToInstanceParams_StopRecordingInput> data = std::make_shared<ToInstanceParams_StopRecordingInput>();
+    ipcData._call = DolphinInstanceIpcCall::DolphinInstance_StopRecordingInput;
+    ipcSendToInstance(ipcData);
+}
+
+bool UDolphinInstance::IsRecording() const
+{
+    return bIsRecordingInput;
 }

@@ -18,5 +18,7 @@ public:
 	static const FName Name;
 
 private:
+	void PostPIEStarted(const bool bIsSimulating);
+
 	UDolphinInstance* DefaultDolphinInstance = nullptr;
 };
