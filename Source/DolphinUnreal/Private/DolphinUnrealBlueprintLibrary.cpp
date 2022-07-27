@@ -25,6 +25,13 @@ UDolphinInstance* UDolphinUnrealBlueprintLibrary::CreateDolphinInstance(bool bRe
     return Instance;
 }
 
+void UDolphinUnrealBlueprintLibrary::TerminateDolphinInstance(UDolphinInstance* DolphinInstance)
+{
+    FDolphinUnrealModule& DolphinUnreal = FModuleManager::GetModuleChecked<FDolphinUnrealModule>(FDolphinUnrealModule::ModuleName);
+
+    DolphinUnreal.TerminateInstance(DolphinInstance);
+}
+
 UDolphinInstance* UDolphinUnrealBlueprintLibrary::GetDefaultDolphinInstance()
 {
     FDolphinUnrealModule& DolphinUnreal = FModuleManager::GetModuleChecked<FDolphinUnrealModule>(FDolphinUnrealModule::ModuleName);

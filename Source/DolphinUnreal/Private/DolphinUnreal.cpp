@@ -1,9 +1,12 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "DolphinUnreal.h"
+
 #include "Core.h"
 #include "Modules/ModuleManager.h"
 #include "Interfaces/IPluginManager.h"
+
+#include "DolphinInstance.h"
 
 #define LOCTEXT_NAMESPACE "FDolphinUnrealModule"
 
@@ -23,7 +26,19 @@ UDolphinInstance* FDolphinUnrealModule::CreateNewInstance()
 
 	DolphinInstances.Add(Instance);
 
+	Instance->AddToRoot();
+
 	return Instance;
+}
+
+void FDolphinUnrealModule::TerminateInstance(UDolphinInstance* InDolphinInstance)
+{
+	if (InDolphinInstance != nullptr)
+	{
+		DolphinInstances.Remove(InDolphinInstance);
+		InDolphinInstance->RemoveFromRoot();
+		InDolphinInstance->Terminate();
+	}
 }
 
 void FDolphinUnrealModule::SetDefaultDolphinInstance(UDolphinInstance* InDefaultDolphinInstance)

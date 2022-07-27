@@ -166,9 +166,13 @@ public class DolphinUnreal : ModuleRules
 		string binaryReleasePath = Path.Combine(PluginPath, "ThirdParty/DolphinAPI/Build/x64/Release/DolphinInstance.exe");
 		string binaryContentPath = Path.Combine(PluginPath, "Content/Dolphin/DolphinInstance.exe");
 
-		if (File.Exists(binaryReleasePath))
+		try
 		{
 			File.Copy(binaryReleasePath, binaryContentPath, true);
+		}
+		catch (Exception ex)
+		{
+			Trace("Error copying Dolphin Binary: {0}", ex.ToString() ?? "");
 		}
 	}
 }

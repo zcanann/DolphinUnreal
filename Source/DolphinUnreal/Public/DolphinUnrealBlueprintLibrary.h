@@ -21,6 +21,9 @@ class UDolphinUnrealBlueprintLibrary : public UBlueprintFunctionLibrary
 		FDolphinRuntimeSettings RuntimeSettings = FDolphinRuntimeSettings()
 	);
 
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Terminate Dolphin Instance", Keywords = "Terminate Dolphin Instance"), Category = "Dolphin")
+	static void TerminateDolphinInstance(UDolphinInstance* DolphinInstance);
+
 	UFUNCTION(BlueprintPure, meta = (DisplayName = "Get Default Dolphin Instance", Keywords = "Get Default Dolphin Instance"), Category = "Dolphin")
 	static UDolphinInstance* GetDefaultDolphinInstance();
 

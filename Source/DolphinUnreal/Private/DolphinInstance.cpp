@@ -7,15 +7,19 @@
 #include "Misc/Paths.h"
 
 #include "AssetTypes/IsoAsset.h"
+#include "DolphinUnrealBlueprintLibrary.h"
 #include "FrameInput.h"
 #include "Platform/WindowsSimpleProcessSpawner.h"
 
 // STL
 #include <string>
 
+#pragma optimize("", off)
+
 UDolphinInstance::UDolphinInstance(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
     FEditorDelegates::PausePIE.AddUObject(this, &UDolphinInstance::PausePIE);
+    FEditorDelegates::EndPIE.AddUObject(this, &UDolphinInstance::EndPIE);
 }
 
 void UDolphinInstance::Initialize(UIsoAsset* InIsoAsset, const FDolphinGraphicsSettings& InGraphicsSettings, const FDolphinRuntimeSettings& InRuntimeSettings)
@@ -25,7 +29,6 @@ void UDolphinInstance::Initialize(UIsoAsset* InIsoAsset, const FDolphinGraphicsS
 
 UDolphinInstance::~UDolphinInstance()
 {
-    Terminate();
 }
 
 void UDolphinInstance::PausePIE(const bool bIsSimulating)
@@ -36,8 +39,18 @@ void UDolphinInstance::PausePIE(const bool bIsSimulating)
     ipcSendToInstance(ipcData);
 }
 
+void UDolphinInstance::EndPIE(const bool bIsSimulating)
+{
+    UDolphinUnrealBlueprintLibrary::TerminateDolphinInstance(this);
+}
+
 void UDolphinInstance::Tick(float DeltaTime)
 {
+    if (this == GetDefault<UDolphinInstance>())
+    {
+        return;
+    }
+
     updateIpcListen();
 
     // Send a heartbeat to the running instance
@@ -57,7 +70,6 @@ void UDolphinInstance::DolphinServer_OnInstanceConnected(const ToServerParams_On
 
 void UDolphinInstance::DolphinServer_OnInstanceHeartbeatAcknowledged(const ToServerParams_OnInstanceHeartbeatAcknowledged& onInstanceHeartbeatAcknowledgedParams)
 {
-
 }
 
 void UDolphinInstance::DolphinServer_OnInstanceTerminated(const ToServerParams_OnInstanceTerminated& OnInstanceTerminatedParams)
@@ -70,7 +82,6 @@ void UDolphinInstance::DolphinServer_OnInstanceTerminated(const ToServerParams_O
 
 void UDolphinInstance::DolphinServer_OnInstanceRecordingStopped(const ToServerParams_OnInstanceRecordingStopped& onInstanceRecordingStopped)
 {
-
 }
 
 void UDolphinInstance::LaunchInstance(UIsoAsset* InIsoAsset, const FDolphinGraphicsSettings& InGraphicsSettings, const FDolphinRuntimeSettings& InRuntimeSettings)
@@ -88,11 +99,15 @@ void UDolphinInstance::LaunchInstance(UIsoAsset* InIsoAsset, const FDolphinGraph
 
     initializeChannels(std::string(TCHAR_TO_UTF8(*InstanceId)), false);
 
+    /*
     FWindowsSimpleProcessSpawner::CreateProc(
         *DolphinBinaryPath,
         *Params,
         (OptionalWorkingDirectory != "") ? *OptionalWorkingDirectory : nullptr
-    );
+    );*/
+
+    FString ExecuteParams = "start " + DolphinBinaryPath + " " + Params;
+    FWindowsSimpleProcessSpawner::CreateProc(TCHAR_TO_ANSI(*ExecuteParams));
 }
 
 void UDolphinInstance::RequestLoadSaveState(FString SaveName)
@@ -182,3 +197,5 @@ void UDolphinInstance::Terminate()
 
     ConditionalBeginDestroy();
 }
+
+#pragma optimize("", on)

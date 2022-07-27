@@ -13,6 +13,7 @@ public:
 	virtual void ShutdownModule() override;
 
 	UDolphinInstance* CreateNewInstance();
+	void TerminateInstance(UDolphinInstance* InDolphinInstance);
 	void SetDefaultDolphinInstance(UDolphinInstance* InDefaultDolphinInstance);
 	UDolphinInstance* GetDefaultDolphinInstance() const;
 	TArray<UDolphinInstance*> GetDolphinInstances() const;
@@ -20,6 +21,9 @@ public:
 	static const FName ModuleName;
 
 private:
+	UPROPERTY()
 	TArray<UDolphinInstance*> DolphinInstances;
+
+	UPROPERTY()
 	UDolphinInstance* DefaultDolphinInstance = nullptr;
 };

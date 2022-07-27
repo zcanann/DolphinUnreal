@@ -42,6 +42,7 @@ public:
 	virtual ~UDolphinInstance();
 
 	void PausePIE(const bool bIsSimulating);
+	void EndPIE(const bool bIsSimulating);
 
 	bool IsTickable() const override { return true; }
 	bool IsTickableInEditor() const override { return true; }
