@@ -10,12 +10,12 @@ UDolphinUnrealBlueprintLibrary::UDolphinUnrealBlueprintLibrary(const FObjectInit
 
 }
 
-UDolphinInstance* UDolphinUnrealBlueprintLibrary::CreateDolphinInstance(bool bRegisterAsDefaultInstance, UIsoAsset* IsoAsset, FDolphinGraphicsSettings GraphicsSettings, FDolphinRuntimeSettings RuntimeSettings)
+UDolphinInstance* UDolphinUnrealBlueprintLibrary::CreateDolphinInstance(bool bRegisterAsDefaultInstance, bool bBeginRecording, UIsoAsset* IsoAsset)
 {
     FDolphinUnrealModule& DolphinUnreal = FModuleManager::GetModuleChecked<FDolphinUnrealModule>(FDolphinUnrealModule::ModuleName);
     UDolphinInstance* Instance = DolphinUnreal.CreateNewInstance();
 
-    Instance->Initialize(IsoAsset, GraphicsSettings, RuntimeSettings);
+    Instance->Initialize(IsoAsset, bBeginRecording);
 
     if (bRegisterAsDefaultInstance)
     {

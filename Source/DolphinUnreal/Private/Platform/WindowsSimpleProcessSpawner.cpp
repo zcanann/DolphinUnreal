@@ -7,7 +7,7 @@
 void FWindowsSimpleProcessSpawner::CreateProc(const TCHAR* URL, const TCHAR* Params, const TCHAR* OptionalWorkingDirectory)
 {
 	ShellExecute(NULL, TEXT("open"), URL, Params, OptionalWorkingDirectory, SW_SHOWDEFAULT);
-
+	
 	/*
 	SHELLEXECUTEINFO ShellExecuteInfo;
 	ZeroMemory(&ShellExecuteInfo, sizeof(ShellExecuteInfo));

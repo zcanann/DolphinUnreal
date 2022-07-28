@@ -15,10 +15,9 @@ class UDolphinUnrealBlueprintLibrary : public UBlueprintFunctionLibrary
 
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Create Dolphin Instance", Keywords = "Create Initialize New Dolphin Instance"), Category = "Dolphin")
 	static UDolphinInstance* CreateDolphinInstance(
-		bool bRegisterAsDefaultInstance = true,
-		UIsoAsset* IsoAsset = nullptr,
-		FDolphinGraphicsSettings GraphicsSettings = FDolphinGraphicsSettings(),
-		FDolphinRuntimeSettings RuntimeSettings = FDolphinRuntimeSettings()
+		bool bRegisterAsDefaultInstance = false,
+		bool bBeginRecording = false,
+		UIsoAsset* IsoAsset = nullptr
 	);
 
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Terminate Dolphin Instance", Keywords = "Terminate Dolphin Instance"), Category = "Dolphin")

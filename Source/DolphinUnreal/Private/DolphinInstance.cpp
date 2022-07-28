@@ -22,9 +22,9 @@ UDolphinInstance::UDolphinInstance(const FObjectInitializer& ObjectInitializer) 
     FEditorDelegates::EndPIE.AddUObject(this, &UDolphinInstance::EndPIE);
 }
 
-void UDolphinInstance::Initialize(UIsoAsset* InIsoAsset, const FDolphinGraphicsSettings& InGraphicsSettings, const FDolphinRuntimeSettings& InRuntimeSettings)
+void UDolphinInstance::Initialize(UIsoAsset* InIsoAsset, bool bBeginRecording)
 {
-    LaunchInstance(InIsoAsset, InGraphicsSettings, InRuntimeSettings);
+    LaunchInstance(InIsoAsset, bBeginRecording);
 }
 
 UDolphinInstance::~UDolphinInstance()
@@ -70,6 +70,8 @@ void UDolphinInstance::DolphinServer_OnInstanceConnected(const ToServerParams_On
 
 void UDolphinInstance::DolphinServer_OnInstanceHeartbeatAcknowledged(const ToServerParams_OnInstanceHeartbeatAcknowledged& onInstanceHeartbeatAcknowledgedParams)
 {
+    bIsRecordingInput = onInstanceHeartbeatAcknowledgedParams._isRecording;
+    bIsPaused = onInstanceHeartbeatAcknowledgedParams._isPaused;
 }
 
 void UDolphinInstance::DolphinServer_OnInstanceTerminated(const ToServerParams_OnInstanceTerminated& OnInstanceTerminatedParams)
@@ -84,7 +86,7 @@ void UDolphinInstance::DolphinServer_OnInstanceRecordingStopped(const ToServerPa
 {
 }
 
-void UDolphinInstance::LaunchInstance(UIsoAsset* InIsoAsset, const FDolphinGraphicsSettings& InGraphicsSettings, const FDolphinRuntimeSettings& InRuntimeSettings)
+void UDolphinInstance::LaunchInstance(UIsoAsset* InIsoAsset, bool bBeginRecording)
 {
     static FString PluginContentDirectory = FPaths::ConvertRelativePathToFull(IPluginManager::Get().FindPlugin(TEXT("DolphinUnreal"))->GetContentDir());
     static FString ProjectContentDirectory = FPaths::ConvertRelativePathToFull(FPaths::ProjectContentDir());
@@ -94,7 +96,7 @@ void UDolphinInstance::LaunchInstance(UIsoAsset* InIsoAsset, const FDolphinGraph
     FString DolphinBinaryPath = FPaths::Combine(DolphinBinaryFolder, TEXT("DolphinInstance.exe"));
     FString GamePath = InIsoAsset->Path;
     FString UserPath = FPaths::Combine(ProjectContentDirectory, "Dolphin");
-    FString Params = FString::Format(TEXT("\"{0}\" -u \"{1}\" -p win32 -i {2}"), { GamePath, UserPath, InstanceId });
+    FString Params = FString::Format(TEXT("\"{0}\" -u \"{1}\" -p win32 -i {2} {3}"), { GamePath, UserPath, InstanceId, bBeginRecording ? "-r" : "" });
     FString OptionalWorkingDirectory = DolphinBinaryFolder;
 
     initializeChannels(std::string(TCHAR_TO_UTF8(*InstanceId)), false);

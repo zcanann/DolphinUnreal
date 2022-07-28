@@ -8,26 +8,6 @@
 
 #include "DolphinInstance.generated.h"
 
-USTRUCT(BlueprintType)
-struct FDolphinGraphicsSettings
-{
-	GENERATED_BODY()
-
-public:
-	FDolphinGraphicsSettings() { }
-
-	bool bIsHeadless = false;
-};
-
-USTRUCT(BlueprintType)
-struct FDolphinRuntimeSettings
-{
-	GENERATED_BODY()
-
-public:
-	FDolphinRuntimeSettings() { }
-};
-
 class UIsoAsset;
 struct FProcHandle;
 
@@ -38,7 +18,7 @@ class UDolphinInstance : public UObject, public DolphinIpcHandlerBase, public FT
 
 public:
 	UFUNCTION()
-	void Initialize(UIsoAsset* InIsoAsset, const FDolphinGraphicsSettings& InGraphicsSettings, const FDolphinRuntimeSettings& InRuntimeSettings);
+	void Initialize(UIsoAsset* InIsoAsset, bool bBeginRecording);
 	virtual ~UDolphinInstance();
 
 	void PausePIE(const bool bIsSimulating);
@@ -87,7 +67,7 @@ protected:
 	virtual void DolphinServer_OnInstanceRecordingStopped(const ToServerParams_OnInstanceRecordingStopped& onInstanceRecordingStopped) override;
 
 private:
-	void LaunchInstance(UIsoAsset* InIsoAsset, const FDolphinGraphicsSettings& InGraphicsSettings, const FDolphinRuntimeSettings& InRuntimeSettings);
+	void LaunchInstance(UIsoAsset* InIsoAsset, bool bBeginRecording);
 
 	FString InstanceId;
 

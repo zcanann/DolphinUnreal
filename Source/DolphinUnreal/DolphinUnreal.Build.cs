@@ -165,7 +165,7 @@ public class DolphinUnreal : ModuleRules
 	{
 		string binaryReleasePath = Path.Combine(PluginPath, "ThirdParty/DolphinAPI/Build/x64/Release/DolphinInstance.exe");
 		string binaryContentPath = Path.Combine(PluginPath, "Content/Dolphin/DolphinInstance.exe");
-
+		
 		try
 		{
 			File.Copy(binaryReleasePath, binaryContentPath, true);
