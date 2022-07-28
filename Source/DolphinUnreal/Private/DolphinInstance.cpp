@@ -1,12 +1,13 @@
 #include "DolphinInstance.h"
 
-#include "DolphinUnreal.h"
 #include "Interfaces/IPluginManager.h"
 #include "Misc/Guid.h"
 #include "Misc/MonitoredProcess.h"
 #include "Misc/Paths.h"
 
 #include "AssetTypes/IsoAsset.h"
+#include "DataTables/InputTableImporter.h"
+#include "DolphinUnreal.h"
 #include "DolphinUnrealBlueprintLibrary.h"
 #include "FrameInput.h"
 #include "Platform/WindowsSimpleProcessSpawner.h"
@@ -84,6 +85,31 @@ void UDolphinInstance::DolphinServer_OnInstanceTerminated(const ToServerParams_O
 
 void UDolphinInstance::DolphinServer_OnInstanceRecordingStopped(const ToServerParams_OnInstanceRecordingStopped& onInstanceRecordingStopped)
 {
+    if (onInstanceRecordingStopped._inputStates.size() <= 0)
+    {
+        return;
+    }
+
+    UDataTable* InputTable = NewObject<UDataTable>();
+
+    InputTable->RowStruct = FFrameInput::StaticStruct();
+
+    for (const DolphinControllerState& Next : onInstanceRecordingStopped._inputStates)
+    {
+        FFrameInput FrameInput = FFrameInput::FromDolphinControllerState(Next);
+        InputTable->AddRow(FName(FGuid::NewGuid().ToString()), FrameInput);
+    }
+
+    FInputTableImporter::ImportInputTableAsAsset(*InputTable);
+
+    /*
+    * UCSVImportFactory::FactoryCreateText
+GEditor->GetEditorSubsystem<UImportSubsystem>()->BroadcastAssetPreImport(this, InClass, InParent, InName, Type);
+    DoImportDataTable
+GEditor->GetEditorSubsystem<UImportSubsystem>()->BroadcastAssetPostImport(this, NewAsset);
+
+return NewAsset;
+    */
 }
 
 void UDolphinInstance::LaunchInstance(UIsoAsset* InIsoAsset, bool bBeginRecording)

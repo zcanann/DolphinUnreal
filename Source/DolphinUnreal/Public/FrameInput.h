@@ -5,6 +5,8 @@
 #include "Engine/DataTable.h"
 #include "Serialization/Archive.h"
 
+#include "dolphin-ipc/IpcStructs.h"
+
 #include "FrameInput.generated.h"
 
 UENUM(BlueprintType)
@@ -37,6 +39,7 @@ struct FFrameInput : public FTableRowBase
 	GENERATED_BODY()
 
 public:
+	static FFrameInput FromDolphinControllerState(DolphinControllerState InDolphinControllerState);
 	static FString GetSimpleName(EFrameInputType FrameInputType);
 	static FText GetToolTip(EFrameInputType FrameInputType, int32 InFrame);
 	static bool IsFrameInputTypeButton(EFrameInputType InFrameInputType);
@@ -79,6 +82,18 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bButtonR = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bDiscChange = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bConsoleReset = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bIsControllerConnected = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bOriginReset = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	uint8 TriggerLeft = 0;

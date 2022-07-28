@@ -2,6 +2,35 @@
 
 #define LOCTEXT_NAMESPACE "FrameInput"
 
+FFrameInput FFrameInput::FromDolphinControllerState(DolphinControllerState InDolphinControllerState)
+{
+	FFrameInput Result;
+
+	Result.bButtonA = InDolphinControllerState.A;
+	Result.bButtonB = InDolphinControllerState.B;
+	Result.bButtonX = InDolphinControllerState.X;
+	Result.bButtonY = InDolphinControllerState.Z;
+	Result.bButtonZ = InDolphinControllerState.Z;
+	Result.bButtonDUp = InDolphinControllerState.DPadUp;
+	Result.bButtonDDown = InDolphinControllerState.DPadDown;
+	Result.bButtonDLeft = InDolphinControllerState.DPadLeft;
+	Result.bButtonDRight = InDolphinControllerState.DPadRight;
+	Result.bButtonL = InDolphinControllerState.L;
+	Result.TriggerLeft = InDolphinControllerState.TriggerL;
+	Result.bButtonR = InDolphinControllerState.R;
+	Result.TriggerRight = InDolphinControllerState.TriggerR;
+	Result.MainStickX = InDolphinControllerState.AnalogStickX;
+	Result.MainStickY = InDolphinControllerState.AnalogStickY;
+	Result.CStickX = InDolphinControllerState.CStickX;
+	Result.CStickY = InDolphinControllerState.CStickY;
+	Result.bDiscChange = InDolphinControllerState.Disc;
+	Result.bConsoleReset = InDolphinControllerState.Reset;
+	Result.bIsControllerConnected = InDolphinControllerState.IsConnected;
+	Result.bOriginReset = InDolphinControllerState.GetOrigin;
+
+	return Result;
+}
+
 FString FFrameInput::GetSimpleName(EFrameInputType FrameInputType)
 {
 	switch (FrameInputType)
