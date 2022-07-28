@@ -1,6 +1,8 @@
 #pragma once
 
 #include "DataTables/InputTableImporter.h"
+
+#include "AssetToolsModule.h"
 #include "Factories/CSVImportFactory.h"
 #include "Kismet/DataTableFunctionLibrary.h"
 #include "Misc/FileHelper.h"
@@ -22,7 +24,6 @@ bool FInputTableImporter::ImportInputTableAsAsset(const UDataTable& InDataTable)
 
 	if (FileHandle == nullptr)
 	{
-		delete FileHandle;
 		return false;
 	}
 
@@ -71,29 +72,12 @@ bool FInputTableImporter::ImportInputTableAsAsset(const UDataTable& InDataTable)
 		AppendString(FileHandle, TEXT("\n"));
 	}
 
-	/*
-	bool bSuccess = UDataTableFunctionLibrary::FillDataTableFromCSVFile(&InDataTable, InputTableOutputFile);
-	*/
-
 	FileHandle->Flush(true);
 	delete FileHandle;
 
-	FString CsvContents;
-	FFileHelper::LoadFileToString(CsvContents, *InputTableOutputFile, FFileHelper::EHashOptions::None);
-
-	bool bWasCancelled = false;
-	const TCHAR* Buffer = *CsvContents;
-	UCSVImportFactory* ImportFactory = NewObject<UCSVImportFactory>();
-	ImportFactory->FactoryCreateText(InDataTable.GetClass()
-		, InDataTable.GetOuter()
-		, FName(UniqueName)
-		, InDataTable.GetFlags()
-		, nullptr
-		, TEXT("csv")
-		, Buffer
-		, Buffer + CsvContents.Len()
-		, nullptr
-		, bWasCancelled);
+	TArray<FString> Files = { InputTableOutputFile };
+	FString DestinationPath = FPaths::Combine(FPaths::ProjectContentDir(), TEXT("InputTables"));
+	GEditor->GetEditorSubsystem<UImportSubsystem>()->ImportNextTick(Files, DestinationPath);
 
 	return true;
 }
