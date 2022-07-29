@@ -23,9 +23,9 @@ UDolphinInstance::UDolphinInstance(const FObjectInitializer& ObjectInitializer) 
     FEditorDelegates::EndPIE.AddUObject(this, &UDolphinInstance::EndPIE);
 }
 
-void UDolphinInstance::Initialize(UIsoAsset* InIsoAsset, bool bBeginRecording)
+void UDolphinInstance::Initialize(UIsoAsset* InIsoAsset, bool bStartPaused, bool bBeginRecording)
 {
-    LaunchInstance(InIsoAsset, bBeginRecording);
+    LaunchInstance(InIsoAsset, bStartPaused, bBeginRecording);
 }
 
 UDolphinInstance::~UDolphinInstance()
@@ -101,28 +101,22 @@ void UDolphinInstance::DolphinServer_OnInstanceRecordingStopped(const ToServerPa
     }
 
     FInputTableImporter::ImportInputTableAsAsset(*InputTable);
-
-    /*
-    * UCSVImportFactory::FactoryCreateText
-GEditor->GetEditorSubsystem<UImportSubsystem>()->BroadcastAssetPreImport(this, InClass, InParent, InName, Type);
-    DoImportDataTable
-GEditor->GetEditorSubsystem<UImportSubsystem>()->BroadcastAssetPostImport(this, NewAsset);
-
-return NewAsset;
-    */
 }
 
-void UDolphinInstance::LaunchInstance(UIsoAsset* InIsoAsset, bool bBeginRecording)
+void UDolphinInstance::LaunchInstance(UIsoAsset* InIsoAsset, bool bStartPaused, bool bBeginRecording)
 {
     static FString PluginContentDirectory = FPaths::ConvertRelativePathToFull(IPluginManager::Get().FindPlugin(TEXT("DolphinUnreal"))->GetContentDir());
     static FString ProjectContentDirectory = FPaths::ConvertRelativePathToFull(FPaths::ProjectContentDir());
 
     InstanceId = FGuid::NewGuid().ToString();
-    FString DolphinBinaryFolder = FPaths::Combine(PluginContentDirectory, TEXT("Dolphin/"));
-    FString DolphinBinaryPath = FPaths::Combine(DolphinBinaryFolder, TEXT("DolphinInstance.exe"));
     FString GamePath = InIsoAsset->Path;
     FString UserPath = FPaths::Combine(ProjectContentDirectory, "Dolphin");
-    FString Params = FString::Format(TEXT("\"{0}\" -u \"{1}\" -p win32 -i {2} {3}"), { GamePath, UserPath, InstanceId, bBeginRecording ? "-r" : "" });
+    FString StartPausedFlag = bStartPaused ? TEXT("-z") : TEXT("");
+    FString RecordingFlag = bBeginRecording ? TEXT("-r") : TEXT("");
+    FString Params = FString::Format(TEXT("\"{0}\" -u \"{1}\" -p win32 -i {2} {3} {3}"), { GamePath, UserPath, InstanceId, StartPausedFlag, RecordingFlag });
+
+    FString DolphinBinaryFolder = FPaths::Combine(PluginContentDirectory, TEXT("Dolphin/"));
+    FString DolphinBinaryPath = FPaths::Combine(DolphinBinaryFolder, TEXT("DolphinInstance.exe"));
     FString OptionalWorkingDirectory = DolphinBinaryFolder;
 
     initializeChannels(std::string(TCHAR_TO_UTF8(*InstanceId)), false);
@@ -163,8 +157,8 @@ void UDolphinInstance::RequestUnpause()
     bIsPaused = false;
 
     DolphinIpcToInstanceData ipcData;
-    std::shared_ptr<ToInstanceParams_UnpauseEmulation> data = std::make_shared<ToInstanceParams_UnpauseEmulation>();
-    ipcData._call = DolphinInstanceIpcCall::DolphinInstance_UnpauseEmulation;
+    std::shared_ptr<ToInstanceParams_ResumeEmulation> data = std::make_shared<ToInstanceParams_ResumeEmulation>();
+    ipcData._call = DolphinInstanceIpcCall::DolphinInstance_ResumeEmulation;
     ipcSendToInstance(ipcData);
 }
 
@@ -216,7 +210,7 @@ void UDolphinInstance::RequestPlayInputs(UDataTable* FrameInputsTable)
     ipcSendToInstance(ipcData);
 }
 
-void UDolphinInstance::Terminate()
+void UDolphinInstance::RequestTerminate()
 {
     DolphinIpcToInstanceData ipcData;
     std::shared_ptr<ToInstanceParams_Terminate> data = std::make_shared<ToInstanceParams_Terminate>();

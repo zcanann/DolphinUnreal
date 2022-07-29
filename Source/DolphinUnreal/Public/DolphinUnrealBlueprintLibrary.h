@@ -16,6 +16,7 @@ class UDolphinUnrealBlueprintLibrary : public UBlueprintFunctionLibrary
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Create Dolphin Instance", Keywords = "Create Initialize New Dolphin Instance"), Category = "Dolphin")
 	static UDolphinInstance* CreateDolphinInstance(
 		bool bRegisterAsDefaultInstance = false,
+		bool bStartPaused = true,
 		bool bBeginRecording = false,
 		UIsoAsset* IsoAsset = nullptr
 	);
@@ -29,14 +30,29 @@ class UDolphinUnrealBlueprintLibrary : public UBlueprintFunctionLibrary
 	UFUNCTION(BlueprintPure, meta = (DisplayName = "Get All Dolphin Instances", Keywords = "Get All Dolphin Instances"), Category = "Dolphin")
 	static TArray<UDolphinInstance*> GetDolphinInstances();
 
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Resume Emulation", Keywords = "Resume Continue Unpause Play Emulation"), Category = "Dolphin")
+	static void ResumeEmulation(UDolphinInstance* DolphinInstance = nullptr);
+
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Pause Emulation", Keywords = "Pause Stop Emulation"), Category = "Dolphin")
+	static void PauseEmulation(UDolphinInstance* DolphinInstance = nullptr);
+
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Load Save State", Keywords = "Load Save State"), Category = "Dolphin")
 	static void LoadSaveState(FString SaveName, UDolphinInstance* DolphinInstance);
 
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Create Save State", Keywords = "Create Save State"), Category = "Dolphin")
 	static void CreateSaveState(FString SaveName, UDolphinInstance* DolphinInstance);
 
-	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Play Inputs", Keywords = "Play Input Frames"), Category = "Dolphin")
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Start Recording Input Table", Keywords = "Start Begin Recording Input Table Frames"), Category = "Dolphin")
+	static void StartRecording(UDolphinInstance* DolphinInstance = nullptr);
+
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Stop Recording Input Table", Keywords = "Stop End Finish Recording Input Table Frames"), Category = "Dolphin")
+	static void StopRecording(UDolphinInstance* DolphinInstance = nullptr);
+
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Play Input Table", Keywords = "Play Playback Recording Input Table Frames"), Category = "Dolphin")
 	static void PlayInputs(UDataTable* FrameInputsTable, UDolphinInstance* DolphinInstance = nullptr);
+
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Terminate Dolphin Instance", Keywords = "Terminate Stop Destroy Dolphin Instance"), Category = "Dolphin")
+	static void Terminate(UDolphinInstance* DolphinInstance = nullptr);
 
 	/*
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Wait Frames", Keywords = "Wait Skip Frames"), Category = "Dolphin")

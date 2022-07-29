@@ -37,7 +37,7 @@ void FDolphinUnrealModule::TerminateInstance(UDolphinInstance* InDolphinInstance
 	{
 		DolphinInstances.Remove(InDolphinInstance);
 		InDolphinInstance->RemoveFromRoot();
-		InDolphinInstance->Terminate();
+		InDolphinInstance->RequestTerminate();
 	}
 }
 

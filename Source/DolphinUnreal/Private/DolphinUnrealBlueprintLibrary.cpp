@@ -7,15 +7,14 @@
 UDolphinUnrealBlueprintLibrary::UDolphinUnrealBlueprintLibrary(const FObjectInitializer& ObjectInitializer)
     : Super(ObjectInitializer)
 {
-
 }
 
-UDolphinInstance* UDolphinUnrealBlueprintLibrary::CreateDolphinInstance(bool bRegisterAsDefaultInstance, bool bBeginRecording, UIsoAsset* IsoAsset)
+UDolphinInstance* UDolphinUnrealBlueprintLibrary::CreateDolphinInstance(bool bRegisterAsDefaultInstance, bool bStartPaused, bool bBeginRecording, UIsoAsset* IsoAsset)
 {
     FDolphinUnrealModule& DolphinUnreal = FModuleManager::GetModuleChecked<FDolphinUnrealModule>(FDolphinUnrealModule::ModuleName);
     UDolphinInstance* Instance = DolphinUnreal.CreateNewInstance();
 
-    Instance->Initialize(IsoAsset, bBeginRecording);
+    Instance->Initialize(IsoAsset, bStartPaused, bBeginRecording);
 
     if (bRegisterAsDefaultInstance)
     {
@@ -48,6 +47,26 @@ TArray<UDolphinInstance*> UDolphinUnrealBlueprintLibrary::GetDolphinInstances()
     return Instances;
 }
 
+void UDolphinUnrealBlueprintLibrary::ResumeEmulation(UDolphinInstance* DolphinInstance)
+{
+    DolphinInstance = DolphinInstance ? DolphinInstance : GetDefaultDolphinInstance();
+
+    if (DolphinInstance != nullptr)
+    {
+        DolphinInstance->RequestUnpause();
+    }
+}
+
+void UDolphinUnrealBlueprintLibrary::PauseEmulation(UDolphinInstance* DolphinInstance)
+{
+    DolphinInstance = DolphinInstance ? DolphinInstance : GetDefaultDolphinInstance();
+
+    if (DolphinInstance != nullptr)
+    {
+        DolphinInstance->RequestPause();
+    }
+}
+
 void UDolphinUnrealBlueprintLibrary::LoadSaveState(FString SaveName, UDolphinInstance* DolphinInstance)
 {
     DolphinInstance = DolphinInstance ? DolphinInstance : GetDefaultDolphinInstance();
@@ -68,6 +87,26 @@ void UDolphinUnrealBlueprintLibrary::CreateSaveState(FString SaveName, UDolphinI
     }
 }
 
+void UDolphinUnrealBlueprintLibrary::StartRecording(UDolphinInstance* DolphinInstance)
+{
+    DolphinInstance = DolphinInstance ? DolphinInstance : GetDefaultDolphinInstance();
+
+    if (DolphinInstance != nullptr)
+    {
+        DolphinInstance->RequestStartRecording();
+    }
+}
+
+void UDolphinUnrealBlueprintLibrary::StopRecording(UDolphinInstance* DolphinInstance)
+{
+    DolphinInstance = DolphinInstance ? DolphinInstance : GetDefaultDolphinInstance();
+
+    if (DolphinInstance != nullptr)
+    {
+        DolphinInstance->RequestStopRecording();
+    }
+}
+
 void UDolphinUnrealBlueprintLibrary::PlayInputs(UDataTable* FrameInputsTable, UDolphinInstance* DolphinInstance)
 {
     DolphinInstance = DolphinInstance ? DolphinInstance : GetDefaultDolphinInstance();
@@ -75,6 +114,16 @@ void UDolphinUnrealBlueprintLibrary::PlayInputs(UDataTable* FrameInputsTable, UD
     if (DolphinInstance != nullptr)
     {
         DolphinInstance->RequestPlayInputs(FrameInputsTable);
+    }
+}
+
+void UDolphinUnrealBlueprintLibrary::Terminate(UDolphinInstance* DolphinInstance)
+{
+    DolphinInstance = DolphinInstance ? DolphinInstance : GetDefaultDolphinInstance();
+
+    if (DolphinInstance != nullptr)
+    {
+        DolphinInstance->RequestTerminate();
     }
 }
 

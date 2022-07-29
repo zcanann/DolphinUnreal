@@ -18,7 +18,7 @@ class UDolphinInstance : public UObject, public DolphinIpcHandlerBase, public FT
 
 public:
 	UFUNCTION()
-	void Initialize(UIsoAsset* InIsoAsset, bool bBeginRecording);
+	void Initialize(UIsoAsset* InIsoAsset, bool bStartPaused, bool bBeginRecording);
 	virtual ~UDolphinInstance();
 
 	void PausePIE(const bool bIsSimulating);
@@ -30,35 +30,35 @@ public:
 	TStatId GetStatId() const override { return TStatId(); }
 	void Tick(float DeltaTime) override;
 	
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION()
 	void RequestLoadSaveState(FString SaveName);
 	
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION()
 	void RequestCreateSaveState(FString SaveName);
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION()
 	void RequestPause();
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION()
 	void RequestUnpause();
 
 	UFUNCTION(BlueprintPure)
 	bool IsPaused() const;
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION()
 	void RequestStartRecording();
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION()
 	void RequestStopRecording();
 
 	UFUNCTION(BlueprintPure)
 	bool IsRecording() const;
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION()
 	void RequestPlayInputs(UDataTable* FrameInputsTable);
 
-	UFUNCTION(BlueprintCallable)
-	void Terminate();
+	UFUNCTION()
+	void RequestTerminate();
 
 protected:
 	virtual void DolphinServer_OnInstanceConnected(const ToServerParams_OnInstanceConnected& OnInstanceConnectedParams) override;
@@ -67,7 +67,7 @@ protected:
 	virtual void DolphinServer_OnInstanceRecordingStopped(const ToServerParams_OnInstanceRecordingStopped& onInstanceRecordingStopped) override;
 
 private:
-	void LaunchInstance(UIsoAsset* InIsoAsset, bool bBeginRecording);
+	void LaunchInstance(UIsoAsset* InIsoAsset, bool bStartPaused, bool bBeginRecording);
 
 	FString InstanceId;
 
