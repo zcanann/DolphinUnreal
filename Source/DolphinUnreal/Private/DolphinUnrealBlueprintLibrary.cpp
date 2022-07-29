@@ -53,7 +53,7 @@ void UDolphinUnrealBlueprintLibrary::ResumeEmulation(UDolphinInstance* DolphinIn
 
     if (DolphinInstance != nullptr)
     {
-        DolphinInstance->RequestUnpause();
+        DolphinInstance->RequestResume();
     }
 }
 

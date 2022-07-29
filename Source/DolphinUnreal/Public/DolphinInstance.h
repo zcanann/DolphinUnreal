@@ -40,7 +40,7 @@ public:
 	void RequestPause();
 
 	UFUNCTION()
-	void RequestUnpause();
+	void RequestResume();
 
 	UFUNCTION(BlueprintPure)
 	bool IsPaused() const;

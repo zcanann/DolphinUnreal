@@ -85,15 +85,11 @@ void UDolphinInstance::DolphinServer_OnInstanceTerminated(const ToServerParams_O
 
 void UDolphinInstance::DolphinServer_OnInstanceRecordingStopped(const ToServerParams_OnInstanceRecordingStopped& onInstanceRecordingStopped)
 {
-    if (onInstanceRecordingStopped._inputStates.size() <= 0)
-    {
-        return;
-    }
-
     UDataTable* InputTable = NewObject<UDataTable>();
 
     InputTable->RowStruct = FFrameInput::StaticStruct();
 
+    // TODO: This is slow and takes too much memory. Better to not to add the rows to the data table at all, and append each row to the CSV iteratively.
     for (const DolphinControllerState& Next : onInstanceRecordingStopped._inputStates)
     {
         FFrameInput FrameInput = FFrameInput::FromDolphinControllerState(Next);
@@ -113,7 +109,7 @@ void UDolphinInstance::LaunchInstance(UIsoAsset* InIsoAsset, bool bStartPaused, 
     FString UserPath = FPaths::Combine(ProjectContentDirectory, "Dolphin");
     FString StartPausedFlag = bStartPaused ? TEXT("-z") : TEXT("");
     FString RecordingFlag = bBeginRecording ? TEXT("-r") : TEXT("");
-    FString Params = FString::Format(TEXT("\"{0}\" -u \"{1}\" -p win32 -i {2} {3} {3}"), { GamePath, UserPath, InstanceId, StartPausedFlag, RecordingFlag });
+    FString Params = FString::Format(TEXT("\"{0}\" -u \"{1}\" -p win32 -i {2} {3} {4}"), { GamePath, UserPath, InstanceId, StartPausedFlag, RecordingFlag });
 
     FString DolphinBinaryFolder = FPaths::Combine(PluginContentDirectory, TEXT("Dolphin/"));
     FString DolphinBinaryPath = FPaths::Combine(DolphinBinaryFolder, TEXT("DolphinInstance.exe"));
@@ -152,7 +148,7 @@ void UDolphinInstance::RequestPause()
     ipcSendToInstance(ipcData);
 }
 
-void UDolphinInstance::RequestUnpause()
+void UDolphinInstance::RequestResume()
 {
     bIsPaused = false;
 
