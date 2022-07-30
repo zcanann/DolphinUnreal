@@ -1,6 +1,6 @@
 #include "BlueprintNodes/K2Node_CreateDolphinInstance.h"
 
-#include "BlueprintNodes/K2Node_CreateDolphinInstanceProxy.h"
+#include "DolphinUnrealBlueprintLibrary.h"
 
 #define LOCTEXT_NAMESPACE "UK2Node_CreateDolphinInstance"
 
@@ -25,6 +25,26 @@ FText UK2Node_CreateDolphinInstance::GetNodeTitle(ENodeTitleType::Type TitleType
 FText UK2Node_CreateDolphinInstance::GetMenuCategory() const
 {
 	return LOCTEXT("K2Node_CreateDolphinInstance_Category", "Dolphin");
+}
+
+UK2Node_CreateDolphinInstanceProxy* UK2Node_CreateDolphinInstanceProxy::CreateProxyObjectForWait(bool bRegisterAsDefaultInstance, bool bStartPaused, bool bBeginRecording, UIsoAsset* IsoAsset)
+{
+	UK2Node_CreateDolphinInstanceProxy* Proxy = NewObject<UK2Node_CreateDolphinInstanceProxy>();
+	Proxy->SetFlags(RF_StrongRefOnFrame);
+
+	UDolphinInstance* Instance = UDolphinUnrealBlueprintLibrary::CreateDolphinInstance(bRegisterAsDefaultInstance, bStartPaused, bBeginRecording, IsoAsset);
+	Instance->OnInstanceReadyForNextCommandEvent.AddUObject(Proxy, &UK2Node_CreateDolphinInstanceProxy::OnInstanceReady);
+
+	return Proxy;
+}
+
+UK2Node_CreateDolphinInstanceProxy::UK2Node_CreateDolphinInstanceProxy(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
+{
+}
+
+void UK2Node_CreateDolphinInstanceProxy::OnInstanceReady(UDolphinInstance* InInstance)
+{
+	OnSuccess.Broadcast(InInstance);
 }
 
 #undef LOCTEXT_NAMESPACE

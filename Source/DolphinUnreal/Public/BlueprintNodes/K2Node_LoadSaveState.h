@@ -4,10 +4,10 @@
 #include "UObject/ObjectMacros.h"
 #include "K2Node_BaseAsyncTask.h"
 
-#include "K2Node_CreateDolphinInstance.generated.h"
+#include "K2Node_LoadSaveState.generated.h"
 
 UCLASS()
-class UK2Node_CreateDolphinInstance : public UK2Node_BaseAsyncTask
+class UK2Node_LoadSaveState : public UK2Node_BaseAsyncTask
 {
 	GENERATED_UCLASS_BODY()
 
@@ -21,22 +21,21 @@ class UK2Node_CreateDolphinInstance : public UK2Node_BaseAsyncTask
 	//~ End UK2Node Interface
 };
 
-class UIsoAsset;
 class UDolphinInstance;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDolphinCreateInstanceMulticastDelegate, UDolphinInstance*, DolphinInstance);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDolphinLoadSaveStateMulticastDelegate, UDolphinInstance*, DolphinInstance);
 
 UCLASS(MinimalAPI)
-class UK2Node_CreateDolphinInstanceProxy : public UObject
+class UK2Node_LoadSaveStateProxy : public UObject
 {
 	GENERATED_UCLASS_BODY()
 
 public:
 	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"))
-	static UK2Node_CreateDolphinInstanceProxy* CreateProxyObjectForWait(bool bRegisterAsDefaultInstance, bool bStartPaused, bool bBeginRecording, UIsoAsset* IsoAsset);
+	static UK2Node_LoadSaveStateProxy* CreateProxyObjectForWait(FString SaveName, UDolphinInstance* DolphinInstance);
 	
 	UPROPERTY(BlueprintAssignable)
-	FDolphinCreateInstanceMulticastDelegate OnSuccess;
+	FDolphinLoadSaveStateMulticastDelegate OnSuccess;
 
 private:
 	void OnInstanceReady(UDolphinInstance* InInstance);
