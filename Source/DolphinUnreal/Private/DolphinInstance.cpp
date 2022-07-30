@@ -67,6 +67,9 @@ void UDolphinInstance::DolphinServer_OnInstanceConnected(const ToServerParams_On
     {
         GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Dolphin instance connected"));
     }
+
+    // TODO: Maybe broadcast on a different IPC event, when emulator is fully booted
+    OnInstanceReadyForNextCommandEvent.Broadcast(this);
 }
 
 void UDolphinInstance::DolphinServer_OnInstanceHeartbeatAcknowledged(const ToServerParams_OnInstanceHeartbeatAcknowledged& onInstanceHeartbeatAcknowledgedParams)
@@ -97,6 +100,8 @@ void UDolphinInstance::DolphinServer_OnInstanceRecordingStopped(const ToServerPa
     }
 
     FInputTableImporter::ImportInputTableAsAsset(*InputTable);
+
+    OnInstanceReadyForNextCommandEvent.Broadcast(this);
 }
 
 void UDolphinInstance::LaunchInstance(UIsoAsset* InIsoAsset, bool bStartPaused, bool bBeginRecording)
@@ -200,9 +205,20 @@ void UDolphinInstance::RequestPlayInputs(UDataTable* FrameInputsTable)
 
     FrameInputsTable->GetAllRows(ContextString, FrameInputs);
 
+    std::vector<DolphinControllerState> InputStates;
+    for (const FFrameInput* Next : FrameInputs)
+    {
+        if (Next)
+        {
+            InputStates.push_back(FFrameInput::ToDolphinControllerState(*Next));
+        }
+    }
+
     DolphinIpcToInstanceData ipcData;
-    std::shared_ptr<ToInstanceParams_StopRecordingInput> data = std::make_shared<ToInstanceParams_StopRecordingInput>();
-    ipcData._call = DolphinInstanceIpcCall::DolphinInstance_StopRecordingInput;
+    std::shared_ptr<ToInstanceParams_PlayInputs> data = std::make_shared<ToInstanceParams_PlayInputs>();
+    data->_inputStates = InputStates;
+    ipcData._call = DolphinInstanceIpcCall::DolphinInstance_PlayInputs;
+    ipcData._params._playInputsParams = data;
     ipcSendToInstance(ipcData);
 }
 

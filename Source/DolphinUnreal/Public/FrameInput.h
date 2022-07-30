@@ -40,6 +40,7 @@ struct FFrameInput : public FTableRowBase
 
 public:
 	static FFrameInput FromDolphinControllerState(DolphinControllerState InDolphinControllerState);
+	static DolphinControllerState ToDolphinControllerState(const FFrameInput& InFrameInput);
 	static FString GetSimpleName(EFrameInputType FrameInputType);
 	static FText GetToolTip(EFrameInputType FrameInputType, int32 InFrame);
 	static bool IsFrameInputTypeButton(EFrameInputType InFrameInputType);

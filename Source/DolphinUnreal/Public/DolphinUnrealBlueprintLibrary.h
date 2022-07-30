@@ -13,7 +13,7 @@ class UDolphinUnrealBlueprintLibrary : public UBlueprintFunctionLibrary
 {
 	GENERATED_UCLASS_BODY()
 
-	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Create Dolphin Instance", Keywords = "Create Initialize New Dolphin Instance"), Category = "Dolphin")
+	UFUNCTION() // UFUNCTION(BlueprintCallable, meta = (DisplayName = "Create Dolphin Instance", Keywords = "Create Initialize New Dolphin Instance"), Category = "Dolphin")
 	static UDolphinInstance* CreateDolphinInstance(
 		bool bRegisterAsDefaultInstance = false,
 		bool bStartPaused = true,

@@ -31,6 +31,35 @@ FFrameInput FFrameInput::FromDolphinControllerState(DolphinControllerState InDol
 	return Result;
 }
 
+DolphinControllerState FFrameInput::ToDolphinControllerState(const FFrameInput& InFrameInput)
+{
+	DolphinControllerState Result;
+
+	Result.A = InFrameInput.bButtonA;
+	Result.B = InFrameInput.bButtonB;
+	Result.X = InFrameInput.bButtonX;
+	Result.Z = InFrameInput.bButtonY;
+	Result.Z = InFrameInput.bButtonZ;
+	Result.DPadUp = InFrameInput.bButtonDUp;
+	Result.DPadDown = InFrameInput.bButtonDDown;
+	Result.DPadLeft = InFrameInput.bButtonDLeft;
+	Result.DPadRight = InFrameInput.bButtonDRight;
+	Result.L = InFrameInput.bButtonL;
+	Result.TriggerL = InFrameInput.TriggerLeft;
+	Result.R = InFrameInput.bButtonR;
+	Result.TriggerR = InFrameInput.TriggerRight;
+	Result.AnalogStickX = InFrameInput.MainStickX;
+	Result.AnalogStickY = InFrameInput.MainStickY;
+	Result.CStickX = InFrameInput.CStickX;
+	Result.CStickY = InFrameInput.CStickY;
+	Result.Disc = InFrameInput.bDiscChange;
+	Result.Reset = InFrameInput.bConsoleReset;
+	Result.IsConnected = InFrameInput.bIsControllerConnected;
+	Result.GetOrigin = InFrameInput.bOriginReset;
+
+	return Result;
+}
+
 FString FFrameInput::GetSimpleName(EFrameInputType FrameInputType)
 {
 	switch (FrameInputType)

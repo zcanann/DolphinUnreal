@@ -29,6 +29,9 @@ public:
 	bool IsTickableWhenPaused() const override { return true; }
 	TStatId GetStatId() const override { return TStatId(); }
 	void Tick(float DeltaTime) override;
+
+	DECLARE_MULTICAST_DELEGATE_OneParam(FOnInstanceReadyForNextCommand, UDolphinInstance*);
+	FOnInstanceReadyForNextCommand OnInstanceReadyForNextCommandEvent;
 	
 	UFUNCTION()
 	void RequestLoadSaveState(FString SaveName);
