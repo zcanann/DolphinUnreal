@@ -25,7 +25,7 @@ class UDolphinInstance;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDolphinResumeEmulationMulticastDelegate, UDolphinInstance*, DolphinInstance);
 
-UCLASS(MinimalAPI)
+UCLASS(meta = (HideThen))
 class UK2Node_ResumeEmulationProxy : public UObject
 {
 	GENERATED_UCLASS_BODY()

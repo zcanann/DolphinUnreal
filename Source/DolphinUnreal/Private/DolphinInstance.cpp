@@ -42,7 +42,7 @@ void UDolphinInstance::PausePIE(const bool bIsSimulating)
 
 void UDolphinInstance::EndPIE(const bool bIsSimulating)
 {
-    UDolphinUnrealBlueprintLibrary::TerminateDolphinInstance(this);
+    UDolphinUnrealBlueprintLibrary::Terminate(this);
 }
 
 void UDolphinInstance::Tick(float DeltaTime)

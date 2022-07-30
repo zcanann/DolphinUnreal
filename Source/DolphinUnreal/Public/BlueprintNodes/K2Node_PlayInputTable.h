@@ -25,14 +25,14 @@ class UDolphinInstance;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDolphinPlayInputTableMulticastDelegate, UDolphinInstance*, DolphinInstance);
 
-UCLASS(MinimalAPI)
+UCLASS(meta = (HideThen))
 class UK2Node_PlayInputTableProxy : public UObject
 {
 	GENERATED_UCLASS_BODY()
 
 public:
 	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"))
-	static UK2Node_PlayInputTableProxy* CreateProxyObjectForWait(UDataTable* FrameInputsTable, UDolphinInstance* DolphinInstance);
+	static UK2Node_PlayInputTableProxy* CreateProxyObjectForWait(UDolphinInstance* DolphinInstance, UDataTable* FrameInputsTable);
 	
 	UPROPERTY(BlueprintAssignable)
 	FDolphinPlayInputTableMulticastDelegate OnSuccess;

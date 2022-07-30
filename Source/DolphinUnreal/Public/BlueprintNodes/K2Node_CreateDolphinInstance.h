@@ -26,7 +26,7 @@ class UDolphinInstance;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDolphinCreateInstanceMulticastDelegate, UDolphinInstance*, DolphinInstance);
 
-UCLASS(MinimalAPI)
+UCLASS(meta = (HideThen))
 class UK2Node_CreateDolphinInstanceProxy : public UObject
 {
 	GENERATED_UCLASS_BODY()

@@ -25,7 +25,7 @@ class UIsoAsset;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDolphinPauseEmulationMulticastDelegate, UDolphinInstance*, DolphinInstance);
 
-UCLASS(MinimalAPI)
+UCLASS(meta = (HideThen))
 class UK2Node_PauseEmulationProxy : public UObject
 {
 	GENERATED_UCLASS_BODY()

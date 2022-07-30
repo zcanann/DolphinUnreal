@@ -25,7 +25,7 @@ class UDolphinInstance;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDolphinStartRecordingMulticastDelegate, UDolphinInstance*, DolphinInstance);
 
-UCLASS(MinimalAPI)
+UCLASS(meta = (HideThen))
 class UK2Node_StartRecordingProxy : public UObject
 {
 	GENERATED_UCLASS_BODY()

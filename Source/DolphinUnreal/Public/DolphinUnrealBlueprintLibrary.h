@@ -21,9 +21,6 @@ class UDolphinUnrealBlueprintLibrary : public UBlueprintFunctionLibrary
 		UIsoAsset* IsoAsset = nullptr
 	);
 
-	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Terminate Dolphin Instance", Keywords = "Terminate Dolphin Instance"), Category = "Dolphin")
-	static void TerminateDolphinInstance(UDolphinInstance* DolphinInstance);
-
 	UFUNCTION(BlueprintPure, meta = (DisplayName = "Get Default Dolphin Instance", Keywords = "Get Default Dolphin Instance"), Category = "Dolphin")
 	static UDolphinInstance* GetDefaultDolphinInstance();
 
