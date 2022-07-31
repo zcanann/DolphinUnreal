@@ -1,4 +1,4 @@
-#include "AssetTypes/IsoAsset.h"
+#include "AssetTypes/Iso/IsoAsset.h"
 
 #define LOCTEXT_NAMESPACE "IsoAsset"
 

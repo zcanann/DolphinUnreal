@@ -1,16 +1,16 @@
 #include "DolphinInstance.h"
 
-#include "Interfaces/IPluginManager.h"
-#include "Misc/Guid.h"
-#include "Misc/MonitoredProcess.h"
-#include "Misc/Paths.h"
-
-#include "AssetTypes/IsoAsset.h"
+#include "AssetTypes/Iso/IsoAsset.h"
 #include "DataTables/InputTableImporter.h"
 #include "DolphinUnreal.h"
 #include "DolphinUnrealBlueprintLibrary.h"
 #include "FrameInput.h"
-#include "Platform/WindowsSimpleProcessSpawner.h"
+
+// Engine includes
+#include "Interfaces/IPluginManager.h"
+#include "Misc/Guid.h"
+#include "Misc/Paths.h"
+#include "Windows/WindowsPlatformProcess.h"
 
 // STL
 #include <string>
@@ -58,6 +58,7 @@ void UDolphinInstance::Tick(float DeltaTime)
     DolphinIpcToInstanceData ipcData;
     std::shared_ptr<ToInstanceParams_Heartbeat> data = std::make_shared<ToInstanceParams_Heartbeat>();
     ipcData._call = DolphinInstanceIpcCall::DolphinInstance_Heartbeat;
+    ipcData._params._heartbeatParams = data;
     ipcSendToInstance(ipcData);
 }
 
@@ -122,25 +123,50 @@ void UDolphinInstance::LaunchInstance(UIsoAsset* InIsoAsset, bool bStartPaused, 
 
     initializeChannels(std::string(TCHAR_TO_UTF8(*InstanceId)), false);
 
-    /*
-    FWindowsSimpleProcessSpawner::CreateProc(
+    bool bLaunchDetached = true;
+    bool bLaunchHidden = false;
+    bool bLaunchReallyHidden = false;
+
+    uint32 OutProcessID = 0;
+    uint32 PriorityModifier = 0;
+
+    DolphinProcHandle = FWindowsPlatformProcess::CreateProc(
         *DolphinBinaryPath,
         *Params,
-        (OptionalWorkingDirectory != "") ? *OptionalWorkingDirectory : nullptr
-    );*/
-
-    FString ExecuteParams = "start " + DolphinBinaryPath + " " + Params;
-    FWindowsSimpleProcessSpawner::CreateProc(TCHAR_TO_ANSI(*ExecuteParams));
+        bLaunchDetached,
+        bLaunchHidden,
+        bLaunchReallyHidden,
+        &OutProcessID,
+        PriorityModifier,
+        (OptionalWorkingDirectory != "") ? *OptionalWorkingDirectory : nullptr,
+        nullptr
+    );
 }
 
 void UDolphinInstance::RequestLoadSaveState(FString SaveName)
 {
+    static const FString ProjectContentDirectory = FPaths::ConvertRelativePathToFull(FPaths::ProjectContentDir());
+    const FString FilePath = FPaths::Combine(ProjectContentDirectory, "SaveStates/", SaveName) + ".sav";
 
+    DolphinIpcToInstanceData ipcData;
+    std::shared_ptr<ToInstanceParams_LoadSaveState> data = std::make_shared<ToInstanceParams_LoadSaveState>();
+    data->_filePath = std::string(TCHAR_TO_UTF8(*FilePath));
+    ipcData._call = DolphinInstanceIpcCall::DolphinInstance_LoadSaveState;
+    ipcData._params._loadSaveStateParams = data;
+    ipcSendToInstance(ipcData);
 }
 
 void UDolphinInstance::RequestCreateSaveState(FString SaveName)
 {
+    static const FString ProjectContentDirectory = FPaths::ConvertRelativePathToFull(FPaths::ProjectContentDir());
+    const FString FilePath = FPaths::Combine(ProjectContentDirectory, "SaveStates/", SaveName) + ".sav";
 
+    DolphinIpcToInstanceData ipcData;
+    std::shared_ptr<ToInstanceParams_CreateSaveState> data = std::make_shared<ToInstanceParams_CreateSaveState>();
+    data->_filePath = std::string(TCHAR_TO_UTF8(*FilePath));
+    ipcData._call = DolphinInstanceIpcCall::DolphinInstance_CreateSaveState;
+    ipcData._params._createSaveStateParams = data;
+    ipcSendToInstance(ipcData);
 }
 
 void UDolphinInstance::RequestPause()
@@ -150,6 +176,7 @@ void UDolphinInstance::RequestPause()
     DolphinIpcToInstanceData ipcData;
     std::shared_ptr<ToInstanceParams_PauseEmulation> data = std::make_shared<ToInstanceParams_PauseEmulation>();
     ipcData._call = DolphinInstanceIpcCall::DolphinInstance_PauseEmulation;
+    ipcData._params._pauseEmulationParams = data;
     ipcSendToInstance(ipcData);
 }
 
@@ -160,6 +187,7 @@ void UDolphinInstance::RequestResume()
     DolphinIpcToInstanceData ipcData;
     std::shared_ptr<ToInstanceParams_ResumeEmulation> data = std::make_shared<ToInstanceParams_ResumeEmulation>();
     ipcData._call = DolphinInstanceIpcCall::DolphinInstance_ResumeEmulation;
+    ipcData._params._resumeEmulationParams = data;
     ipcSendToInstance(ipcData);
 }
 
@@ -175,6 +203,7 @@ void UDolphinInstance::RequestStartRecording()
     DolphinIpcToInstanceData ipcData;
     std::shared_ptr<ToInstanceParams_StartRecordingInput> data = std::make_shared<ToInstanceParams_StartRecordingInput>();
     ipcData._call = DolphinInstanceIpcCall::DolphinInstance_StartRecordingInput;
+    ipcData._params._startRecordingInputParams = data;
     ipcSendToInstance(ipcData);
 }
 
@@ -185,6 +214,7 @@ void UDolphinInstance::RequestStopRecording()
     DolphinIpcToInstanceData ipcData;
     std::shared_ptr<ToInstanceParams_StopRecordingInput> data = std::make_shared<ToInstanceParams_StopRecordingInput>();
     ipcData._call = DolphinInstanceIpcCall::DolphinInstance_StopRecordingInput;
+    ipcData._params._stopRecordingInputParams = data;
     ipcSendToInstance(ipcData);
 }
 
@@ -227,6 +257,7 @@ void UDolphinInstance::RequestTerminate()
     DolphinIpcToInstanceData ipcData;
     std::shared_ptr<ToInstanceParams_Terminate> data = std::make_shared<ToInstanceParams_Terminate>();
     ipcData._call = DolphinInstanceIpcCall::DolphinInstance_Terminate;
+    ipcData._params._terminateParams = data;
     ipcSendToInstance(ipcData);
 
     ConditionalBeginDestroy();

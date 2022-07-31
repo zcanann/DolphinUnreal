@@ -1,10 +1,10 @@
-#include "AssetTypes/IsoAssetActions.h"
+#include "AssetTypes/Iso/IsoAssetActions.h"
 
 #include "Framework/MultiBox/MultiBoxBuilder.h"
 #include "Styling/SlateStyle.h"
 
-#include "AssetTypes/IsoAsset.h"
-#include "AssetTypes/IsoAssetEditorToolkit.h"
+#include "AssetTypes/Iso/IsoAsset.h"
+#include "AssetTypes/Iso/IsoAssetEditorToolkit.h"
 
 #define LOCTEXT_NAMESPACE "AssetTypeActions"
 

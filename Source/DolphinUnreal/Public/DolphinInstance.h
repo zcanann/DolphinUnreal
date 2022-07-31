@@ -74,6 +74,7 @@ private:
 	void LaunchInstance(UIsoAsset* InIsoAsset, bool bStartPaused, bool bBeginRecording);
 
 	FString InstanceId;
+	FProcHandle DolphinProcHandle;
 
 	bool bIsRecordingInput = false;
 	bool bIsPaused = false;

@@ -1,4 +1,4 @@
-#include "AssetTypes/IsoAssetEditorToolkit.h"
+#include "AssetTypes/Iso/IsoAssetEditorToolkit.h"
 
 #include "Editor.h"
 #include "EditorReimportHandler.h"
@@ -6,7 +6,7 @@
 #include "UObject/NameTypes.h"
 #include "Widgets/Docking/SDockTab.h"
 
-#include "AssetTypes/IsoAsset.h"
+#include "AssetTypes/Iso/IsoAsset.h"
 
 #define LOCTEXT_NAMESPACE "IsoAssetToolkit"
 

@@ -14,12 +14,12 @@ UK2Node_CreateSaveState::UK2Node_CreateSaveState(const FObjectInitializer& Objec
 
 FText UK2Node_CreateSaveState::GetTooltipText() const
 {
-	return LOCTEXT("K2Node_CreateSaveState_Tooltip", "Creates a new Dolphin instance.");
+	return LOCTEXT("K2Node_CreateSaveState_Tooltip", "Creates a Dolphin save state.");
 }
 
 FText UK2Node_CreateSaveState::GetNodeTitle(ENodeTitleType::Type TitleType) const
 {
-	return LOCTEXT("K2Node_CreateSaveState_Title", "Create Dolphin Instance");
+	return LOCTEXT("K2Node_CreateSaveState_Title", "Create Save State");
 }
 
 FText UK2Node_CreateSaveState::GetMenuCategory() const

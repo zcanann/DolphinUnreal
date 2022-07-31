@@ -1,6 +1,6 @@
-#include "AssetTypes/IsoAssetFactory.h"
+#include "AssetTypes/Iso/IsoAssetFactory.h"
 
-#include "AssetTypes/IsoAsset.h"
+#include "AssetTypes/Iso/IsoAsset.h"
 #include "Misc/FileHelper.h"
 
 #define LOCTEXT_NAMESPACE "IsoAssetFactory"
