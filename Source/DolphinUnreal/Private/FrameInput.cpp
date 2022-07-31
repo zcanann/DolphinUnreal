@@ -9,7 +9,7 @@ FFrameInput FFrameInput::FromDolphinControllerState(DolphinControllerState InDol
 	Result.bButtonA = InDolphinControllerState.A;
 	Result.bButtonB = InDolphinControllerState.B;
 	Result.bButtonX = InDolphinControllerState.X;
-	Result.bButtonY = InDolphinControllerState.Z;
+	Result.bButtonY = InDolphinControllerState.Y;
 	Result.bButtonZ = InDolphinControllerState.Z;
 	Result.bButtonDUp = InDolphinControllerState.DPadUp;
 	Result.bButtonDDown = InDolphinControllerState.DPadDown;
@@ -38,7 +38,7 @@ DolphinControllerState FFrameInput::ToDolphinControllerState(const FFrameInput& 
 	Result.A = InFrameInput.bButtonA;
 	Result.B = InFrameInput.bButtonB;
 	Result.X = InFrameInput.bButtonX;
-	Result.Z = InFrameInput.bButtonY;
+	Result.Y = InFrameInput.bButtonY;
 	Result.Z = InFrameInput.bButtonZ;
 	Result.DPadUp = InFrameInput.bButtonDUp;
 	Result.DPadDown = InFrameInput.bButtonDDown;
