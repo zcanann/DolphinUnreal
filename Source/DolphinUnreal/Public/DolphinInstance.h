@@ -9,6 +9,7 @@
 #include "DolphinInstance.generated.h"
 
 class UIsoAsset;
+class USavAsset;
 struct FProcHandle;
 
 UCLASS(BlueprintType)
@@ -32,12 +33,15 @@ public:
 
 	DECLARE_MULTICAST_DELEGATE_OneParam(FOnInstanceReadyForNextCommand, UDolphinInstance*);
 	FOnInstanceReadyForNextCommand OnInstanceReadyForNextCommandEvent;
-	
-	UFUNCTION()
-	void RequestLoadSaveState(FString SaveName);
+
+	DECLARE_MULTICAST_DELEGATE_TwoParams(FOnSaveStateCreated, UDolphinInstance*, USavAsset*);
+	FOnSaveStateCreated OnInstanceSaveStateCreated;
 	
 	UFUNCTION()
 	void RequestCreateSaveState(FString SaveName);
+	
+	UFUNCTION()
+	void RequestLoadSaveState(USavAsset* SavAsset);
 
 	UFUNCTION()
 	void RequestPause();
@@ -69,6 +73,7 @@ protected:
 	virtual void DolphinServer_OnInstanceHeartbeatAcknowledged(const ToServerParams_OnInstanceHeartbeatAcknowledged& onInstanceHeartbeatAcknowledgedParams) override;
 	virtual void DolphinServer_OnInstanceTerminated(const ToServerParams_OnInstanceTerminated& OnInstanceTerminatedParams) override;
 	virtual void DolphinServer_OnInstanceRecordingStopped(const ToServerParams_OnInstanceRecordingStopped& onInstanceRecordingStopped) override;
+	virtual void DolphinServer_OnInstanceSaveStateCreated(const ToServerParams_OnInstanceSaveStateCreated& onInstanceSaveStateCreated) override;
 
 private:
 	void LaunchInstance(UIsoAsset* InIsoAsset, bool bStartPaused, bool bBeginRecording);

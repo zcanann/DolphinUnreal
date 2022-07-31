@@ -22,8 +22,9 @@ class UK2Node_CreateSaveState : public UK2Node_BaseAsyncTask
 };
 
 class UDolphinInstance;
+class USavAsset;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDolphinCreateSaveStateMulticastDelegate, UDolphinInstance*, DolphinInstance);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FDolphinCreateSaveStateMulticastDelegate, UDolphinInstance*, DolphinInstance, USavAsset*, SavAsset);
 
 UCLASS(meta = (HideThen))
 class UK2Node_CreateSaveStateProxy : public UObject
@@ -38,5 +39,9 @@ public:
 	FDolphinCreateSaveStateMulticastDelegate OnSuccess;
 
 private:
+	void OnInstanceSaveStateCreated(UDolphinInstance* InInstance, USavAsset* InSavAsset);
 	void OnInstanceReady(UDolphinInstance* InInstance);
+
+	UPROPERTY()
+	USavAsset* SavAsset;
 };

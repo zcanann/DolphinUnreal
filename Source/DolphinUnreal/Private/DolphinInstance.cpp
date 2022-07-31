@@ -1,6 +1,7 @@
 #include "DolphinInstance.h"
 
 #include "AssetTypes/Iso/IsoAsset.h"
+#include "AssetTypes/Sav/SavAsset.h"
 #include "DataTables/InputTableImporter.h"
 #include "DolphinUnreal.h"
 #include "DolphinUnrealBlueprintLibrary.h"
@@ -105,6 +106,19 @@ void UDolphinInstance::DolphinServer_OnInstanceRecordingStopped(const ToServerPa
     FInputTableImporter::ImportInputTableAsAsset(*InputTable);
 }
 
+void UDolphinInstance::DolphinServer_OnInstanceSaveStateCreated(const ToServerParams_OnInstanceSaveStateCreated& onInstanceSaveStateCreated)
+{
+    FString FilePath = FString(onInstanceSaveStateCreated._filePath.c_str());
+    FString DestinationPath = FPaths::Combine(FPaths::ProjectContentDir(), TEXT("SaveStates"));
+    GEditor->GetEditorSubsystem<UImportSubsystem>()->ImportNextTick({ FilePath }, DestinationPath);
+
+    // Create a virtual save asset so that we can fire an event immediately
+    USavAsset* VirtualSavAsset = NewObject<USavAsset>(this);
+    VirtualSavAsset->Path = FilePath;
+
+    OnInstanceSaveStateCreated.Broadcast(this, VirtualSavAsset);
+}
+
 void UDolphinInstance::LaunchInstance(UIsoAsset* InIsoAsset, bool bStartPaused, bool bBeginRecording)
 {
     static FString PluginContentDirectory = FPaths::ConvertRelativePathToFull(IPluginManager::Get().FindPlugin(TEXT("DolphinUnreal"))->GetContentDir());
@@ -143,19 +157,6 @@ void UDolphinInstance::LaunchInstance(UIsoAsset* InIsoAsset, bool bStartPaused, 
     );
 }
 
-void UDolphinInstance::RequestLoadSaveState(FString SaveName)
-{
-    static const FString ProjectContentDirectory = FPaths::ConvertRelativePathToFull(FPaths::ProjectContentDir());
-    const FString FilePath = FPaths::Combine(ProjectContentDirectory, "SaveStates/", SaveName) + ".sav";
-
-    DolphinIpcToInstanceData ipcData;
-    std::shared_ptr<ToInstanceParams_LoadSaveState> data = std::make_shared<ToInstanceParams_LoadSaveState>();
-    data->_filePath = std::string(TCHAR_TO_UTF8(*FilePath));
-    ipcData._call = DolphinInstanceIpcCall::DolphinInstance_LoadSaveState;
-    ipcData._params._loadSaveStateParams = data;
-    ipcSendToInstance(ipcData);
-}
-
 void UDolphinInstance::RequestCreateSaveState(FString SaveName)
 {
     static const FString ProjectContentDirectory = FPaths::ConvertRelativePathToFull(FPaths::ProjectContentDir());
@@ -166,6 +167,23 @@ void UDolphinInstance::RequestCreateSaveState(FString SaveName)
     data->_filePath = std::string(TCHAR_TO_UTF8(*FilePath));
     ipcData._call = DolphinInstanceIpcCall::DolphinInstance_CreateSaveState;
     ipcData._params._createSaveStateParams = data;
+    ipcSendToInstance(ipcData);
+}
+
+void UDolphinInstance::RequestLoadSaveState(USavAsset* SavAsset)
+{
+    if (SavAsset == nullptr)
+    {
+        OnInstanceReadyForNextCommandEvent.Broadcast(this);
+        return;
+    }
+
+    const FString FilePath = SavAsset->Path;
+    DolphinIpcToInstanceData ipcData;
+    std::shared_ptr<ToInstanceParams_LoadSaveState> data = std::make_shared<ToInstanceParams_LoadSaveState>();
+    data->_filePath = std::string(TCHAR_TO_UTF8(*FilePath));
+    ipcData._call = DolphinInstanceIpcCall::DolphinInstance_LoadSaveState;
+    ipcData._params._loadSaveStateParams = data;
     ipcSendToInstance(ipcData);
 }
 
@@ -227,6 +245,7 @@ void UDolphinInstance::RequestPlayInputs(UDataTable* FrameInputsTable)
 {
     if (FrameInputsTable == nullptr)
     {
+        OnInstanceReadyForNextCommandEvent.Broadcast(this);
         return;
     }
 

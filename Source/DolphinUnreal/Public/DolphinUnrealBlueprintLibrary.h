@@ -6,6 +6,7 @@
 #include "DolphinUnrealBlueprintLibrary.generated.h"
 
 class UIsoAsset;
+class USavAsset;
 class UDataTable;
 
 UCLASS()
@@ -36,11 +37,11 @@ class UDolphinUnrealBlueprintLibrary : public UBlueprintFunctionLibrary
 	UFUNCTION() // UFUNCTION(BlueprintCallable, meta = (DisplayName = "Pause Emulation", Keywords = "Pause Stop Emulation"), Category = "Dolphin")
 	static void PauseEmulation(UDolphinInstance* DolphinInstance = nullptr);
 
-	UFUNCTION() // UFUNCTION(BlueprintCallable, meta = (DisplayName = "Load Save State", Keywords = "Load Save State"), Category = "Dolphin")
-	static void LoadSaveState(FString SaveName, UDolphinInstance* DolphinInstance);
-
 	UFUNCTION() // UFUNCTION(BlueprintCallable, meta = (DisplayName = "Create Save State", Keywords = "Create Save State"), Category = "Dolphin")
 	static void CreateSaveState(FString SaveName, UDolphinInstance* DolphinInstance);
+
+	UFUNCTION() // UFUNCTION(BlueprintCallable, meta = (DisplayName = "Load Save State", Keywords = "Load Save State"), Category = "Dolphin")
+	static void LoadSaveState(USavAsset* SavAsset, UDolphinInstance* DolphinInstance);
 
 	UFUNCTION() // UFUNCTION(BlueprintCallable, meta = (DisplayName = "Start Recording Input Table", Keywords = "Start Begin Recording Input Table Frames"), Category = "Dolphin")
 	static void StartRecording(UDolphinInstance* DolphinInstance = nullptr);

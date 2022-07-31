@@ -22,6 +22,7 @@ class UK2Node_LoadSaveState : public UK2Node_BaseAsyncTask
 };
 
 class UDolphinInstance;
+class USavAsset;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDolphinLoadSaveStateMulticastDelegate, UDolphinInstance*, DolphinInstance);
 
@@ -32,7 +33,7 @@ class UK2Node_LoadSaveStateProxy : public UObject
 
 public:
 	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"))
-	static UK2Node_LoadSaveStateProxy* CreateProxyObjectForWait(FString SaveName, UDolphinInstance* DolphinInstance);
+	static UK2Node_LoadSaveStateProxy* CreateProxyObjectForWait(UDolphinInstance* DolphinInstance, USavAsset* SavAsset);
 	
 	UPROPERTY(BlueprintAssignable)
 	FDolphinLoadSaveStateMulticastDelegate OnSuccess;

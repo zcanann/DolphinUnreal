@@ -36,6 +36,7 @@ UK2Node_CreateSaveStateProxy* UK2Node_CreateSaveStateProxy::CreateProxyObjectFor
 
 	if (DolphinInstance != nullptr)
 	{
+		DolphinInstance->OnInstanceSaveStateCreated.AddUObject(Proxy, &UK2Node_CreateSaveStateProxy::OnInstanceSaveStateCreated);
 		DolphinInstance->OnInstanceReadyForNextCommandEvent.AddUObject(Proxy, &UK2Node_CreateSaveStateProxy::OnInstanceReady);
 		UDolphinUnrealBlueprintLibrary::CreateSaveState(SaveName, DolphinInstance);
 	}
@@ -47,6 +48,16 @@ UK2Node_CreateSaveStateProxy::UK2Node_CreateSaveStateProxy(const FObjectInitiali
 {
 }
 
+void UK2Node_CreateSaveStateProxy::OnInstanceSaveStateCreated(UDolphinInstance* InInstance, USavAsset* InSavAsset)
+{
+	if (InInstance)
+	{
+		InInstance->OnInstanceSaveStateCreated.RemoveAll(this);
+	}
+
+	SavAsset = InSavAsset;
+}
+
 void UK2Node_CreateSaveStateProxy::OnInstanceReady(UDolphinInstance* InInstance)
 {
 	if (InInstance)
@@ -54,7 +65,7 @@ void UK2Node_CreateSaveStateProxy::OnInstanceReady(UDolphinInstance* InInstance)
 		InInstance->OnInstanceReadyForNextCommandEvent.RemoveAll(this);
 	}
 
-	OnSuccess.Broadcast(InInstance);
+	OnSuccess.Broadcast(InInstance, SavAsset);
 }
 
 #undef LOCTEXT_NAMESPACE

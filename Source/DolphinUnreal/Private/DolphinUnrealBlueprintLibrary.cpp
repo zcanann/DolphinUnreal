@@ -67,13 +67,13 @@ void UDolphinUnrealBlueprintLibrary::PauseEmulation(UDolphinInstance* DolphinIns
     }
 }
 
-void UDolphinUnrealBlueprintLibrary::LoadSaveState(FString SaveName, UDolphinInstance* DolphinInstance)
+void UDolphinUnrealBlueprintLibrary::LoadSaveState(USavAsset* SavAsset, UDolphinInstance* DolphinInstance)
 {
     DolphinInstance = UDolphinUnrealBlueprintLibrary::GetDolphinInstanceOrDefault(DolphinInstance);
 
     if (DolphinInstance != nullptr)
     {
-        DolphinInstance->RequestLoadSaveState(SaveName);
+        DolphinInstance->RequestLoadSaveState(SavAsset);
     }
 }
 

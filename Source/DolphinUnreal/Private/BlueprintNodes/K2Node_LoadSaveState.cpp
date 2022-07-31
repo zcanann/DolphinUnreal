@@ -1,5 +1,6 @@
 #include "BlueprintNodes/K2Node_LoadSaveState.h"
 
+#include "AssetTypes/Sav/SavAsset.h"
 #include "DolphinUnrealBlueprintLibrary.h"
 
 #define LOCTEXT_NAMESPACE "UK2Node_LoadSaveState"
@@ -27,7 +28,7 @@ FText UK2Node_LoadSaveState::GetMenuCategory() const
 	return LOCTEXT("K2Node_LoadSaveState_Category", "Dolphin");
 }
 
-UK2Node_LoadSaveStateProxy* UK2Node_LoadSaveStateProxy::CreateProxyObjectForWait(FString SaveName, UDolphinInstance* DolphinInstance)
+UK2Node_LoadSaveStateProxy* UK2Node_LoadSaveStateProxy::CreateProxyObjectForWait(UDolphinInstance* DolphinInstance, USavAsset* SavAsset)
 {
 	UK2Node_LoadSaveStateProxy* Proxy = NewObject<UK2Node_LoadSaveStateProxy>();
 	Proxy->SetFlags(RF_StrongRefOnFrame);
@@ -37,7 +38,7 @@ UK2Node_LoadSaveStateProxy* UK2Node_LoadSaveStateProxy::CreateProxyObjectForWait
 	if (DolphinInstance != nullptr)
 	{
 		DolphinInstance->OnInstanceReadyForNextCommandEvent.AddUObject(Proxy, &UK2Node_LoadSaveStateProxy::OnInstanceReady);
-		UDolphinUnrealBlueprintLibrary::LoadSaveState(SaveName, DolphinInstance);
+		UDolphinUnrealBlueprintLibrary::LoadSaveState(SavAsset, DolphinInstance);
 	}
 
 	return Proxy;
