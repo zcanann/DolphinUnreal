@@ -49,6 +49,11 @@ UK2Node_PlayInputTableProxy::UK2Node_PlayInputTableProxy(const FObjectInitialize
 
 void UK2Node_PlayInputTableProxy::OnInstanceReady(UDolphinInstance* InInstance)
 {
+	if (InInstance)
+	{
+		InInstance->OnInstanceReadyForNextCommandEvent.RemoveAll(this);
+	}
+
 	OnSuccess.Broadcast(InInstance);
 }
 

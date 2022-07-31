@@ -49,6 +49,11 @@ UK2Node_PauseEmulationProxy::UK2Node_PauseEmulationProxy(const FObjectInitialize
 
 void UK2Node_PauseEmulationProxy::OnInstanceReady(UDolphinInstance* InInstance)
 {
+	if (InInstance)
+	{
+		InInstance->OnInstanceReadyForNextCommandEvent.RemoveAll(this);
+	}
+
 	OnSuccess.Broadcast(InInstance);
 }
 

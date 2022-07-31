@@ -44,6 +44,11 @@ UK2Node_CreateDolphinInstanceProxy::UK2Node_CreateDolphinInstanceProxy(const FOb
 
 void UK2Node_CreateDolphinInstanceProxy::OnInstanceReady(UDolphinInstance* InInstance)
 {
+	if (InInstance)
+	{
+		InInstance->OnInstanceReadyForNextCommandEvent.RemoveAll(this);
+	}
+
 	OnSuccess.Broadcast(InInstance);
 }
 

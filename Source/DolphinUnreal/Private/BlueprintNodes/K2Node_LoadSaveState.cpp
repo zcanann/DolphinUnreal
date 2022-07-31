@@ -49,6 +49,11 @@ UK2Node_LoadSaveStateProxy::UK2Node_LoadSaveStateProxy(const FObjectInitializer&
 
 void UK2Node_LoadSaveStateProxy::OnInstanceReady(UDolphinInstance* InInstance)
 {
+	if (InInstance)
+	{
+		InInstance->OnInstanceReadyForNextCommandEvent.RemoveAll(this);
+	}
+
 	OnSuccess.Broadcast(InInstance);
 }
 

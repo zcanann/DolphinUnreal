@@ -49,6 +49,11 @@ UK2Node_TerminateProxy::UK2Node_TerminateProxy(const FObjectInitializer& ObjectI
 
 void UK2Node_TerminateProxy::OnInstanceReady(UDolphinInstance* InInstance)
 {
+	if (InInstance)
+	{
+		InInstance->OnInstanceReadyForNextCommandEvent.RemoveAll(this);
+	}
+
 	OnSuccess.Broadcast(InInstance);
 }
 

@@ -49,6 +49,11 @@ UK2Node_CreateSaveStateProxy::UK2Node_CreateSaveStateProxy(const FObjectInitiali
 
 void UK2Node_CreateSaveStateProxy::OnInstanceReady(UDolphinInstance* InInstance)
 {
+	if (InInstance)
+	{
+		InInstance->OnInstanceReadyForNextCommandEvent.RemoveAll(this);
+	}
+
 	OnSuccess.Broadcast(InInstance);
 }
 

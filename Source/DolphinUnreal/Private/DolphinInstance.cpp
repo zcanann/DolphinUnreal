@@ -67,8 +67,10 @@ void UDolphinInstance::DolphinServer_OnInstanceConnected(const ToServerParams_On
     {
         GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Dolphin instance connected"));
     }
+}
 
-    // TODO: Maybe broadcast on a different IPC event, when emulator is fully booted
+void UDolphinInstance::DolphinServer_OnInstanceReady(const ToServerParams_OnInstanceReady& OnInstanceReadyParams)
+{
     OnInstanceReadyForNextCommandEvent.Broadcast(this);
 }
 
@@ -100,8 +102,6 @@ void UDolphinInstance::DolphinServer_OnInstanceRecordingStopped(const ToServerPa
     }
 
     FInputTableImporter::ImportInputTableAsAsset(*InputTable);
-
-    OnInstanceReadyForNextCommandEvent.Broadcast(this);
 }
 
 void UDolphinInstance::LaunchInstance(UIsoAsset* InIsoAsset, bool bStartPaused, bool bBeginRecording)

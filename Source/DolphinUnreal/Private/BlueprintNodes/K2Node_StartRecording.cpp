@@ -49,6 +49,11 @@ UK2Node_StartRecordingProxy::UK2Node_StartRecordingProxy(const FObjectInitialize
 
 void UK2Node_StartRecordingProxy::OnInstanceReady(UDolphinInstance* InInstance)
 {
+	if (InInstance)
+	{
+		InInstance->OnInstanceReadyForNextCommandEvent.RemoveAll(this);
+	}
+
 	OnSuccess.Broadcast(InInstance);
 }
 
