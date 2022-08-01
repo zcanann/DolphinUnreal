@@ -4,6 +4,8 @@
 
 #include "Modules/ModuleManager.h"
 
+DECLARE_LOG_CATEGORY_EXTERN(Dolphin, Log, All);
+
 class UDolphinInstance;
 
 class FDolphinUnrealModule : public IModuleInterface

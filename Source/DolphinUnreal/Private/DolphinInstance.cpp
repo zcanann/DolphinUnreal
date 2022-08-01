@@ -82,6 +82,21 @@ void UDolphinInstance::DolphinServer_OnInstanceHeartbeatAcknowledged(const ToSer
     bIsPaused = onInstanceHeartbeatAcknowledgedParams._isPaused;
 }
 
+void UDolphinInstance::DolphinServer_OnInstanceLogOutput(const ToServerParams_OnInstanceLogOutput& onInstanceLogOutputParams)
+{
+    FString LogMessage = FString(onInstanceLogOutputParams._logString.c_str());
+    static constexpr TCHAR FormatString[] = TEXT("%s");
+
+    switch (onInstanceLogOutputParams._logLevel)
+    {
+        case ToServerParams_OnInstanceLogOutput::LogLevel::Notice: UE_LOG(Dolphin, Display, FormatString, *LogMessage); break;
+        case ToServerParams_OnInstanceLogOutput::LogLevel::Error: UE_LOG(Dolphin, Error, FormatString, *LogMessage); break;
+        case ToServerParams_OnInstanceLogOutput::LogLevel::Warning: UE_LOG(Dolphin, Warning, FormatString, *LogMessage); break;
+        default: case ToServerParams_OnInstanceLogOutput::LogLevel::Info: UE_LOG(Dolphin, Log, FormatString, *LogMessage); break;
+        case ToServerParams_OnInstanceLogOutput::LogLevel::Debug: UE_LOG(Dolphin, Verbose, FormatString, *LogMessage); break;
+    }
+}
+
 void UDolphinInstance::DolphinServer_OnInstanceTerminated(const ToServerParams_OnInstanceTerminated& OnInstanceTerminatedParams)
 {
     if (GEngine)

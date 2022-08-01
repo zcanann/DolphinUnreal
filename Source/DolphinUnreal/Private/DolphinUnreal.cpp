@@ -10,6 +10,8 @@
 
 #define LOCTEXT_NAMESPACE "FDolphinUnrealModule"
 
+DEFINE_LOG_CATEGORY(Dolphin);
+
 const FName FDolphinUnrealModule::ModuleName = FName("DolphinUnreal");
 
 void FDolphinUnrealModule::StartupModule()
