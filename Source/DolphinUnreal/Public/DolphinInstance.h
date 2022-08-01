@@ -68,13 +68,14 @@ public:
 	void RequestTerminate();
 
 protected:
-	virtual void DolphinServer_OnInstanceConnected(const ToServerParams_OnInstanceConnected& OnInstanceConnectedParams) override;
-	virtual void DolphinServer_OnInstanceReady(const ToServerParams_OnInstanceReady& OnInstanceReadyParams) override;
-	virtual void DolphinServer_OnInstanceHeartbeatAcknowledged(const ToServerParams_OnInstanceHeartbeatAcknowledged& onInstanceHeartbeatAcknowledgedParams) override;
-	virtual void DolphinServer_OnInstanceLogOutput(const ToServerParams_OnInstanceLogOutput& onInstanceLogOutputParams) override;
-	virtual void DolphinServer_OnInstanceTerminated(const ToServerParams_OnInstanceTerminated& OnInstanceTerminatedParams) override;
-	virtual void DolphinServer_OnInstanceRecordingStopped(const ToServerParams_OnInstanceRecordingStopped& onInstanceRecordingStopped) override;
-	virtual void DolphinServer_OnInstanceSaveStateCreated(const ToServerParams_OnInstanceSaveStateCreated& onInstanceSaveStateCreated) override;
+	SERVER_FUNC_OVERRIDE(OnInstanceConnected)
+	SERVER_FUNC_OVERRIDE(OnInstanceReady)
+	SERVER_FUNC_OVERRIDE(OnInstanceHeartbeatAcknowledged)
+	SERVER_FUNC_OVERRIDE(OnInstanceLogOutput)
+	SERVER_FUNC_OVERRIDE(OnInstanceTerminated)
+	SERVER_FUNC_OVERRIDE(OnInstanceRecordingStopped)
+	SERVER_FUNC_OVERRIDE(OnInstanceSaveStateCreated)
+	SERVER_FUNC_OVERRIDE(OnInstanceMemoryCardFormatted)
 
 private:
 	void LaunchInstance(UIsoAsset* InIsoAsset, bool bStartPaused, bool bBeginRecording);

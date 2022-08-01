@@ -59,11 +59,11 @@ void UDolphinInstance::Tick(float DeltaTime)
     DolphinIpcToInstanceData ipcData;
     std::shared_ptr<ToInstanceParams_Heartbeat> data = std::make_shared<ToInstanceParams_Heartbeat>();
     ipcData._call = DolphinInstanceIpcCall::DolphinInstance_Heartbeat;
-    ipcData._params._heartbeatParams = data;
+    ipcData._params._paramsHeartbeat = data;
     ipcSendToInstance(ipcData);
 }
 
-void UDolphinInstance::DolphinServer_OnInstanceConnected(const ToServerParams_OnInstanceConnected& OnInstanceConnectedParams)
+void UDolphinInstance::DolphinServer_OnInstanceConnected(const ToServerParams_OnInstanceConnected& params)
 {
     if (GEngine)
     {
@@ -71,23 +71,23 @@ void UDolphinInstance::DolphinServer_OnInstanceConnected(const ToServerParams_On
     }
 }
 
-void UDolphinInstance::DolphinServer_OnInstanceReady(const ToServerParams_OnInstanceReady& OnInstanceReadyParams)
+void UDolphinInstance::DolphinServer_OnInstanceReady(const ToServerParams_OnInstanceReady& params)
 {
     OnInstanceReadyForNextCommandEvent.Broadcast(this);
 }
 
-void UDolphinInstance::DolphinServer_OnInstanceHeartbeatAcknowledged(const ToServerParams_OnInstanceHeartbeatAcknowledged& onInstanceHeartbeatAcknowledgedParams)
+void UDolphinInstance::DolphinServer_OnInstanceHeartbeatAcknowledged(const ToServerParams_OnInstanceHeartbeatAcknowledged& params)
 {
-    bIsRecordingInput = onInstanceHeartbeatAcknowledgedParams._isRecording;
-    bIsPaused = onInstanceHeartbeatAcknowledgedParams._isPaused;
+    bIsRecordingInput = params._isRecording;
+    bIsPaused = params._isPaused;
 }
 
-void UDolphinInstance::DolphinServer_OnInstanceLogOutput(const ToServerParams_OnInstanceLogOutput& onInstanceLogOutputParams)
+void UDolphinInstance::DolphinServer_OnInstanceLogOutput(const ToServerParams_OnInstanceLogOutput& params)
 {
-    FString LogMessage = FString(onInstanceLogOutputParams._logString.c_str());
+    FString LogMessage = FString(params._logString.c_str());
     static constexpr TCHAR FormatString[] = TEXT("%s");
 
-    switch (onInstanceLogOutputParams._logLevel)
+    switch (params._logLevel)
     {
         case ToServerParams_OnInstanceLogOutput::LogLevel::Notice: UE_LOG(Dolphin, Display, FormatString, *LogMessage); break;
         case ToServerParams_OnInstanceLogOutput::LogLevel::Error: UE_LOG(Dolphin, Error, FormatString, *LogMessage); break;
@@ -97,7 +97,7 @@ void UDolphinInstance::DolphinServer_OnInstanceLogOutput(const ToServerParams_On
     }
 }
 
-void UDolphinInstance::DolphinServer_OnInstanceTerminated(const ToServerParams_OnInstanceTerminated& OnInstanceTerminatedParams)
+void UDolphinInstance::DolphinServer_OnInstanceTerminated(const ToServerParams_OnInstanceTerminated& params)
 {
     if (GEngine)
     {
@@ -105,14 +105,14 @@ void UDolphinInstance::DolphinServer_OnInstanceTerminated(const ToServerParams_O
     }
 }
 
-void UDolphinInstance::DolphinServer_OnInstanceRecordingStopped(const ToServerParams_OnInstanceRecordingStopped& onInstanceRecordingStopped)
+void UDolphinInstance::DolphinServer_OnInstanceRecordingStopped(const ToServerParams_OnInstanceRecordingStopped& params)
 {
     UDataTable* InputTable = NewObject<UDataTable>();
 
     InputTable->RowStruct = FFrameInput::StaticStruct();
 
     // TODO: This is slow and takes too much memory. Better to not to add the rows to the data table at all, and append each row to the CSV iteratively.
-    for (const DolphinControllerState& Next : onInstanceRecordingStopped._inputStates)
+    for (const DolphinControllerState& Next : params._inputStates)
     {
         FFrameInput FrameInput = FFrameInput::FromDolphinControllerState(Next);
         InputTable->AddRow(FName(FGuid::NewGuid().ToString()), FrameInput);
@@ -121,9 +121,9 @@ void UDolphinInstance::DolphinServer_OnInstanceRecordingStopped(const ToServerPa
     FInputTableImporter::ImportInputTableAsAsset(*InputTable);
 }
 
-void UDolphinInstance::DolphinServer_OnInstanceSaveStateCreated(const ToServerParams_OnInstanceSaveStateCreated& onInstanceSaveStateCreated)
+void UDolphinInstance::DolphinServer_OnInstanceSaveStateCreated(const ToServerParams_OnInstanceSaveStateCreated& params)
 {
-    FString FilePath = FString(onInstanceSaveStateCreated._filePath.c_str());
+    FString FilePath = FString(params._filePath.c_str());
     FString DestinationPath = FPaths::Combine(FPaths::ProjectContentDir(), TEXT("SaveStates"));
     GEditor->GetEditorSubsystem<UImportSubsystem>()->ImportNextTick({ FilePath }, DestinationPath);
 
@@ -132,6 +132,10 @@ void UDolphinInstance::DolphinServer_OnInstanceSaveStateCreated(const ToServerPa
     VirtualSavAsset->Path = FilePath;
 
     OnInstanceSaveStateCreated.Broadcast(this, VirtualSavAsset);
+}
+
+void UDolphinInstance::DolphinServer_OnInstanceMemoryCardFormatted(const ToServerParams_OnInstanceMemoryCardFormatted& params)
+{
 }
 
 void UDolphinInstance::LaunchInstance(UIsoAsset* InIsoAsset, bool bStartPaused, bool bBeginRecording)
@@ -181,7 +185,7 @@ void UDolphinInstance::RequestCreateSaveState(FString SaveName)
     std::shared_ptr<ToInstanceParams_CreateSaveState> data = std::make_shared<ToInstanceParams_CreateSaveState>();
     data->_filePath = std::string(TCHAR_TO_UTF8(*FilePath));
     ipcData._call = DolphinInstanceIpcCall::DolphinInstance_CreateSaveState;
-    ipcData._params._createSaveStateParams = data;
+    ipcData._params._paramsCreateSaveState = data;
     ipcSendToInstance(ipcData);
 }
 
@@ -198,7 +202,7 @@ void UDolphinInstance::RequestLoadSaveState(USavAsset* SavAsset)
     std::shared_ptr<ToInstanceParams_LoadSaveState> data = std::make_shared<ToInstanceParams_LoadSaveState>();
     data->_filePath = std::string(TCHAR_TO_UTF8(*FilePath));
     ipcData._call = DolphinInstanceIpcCall::DolphinInstance_LoadSaveState;
-    ipcData._params._loadSaveStateParams = data;
+    ipcData._params._paramsLoadSaveState = data;
     ipcSendToInstance(ipcData);
 }
 
@@ -209,7 +213,7 @@ void UDolphinInstance::RequestPause()
     DolphinIpcToInstanceData ipcData;
     std::shared_ptr<ToInstanceParams_PauseEmulation> data = std::make_shared<ToInstanceParams_PauseEmulation>();
     ipcData._call = DolphinInstanceIpcCall::DolphinInstance_PauseEmulation;
-    ipcData._params._pauseEmulationParams = data;
+    ipcData._params._paramsPauseEmulation = data;
     ipcSendToInstance(ipcData);
 }
 
@@ -220,7 +224,7 @@ void UDolphinInstance::RequestResume()
     DolphinIpcToInstanceData ipcData;
     std::shared_ptr<ToInstanceParams_ResumeEmulation> data = std::make_shared<ToInstanceParams_ResumeEmulation>();
     ipcData._call = DolphinInstanceIpcCall::DolphinInstance_ResumeEmulation;
-    ipcData._params._resumeEmulationParams = data;
+    ipcData._params._paramsResumeEmulation = data;
     ipcSendToInstance(ipcData);
 }
 
@@ -236,7 +240,7 @@ void UDolphinInstance::RequestStartRecording()
     DolphinIpcToInstanceData ipcData;
     std::shared_ptr<ToInstanceParams_StartRecordingInput> data = std::make_shared<ToInstanceParams_StartRecordingInput>();
     ipcData._call = DolphinInstanceIpcCall::DolphinInstance_StartRecordingInput;
-    ipcData._params._startRecordingInputParams = data;
+    ipcData._params._paramsStartRecordingInput = data;
     ipcSendToInstance(ipcData);
 }
 
@@ -247,7 +251,7 @@ void UDolphinInstance::RequestStopRecording()
     DolphinIpcToInstanceData ipcData;
     std::shared_ptr<ToInstanceParams_StopRecordingInput> data = std::make_shared<ToInstanceParams_StopRecordingInput>();
     ipcData._call = DolphinInstanceIpcCall::DolphinInstance_StopRecordingInput;
-    ipcData._params._stopRecordingInputParams = data;
+    ipcData._params._paramsStopRecordingInput = data;
     ipcSendToInstance(ipcData);
 }
 
@@ -282,7 +286,7 @@ void UDolphinInstance::RequestPlayInputs(UDataTable* FrameInputsTable)
     std::shared_ptr<ToInstanceParams_PlayInputs> data = std::make_shared<ToInstanceParams_PlayInputs>();
     data->_inputStates = InputStates;
     ipcData._call = DolphinInstanceIpcCall::DolphinInstance_PlayInputs;
-    ipcData._params._playInputsParams = data;
+    ipcData._params._paramsPlayInputs = data;
     ipcSendToInstance(ipcData);
 }
 
@@ -291,7 +295,7 @@ void UDolphinInstance::RequestTerminate()
     DolphinIpcToInstanceData ipcData;
     std::shared_ptr<ToInstanceParams_Terminate> data = std::make_shared<ToInstanceParams_Terminate>();
     ipcData._call = DolphinInstanceIpcCall::DolphinInstance_Terminate;
-    ipcData._params._terminateParams = data;
+    ipcData._params._paramsTerminate = data;
     ipcSendToInstance(ipcData);
 
     ConditionalBeginDestroy();
