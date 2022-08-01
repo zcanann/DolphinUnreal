@@ -63,7 +63,7 @@ void UDolphinInstance::Tick(float DeltaTime)
     ipcSendToInstance(ipcData);
 }
 
-void UDolphinInstance::DolphinServer_OnInstanceConnected(const ToServerParams_OnInstanceConnected& params)
+SERVER_FUNC_BODY(UDolphinInstance, OnInstanceConnected, params)
 {
     if (GEngine)
     {
@@ -71,18 +71,18 @@ void UDolphinInstance::DolphinServer_OnInstanceConnected(const ToServerParams_On
     }
 }
 
-void UDolphinInstance::DolphinServer_OnInstanceReady(const ToServerParams_OnInstanceReady& params)
+SERVER_FUNC_BODY(UDolphinInstance, OnInstanceReady, params)
 {
     OnInstanceReadyForNextCommandEvent.Broadcast(this);
 }
 
-void UDolphinInstance::DolphinServer_OnInstanceHeartbeatAcknowledged(const ToServerParams_OnInstanceHeartbeatAcknowledged& params)
+SERVER_FUNC_BODY(UDolphinInstance, OnInstanceHeartbeatAcknowledged, params)
 {
     bIsRecordingInput = params._isRecording;
     bIsPaused = params._isPaused;
 }
 
-void UDolphinInstance::DolphinServer_OnInstanceLogOutput(const ToServerParams_OnInstanceLogOutput& params)
+SERVER_FUNC_BODY(UDolphinInstance, OnInstanceLogOutput, params)
 {
     FString LogMessage = FString(params._logString.c_str());
     static constexpr TCHAR FormatString[] = TEXT("%s");
@@ -97,7 +97,7 @@ void UDolphinInstance::DolphinServer_OnInstanceLogOutput(const ToServerParams_On
     }
 }
 
-void UDolphinInstance::DolphinServer_OnInstanceTerminated(const ToServerParams_OnInstanceTerminated& params)
+SERVER_FUNC_BODY(UDolphinInstance, OnInstanceTerminated, params)
 {
     if (GEngine)
     {
@@ -105,7 +105,7 @@ void UDolphinInstance::DolphinServer_OnInstanceTerminated(const ToServerParams_O
     }
 }
 
-void UDolphinInstance::DolphinServer_OnInstanceRecordingStopped(const ToServerParams_OnInstanceRecordingStopped& params)
+SERVER_FUNC_BODY(UDolphinInstance, OnInstanceRecordingStopped, params)
 {
     UDataTable* InputTable = NewObject<UDataTable>();
 
@@ -121,7 +121,7 @@ void UDolphinInstance::DolphinServer_OnInstanceRecordingStopped(const ToServerPa
     FInputTableImporter::ImportInputTableAsAsset(*InputTable);
 }
 
-void UDolphinInstance::DolphinServer_OnInstanceSaveStateCreated(const ToServerParams_OnInstanceSaveStateCreated& params)
+SERVER_FUNC_BODY(UDolphinInstance, OnInstanceSaveStateCreated, params)
 {
     FString FilePath = FString(params._filePath.c_str());
     FString DestinationPath = FPaths::Combine(FPaths::ProjectContentDir(), TEXT("SaveStates"));
@@ -134,7 +134,7 @@ void UDolphinInstance::DolphinServer_OnInstanceSaveStateCreated(const ToServerPa
     OnInstanceSaveStateCreated.Broadcast(this, VirtualSavAsset);
 }
 
-void UDolphinInstance::DolphinServer_OnInstanceMemoryCardFormatted(const ToServerParams_OnInstanceMemoryCardFormatted& params)
+SERVER_FUNC_BODY(UDolphinInstance, OnInstanceMemoryCardFormatted, params)
 {
 }
 
