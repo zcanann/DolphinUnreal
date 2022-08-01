@@ -7,6 +7,7 @@
 #include "Interfaces/IPluginManager.h"
 
 #include "DolphinInstance.h"
+#include "DolphinUnrealStyle.h"
 
 #define LOCTEXT_NAMESPACE "FDolphinUnrealModule"
 
@@ -16,10 +17,12 @@ const FName FDolphinUnrealModule::ModuleName = FName("DolphinUnreal");
 
 void FDolphinUnrealModule::StartupModule()
 {
+	FDolphinUnrealStyle::Register();
 }
 
 void FDolphinUnrealModule::ShutdownModule()
 {
+	FDolphinUnrealStyle::Unregister();
 }
 
 UDolphinInstance* FDolphinUnrealModule::CreateNewInstance()

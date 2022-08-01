@@ -1,6 +1,8 @@
 #include "AssetTypes/Gci/GciAssetFactory.h"
 
 #include "AssetTypes/Gci/GciAsset.h"
+#include "DolphinUnrealStyle.h"
+
 #include "Misc/FileHelper.h"
 
 #define LOCTEXT_NAMESPACE "GciAssetFactory"
