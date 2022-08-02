@@ -33,7 +33,7 @@ UK2Node_CreateDolphinInstanceProxy* UK2Node_CreateDolphinInstanceProxy::CreatePr
 	Proxy->SetFlags(RF_StrongRefOnFrame);
 
 	UDolphinInstance* Instance = UDolphinUnrealBlueprintLibrary::CreateDolphinInstance(bRegisterAsDefaultInstance, bStartPaused, bBeginRecording, IsoAsset);
-	Instance->OnInstanceReadyForNextCommandEvent.AddUObject(Proxy, &UK2Node_CreateDolphinInstanceProxy::OnInstanceReady);
+	Instance->OnInstanceCommandCompleteEvent.AddUObject(Proxy, &UK2Node_CreateDolphinInstanceProxy::OnInstanceReady);
 
 	return Proxy;
 }
@@ -46,7 +46,7 @@ void UK2Node_CreateDolphinInstanceProxy::OnInstanceReady(UDolphinInstance* InIns
 {
 	if (InInstance)
 	{
-		InInstance->OnInstanceReadyForNextCommandEvent.RemoveAll(this);
+		InInstance->OnInstanceCommandCompleteEvent.RemoveAll(this);
 	}
 
 	OnSuccess.Broadcast(InInstance);

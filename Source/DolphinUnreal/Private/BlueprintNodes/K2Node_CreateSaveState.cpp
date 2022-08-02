@@ -37,7 +37,7 @@ UK2Node_CreateSaveStateProxy* UK2Node_CreateSaveStateProxy::CreateProxyObjectFor
 	if (DolphinInstance != nullptr)
 	{
 		DolphinInstance->OnInstanceSaveStateCreated.AddUObject(Proxy, &UK2Node_CreateSaveStateProxy::OnInstanceSaveStateCreated);
-		DolphinInstance->OnInstanceReadyForNextCommandEvent.AddUObject(Proxy, &UK2Node_CreateSaveStateProxy::OnInstanceReady);
+		DolphinInstance->OnInstanceCommandCompleteEvent.AddUObject(Proxy, &UK2Node_CreateSaveStateProxy::OnInstanceReady);
 		UDolphinUnrealBlueprintLibrary::CreateSaveState(SaveName, DolphinInstance);
 	}
 
@@ -62,7 +62,7 @@ void UK2Node_CreateSaveStateProxy::OnInstanceReady(UDolphinInstance* InInstance)
 {
 	if (InInstance)
 	{
-		InInstance->OnInstanceReadyForNextCommandEvent.RemoveAll(this);
+		InInstance->OnInstanceCommandCompleteEvent.RemoveAll(this);
 	}
 
 	OnSuccess.Broadcast(InInstance, SavAsset);

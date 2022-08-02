@@ -113,7 +113,37 @@ void UDolphinUnrealBlueprintLibrary::PlayInputTable(UDataTable* FrameInputsTable
 
     if (DolphinInstance != nullptr)
     {
-        DolphinInstance->RequestPlayInputs(FrameInputsTable);
+        DolphinInstance->RequestPlayInputTable(FrameInputsTable);
+    }
+}
+
+void UDolphinUnrealBlueprintLibrary::PlayInputs(TArray<FFrameInputs> FrameInputs, UDolphinInstance* DolphinInstance)
+{
+    DolphinInstance = UDolphinUnrealBlueprintLibrary::GetDolphinInstanceOrDefault(DolphinInstance);
+
+    if (DolphinInstance != nullptr)
+    {
+        DolphinInstance->RequestPlayInputs(FrameInputs);
+    }
+}
+
+void UDolphinUnrealBlueprintLibrary::FrameAdvance(int32 NumberOfFrames, UDolphinInstance* DolphinInstance)
+{
+    DolphinInstance = UDolphinUnrealBlueprintLibrary::GetDolphinInstanceOrDefault(DolphinInstance);
+
+    if (DolphinInstance != nullptr)
+    {
+        DolphinInstance->RequestFrameAdvance(NumberOfFrames);
+    }
+}
+
+void UDolphinUnrealBlueprintLibrary::FrameAdvanceWithInput(int32 NumberOfFrames, FFrameInputs FrameInputs, UDolphinInstance* DolphinInstance)
+{
+    DolphinInstance = UDolphinUnrealBlueprintLibrary::GetDolphinInstanceOrDefault(DolphinInstance);
+
+    if (DolphinInstance != nullptr)
+    {
+        DolphinInstance->RequestFrameAdvanceWithInput(NumberOfFrames, FrameInputs);
     }
 }
 
@@ -126,165 +156,3 @@ void UDolphinUnrealBlueprintLibrary::Terminate(UDolphinInstance* DolphinInstance
         DolphinInstance->RequestTerminate();
     }
 }
-
-/*
-void UDolphinUnrealBlueprintLibrary::WaitFrames(int32 Frames, UDolphinInstance* DolphinInstance)
-{
-    DolphinInstance = UDolphinUnrealBlueprintLibrary::GetDolphinInstanceOrDefault(DolphinInstance);
-
-    if (DolphinInstance != nullptr)
-    {
-        return;
-    }
-}
-
-void UDolphinUnrealBlueprintLibrary::PressA(int32 Frames, UDolphinInstance* DolphinInstance)
-{
-    DolphinInstance = UDolphinUnrealBlueprintLibrary::GetDolphinInstanceOrDefault(DolphinInstance);
-
-    if (DolphinInstance != nullptr)
-    {
-        return;
-    }
-}
-
-void UDolphinUnrealBlueprintLibrary::PressB(int32 Frames, UDolphinInstance* DolphinInstance)
-{
-    DolphinInstance = UDolphinUnrealBlueprintLibrary::GetDolphinInstanceOrDefault(DolphinInstance);
-
-    if (DolphinInstance != nullptr)
-    {
-        return;
-    }
-}
-
-void UDolphinUnrealBlueprintLibrary::PressX(int32 Frames, UDolphinInstance* DolphinInstance)
-{
-    DolphinInstance = UDolphinUnrealBlueprintLibrary::GetDolphinInstanceOrDefault(DolphinInstance);
-
-    if (DolphinInstance != nullptr)
-    {
-        return;
-    }
-}
-
-void UDolphinUnrealBlueprintLibrary::PressY(int32 Frames, UDolphinInstance* DolphinInstance)
-{
-    DolphinInstance = UDolphinUnrealBlueprintLibrary::GetDolphinInstanceOrDefault(DolphinInstance);
-
-    if (DolphinInstance != nullptr)
-    {
-        return;
-    }
-}
-
-void UDolphinUnrealBlueprintLibrary::PressZ(int32 Frames, UDolphinInstance* DolphinInstance)
-{
-    DolphinInstance = UDolphinUnrealBlueprintLibrary::GetDolphinInstanceOrDefault(DolphinInstance);
-
-    if (DolphinInstance != nullptr)
-    {
-        return;
-    }
-}
-
-void UDolphinUnrealBlueprintLibrary::PressDPadLeft(int32 Frames, UDolphinInstance* DolphinInstance)
-{
-    DolphinInstance = UDolphinUnrealBlueprintLibrary::GetDolphinInstanceOrDefault(DolphinInstance);
-
-    if (DolphinInstance != nullptr)
-    {
-        return;
-    }
-}
-
-void UDolphinUnrealBlueprintLibrary::PressDPadRight(int32 Frames, UDolphinInstance* DolphinInstance)
-{
-    DolphinInstance = UDolphinUnrealBlueprintLibrary::GetDolphinInstanceOrDefault(DolphinInstance);
-
-    if (DolphinInstance != nullptr)
-    {
-        return;
-    }
-}
-
-void UDolphinUnrealBlueprintLibrary::PressDPadUp(int32 Frames, UDolphinInstance* DolphinInstance)
-{
-    DolphinInstance = UDolphinUnrealBlueprintLibrary::GetDolphinInstanceOrDefault(DolphinInstance);
-
-    if (DolphinInstance != nullptr)
-    {
-        return;
-    }
-}
-
-void UDolphinUnrealBlueprintLibrary::PressDPadDown(int32 Frames, UDolphinInstance* DolphinInstance)
-{
-    DolphinInstance = UDolphinUnrealBlueprintLibrary::GetDolphinInstanceOrDefault(DolphinInstance);
-
-    if (DolphinInstance != nullptr)
-    {
-        return;
-    }
-}
-
-void UDolphinUnrealBlueprintLibrary::PressR(bool bInIsPressed, uint8 InAnalogAmount, int32 Frames, UDolphinInstance* DolphinInstance)
-{
-    DolphinInstance = UDolphinUnrealBlueprintLibrary::GetDolphinInstanceOrDefault(DolphinInstance);
-
-    if (DolphinInstance != nullptr)
-    {
-        return;
-    }
-}
-
-void UDolphinUnrealBlueprintLibrary::PressL(bool bInIsPressed, uint8 InAnalogAmount, int32 Frames, UDolphinInstance* DolphinInstance)
-{
-    DolphinInstance = UDolphinUnrealBlueprintLibrary::GetDolphinInstanceOrDefault(DolphinInstance);
-
-    if (DolphinInstance != nullptr)
-    {
-        return;
-    }
-}
-
-void UDolphinUnrealBlueprintLibrary::AnalogStickX(uint8 AnalogAmount, int32 Frames, UDolphinInstance* DolphinInstance)
-{
-    DolphinInstance = UDolphinUnrealBlueprintLibrary::GetDolphinInstanceOrDefault(DolphinInstance);
-
-    if (DolphinInstance != nullptr)
-    {
-        return;
-    }
-}
-
-void UDolphinUnrealBlueprintLibrary::AnalogStickY(uint8 AnalogAmount, int32 Frames, UDolphinInstance* DolphinInstance)
-{
-    DolphinInstance = UDolphinUnrealBlueprintLibrary::GetDolphinInstanceOrDefault(DolphinInstance);
-
-    if (DolphinInstance != nullptr)
-    {
-        return;
-    }
-}
-
-void UDolphinUnrealBlueprintLibrary::CStickY(uint8 AnalogAmount, int32 Frames, UDolphinInstance* DolphinInstance)
-{
-    DolphinInstance = UDolphinUnrealBlueprintLibrary::GetDolphinInstanceOrDefault(DolphinInstance);
-
-    if (DolphinInstance != nullptr)
-    {
-        return;
-    }
-}
-
-void UDolphinUnrealBlueprintLibrary::CStickX(uint8 AnalogAmount, int32 Frames, UDolphinInstance* DolphinInstance)
-{
-    DolphinInstance = UDolphinUnrealBlueprintLibrary::GetDolphinInstanceOrDefault(DolphinInstance);
-
-    if (DolphinInstance != nullptr)
-    {
-        return;
-    }
-}
-*/

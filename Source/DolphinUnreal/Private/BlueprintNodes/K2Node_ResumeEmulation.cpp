@@ -36,7 +36,7 @@ UK2Node_ResumeEmulationProxy* UK2Node_ResumeEmulationProxy::CreateProxyObjectFor
 
 	if (DolphinInstance != nullptr)
 	{
-		DolphinInstance->OnInstanceReadyForNextCommandEvent.AddUObject(Proxy, &UK2Node_ResumeEmulationProxy::OnInstanceReady);
+		DolphinInstance->OnInstanceCommandCompleteEvent.AddUObject(Proxy, &UK2Node_ResumeEmulationProxy::OnInstanceReady);
 		UDolphinUnrealBlueprintLibrary::ResumeEmulation(DolphinInstance);
 	}
 
@@ -51,7 +51,7 @@ void UK2Node_ResumeEmulationProxy::OnInstanceReady(UDolphinInstance* InInstance)
 {
 	if (InInstance)
 	{
-		InInstance->OnInstanceReadyForNextCommandEvent.RemoveAll(this);
+		InInstance->OnInstanceCommandCompleteEvent.RemoveAll(this);
 	}
 
 	OnSuccess.Broadcast(InInstance);

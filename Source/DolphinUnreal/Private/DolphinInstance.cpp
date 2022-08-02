@@ -5,7 +5,7 @@
 #include "DataTables/InputTableImporter.h"
 #include "DolphinUnreal.h"
 #include "DolphinUnrealBlueprintLibrary.h"
-#include "FrameInput.h"
+#include "FrameInputs.h"
 
 // Engine includes
 #include "Interfaces/IPluginManager.h"
@@ -71,9 +71,9 @@ SERVER_FUNC_BODY(UDolphinInstance, OnInstanceConnected, params)
     }
 }
 
-SERVER_FUNC_BODY(UDolphinInstance, OnInstanceReady, params)
+SERVER_FUNC_BODY(UDolphinInstance, OnInstanceCommandCompleted, params)
 {
-    OnInstanceReadyForNextCommandEvent.Broadcast(this);
+    OnInstanceCommandCompleteEvent.Broadcast(this);
 }
 
 SERVER_FUNC_BODY(UDolphinInstance, OnInstanceHeartbeatAcknowledged, params)
@@ -109,12 +109,12 @@ SERVER_FUNC_BODY(UDolphinInstance, OnInstanceRecordingStopped, params)
 {
     UDataTable* InputTable = NewObject<UDataTable>();
 
-    InputTable->RowStruct = FFrameInput::StaticStruct();
+    InputTable->RowStruct = FFrameInputs::StaticStruct();
 
     // TODO: This is slow and takes too much memory. Better to not to add the rows to the data table at all, and append each row to the CSV iteratively.
     for (const DolphinControllerState& Next : params._inputStates)
     {
-        FFrameInput FrameInput = FFrameInput::FromDolphinControllerState(Next);
+        FFrameInputs FrameInput = FFrameInputs::FromDolphinControllerState(Next);
         InputTable->AddRow(FName(FGuid::NewGuid().ToString()), FrameInput);
     }
 
@@ -193,7 +193,7 @@ void UDolphinInstance::RequestLoadSaveState(USavAsset* SavAsset)
 {
     if (SavAsset == nullptr)
     {
-        OnInstanceReadyForNextCommandEvent.Broadcast(this);
+        OnInstanceCommandCompleteEvent.Broadcast(this);
         return;
     }
 
@@ -260,26 +260,36 @@ bool UDolphinInstance::IsRecording() const
     return bIsRecordingInput;
 }
 
-void UDolphinInstance::RequestPlayInputs(UDataTable* FrameInputsTable)
+void UDolphinInstance::RequestPlayInputTable(UDataTable* FrameInputsTable)
 {
     if (FrameInputsTable == nullptr)
     {
-        OnInstanceReadyForNextCommandEvent.Broadcast(this);
+        OnInstanceCommandCompleteEvent.Broadcast(this);
         return;
     }
 
-    TArray<FFrameInput*> FrameInputs;
+    TArray<FFrameInputs*> FrameInputs;
     FString ContextString = TEXT("PlayInputs");
 
     FrameInputsTable->GetAllRows(ContextString, FrameInputs);
 
-    std::vector<DolphinControllerState> InputStates;
-    for (const FFrameInput* Next : FrameInputs)
+    TArray<FFrameInputs> FrameInputsValue;
+    for (const FFrameInputs* Next : FrameInputs)
     {
         if (Next)
         {
-            InputStates.push_back(FFrameInput::ToDolphinControllerState(*Next));
+            FrameInputsValue.Add(*Next);
         }
+    }
+    RequestPlayInputs(FrameInputsValue);
+}
+
+void UDolphinInstance::RequestPlayInputs(const TArray<FFrameInputs>& FrameInputs)
+{
+    std::vector<DolphinControllerState> InputStates;
+    for (const FFrameInputs Next : FrameInputs)
+    {
+        InputStates.push_back(FFrameInputs::ToDolphinControllerState(Next));
     }
 
     DolphinIpcToInstanceData ipcData;
@@ -287,6 +297,27 @@ void UDolphinInstance::RequestPlayInputs(UDataTable* FrameInputsTable)
     data->_inputStates = InputStates;
     ipcData._call = DolphinInstanceIpcCall::DolphinInstance_PlayInputs;
     ipcData._params._paramsPlayInputs = data;
+    ipcSendToInstance(ipcData);
+}
+
+void UDolphinInstance::RequestFrameAdvance(int32 NumberOfFrames)
+{
+    DolphinIpcToInstanceData ipcData;
+    std::shared_ptr<ToInstanceParams_FrameAdvance> data = std::make_shared<ToInstanceParams_FrameAdvance>();
+    data->_numFrames = NumberOfFrames;
+    ipcData._call = DolphinInstanceIpcCall::DolphinInstance_FrameAdvance;
+    ipcData._params._paramsFrameAdvance = data;
+    ipcSendToInstance(ipcData);
+}
+
+void UDolphinInstance::RequestFrameAdvanceWithInput(int32 NumberOfFrames, FFrameInputs FrameInputs)
+{
+    DolphinIpcToInstanceData ipcData;
+    std::shared_ptr<ToInstanceParams_FrameAdvanceWithInput> data = std::make_shared<ToInstanceParams_FrameAdvanceWithInput>();
+    data->_numFrames = NumberOfFrames;
+    data->_inputState = FFrameInputs::ToDolphinControllerState(FrameInputs);
+    ipcData._call = DolphinInstanceIpcCall::DolphinInstance_FrameAdvanceWithInput;
+    ipcData._params._paramsFrameAdvanceWithInput = data;
     ipcSendToInstance(ipcData);
 }
 

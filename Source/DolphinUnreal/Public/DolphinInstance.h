@@ -6,6 +6,8 @@
 #define __GNUC__ (false)
 #include "dolphin-ipc/DolphinIpcHandlerBase.h"
 
+#include "FrameInputs.h"
+
 #include "DolphinInstance.generated.h"
 
 class UIsoAsset;
@@ -31,8 +33,8 @@ public:
 	TStatId GetStatId() const override { return TStatId(); }
 	void Tick(float DeltaTime) override;
 
-	DECLARE_MULTICAST_DELEGATE_OneParam(FOnInstanceReadyForNextCommand, UDolphinInstance*);
-	FOnInstanceReadyForNextCommand OnInstanceReadyForNextCommandEvent;
+	DECLARE_MULTICAST_DELEGATE_OneParam(FOnInstanceCommandComplete, UDolphinInstance*);
+	FOnInstanceCommandComplete OnInstanceCommandCompleteEvent;
 
 	DECLARE_MULTICAST_DELEGATE_TwoParams(FOnSaveStateCreated, UDolphinInstance*, USavAsset*);
 	FOnSaveStateCreated OnInstanceSaveStateCreated;
@@ -62,14 +64,23 @@ public:
 	bool IsRecording() const;
 
 	UFUNCTION()
-	void RequestPlayInputs(UDataTable* FrameInputsTable);
+	void RequestPlayInputTable(UDataTable* FrameInputsTable);
+
+	UFUNCTION()
+	void RequestPlayInputs(const TArray<FFrameInputs>& FrameInputs);
+
+	UFUNCTION()
+	void RequestFrameAdvance(int32 NumberOfFrames);
+
+	UFUNCTION()
+	void RequestFrameAdvanceWithInput(int32 NumberOfFrames, FFrameInputs FrameInputs);
 
 	UFUNCTION()
 	void RequestTerminate();
 
 protected:
 	SERVER_FUNC_OVERRIDE(OnInstanceConnected)
-	SERVER_FUNC_OVERRIDE(OnInstanceReady)
+	SERVER_FUNC_OVERRIDE(OnInstanceCommandCompleted)
 	SERVER_FUNC_OVERRIDE(OnInstanceHeartbeatAcknowledged)
 	SERVER_FUNC_OVERRIDE(OnInstanceLogOutput)
 	SERVER_FUNC_OVERRIDE(OnInstanceTerminated)
