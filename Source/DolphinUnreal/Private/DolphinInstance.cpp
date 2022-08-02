@@ -123,7 +123,7 @@ SERVER_FUNC_BODY(UDolphinInstance, OnInstanceRecordingStopped, params)
 
 SERVER_FUNC_BODY(UDolphinInstance, OnInstanceSaveStateCreated, params)
 {
-    FString FilePath = FString(params._filePath.c_str());
+    FString FilePath = FString(params._filePathNoExtension.c_str()) + TEXT(".sav");
     FString DestinationPath = FPaths::Combine(FPaths::ProjectContentDir(), TEXT("SaveStates"));
     GEditor->GetEditorSubsystem<UImportSubsystem>()->ImportNextTick({ FilePath }, DestinationPath);
 
@@ -163,6 +163,12 @@ void UDolphinInstance::LaunchInstance(UIsoAsset* InIsoAsset, bool bStartPaused, 
     uint32 OutProcessID = 0;
     uint32 PriorityModifier = 0;
 
+    /*
+    #include "Windows/AllowWindowsPlatformTypes.h"
+    #include <shellapi.h>
+    #include "Windows/HideWindowsPlatformTypes.h"
+    ShellExecute(NULL, TEXT("open"), *DolphinBinaryPath, *Params, *OptionalWorkingDirectory, SW_SHOWDEFAULT);
+    */
     DolphinProcHandle = FWindowsPlatformProcess::CreateProc(
         *DolphinBinaryPath,
         *Params,
@@ -179,11 +185,11 @@ void UDolphinInstance::LaunchInstance(UIsoAsset* InIsoAsset, bool bStartPaused, 
 void UDolphinInstance::RequestCreateSaveState(FString SaveName)
 {
     static const FString ProjectContentDirectory = FPaths::ConvertRelativePathToFull(FPaths::ProjectContentDir());
-    const FString FilePath = FPaths::Combine(ProjectContentDirectory, "SaveStates/", SaveName) + ".sav";
+    const FString FilePath = FPaths::Combine(ProjectContentDirectory, "SaveStates/", SaveName);
 
     DolphinIpcToInstanceData ipcData;
     std::shared_ptr<ToInstanceParams_CreateSaveState> data = std::make_shared<ToInstanceParams_CreateSaveState>();
-    data->_filePath = std::string(TCHAR_TO_UTF8(*FilePath));
+    data->_filePathNoExtension = std::string(TCHAR_TO_UTF8(*FilePath));
     ipcData._call = DolphinInstanceIpcCall::DolphinInstance_CreateSaveState;
     ipcData._params._paramsCreateSaveState = data;
     ipcSendToInstance(ipcData);
