@@ -137,13 +137,13 @@ void UDolphinUnrealBlueprintLibrary::FrameAdvance(int32 NumberOfFrames, UDolphin
     }
 }
 
-void UDolphinUnrealBlueprintLibrary::FrameAdvanceWithInput(int32 NumberOfFrames, FFrameInputs FrameInputs, UDolphinInstance* DolphinInstance)
+void UDolphinUnrealBlueprintLibrary::FrameAdvanceWithInput(FFrameInputs FrameInputs, int32 NumberOfFrames, UDolphinInstance* DolphinInstance)
 {
     DolphinInstance = UDolphinUnrealBlueprintLibrary::GetDolphinInstanceOrDefault(DolphinInstance);
 
     if (DolphinInstance != nullptr)
     {
-        DolphinInstance->RequestFrameAdvanceWithInput(NumberOfFrames, FrameInputs);
+        DolphinInstance->RequestFrameAdvanceWithInput(FrameInputs, NumberOfFrames);
     }
 }
 

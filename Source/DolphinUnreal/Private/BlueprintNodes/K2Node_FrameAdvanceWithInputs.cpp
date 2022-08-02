@@ -14,12 +14,12 @@ UK2Node_FrameAdvanceWithInputs::UK2Node_FrameAdvanceWithInputs(const FObjectInit
 
 FText UK2Node_FrameAdvanceWithInputs::GetTooltipText() const
 {
-	return LOCTEXT("K2Node_FrameAdvanceWithInputs_Tooltip", "Sends an input table to the Dolphin instance for playback");
+	return LOCTEXT("K2Node_FrameAdvanceWithInputs_Tooltip", "Advances the emulation and plays the given input for the specified Dolphin instance(or default) over a specified number of frames.");
 }
 
 FText UK2Node_FrameAdvanceWithInputs::GetNodeTitle(ENodeTitleType::Type TitleType) const
 {
-	return LOCTEXT("K2Node_FrameAdvanceWithInputs_Title", "Play Input Table");
+	return LOCTEXT("K2Node_FrameAdvanceWithInputs_Title", "Frame Advance With Input");
 }
 
 FText UK2Node_FrameAdvanceWithInputs::GetMenuCategory() const
@@ -27,7 +27,7 @@ FText UK2Node_FrameAdvanceWithInputs::GetMenuCategory() const
 	return LOCTEXT("K2Node_FrameAdvanceWithInputs_Category", "Dolphin");
 }
 
-UK2Node_FrameAdvanceWithInputsProxy* UK2Node_FrameAdvanceWithInputsProxy::CreateProxyObjectForWait(UDolphinInstance* DolphinInstance, int32 NumberOfFrames, FFrameInputs FrameInputs)
+UK2Node_FrameAdvanceWithInputsProxy* UK2Node_FrameAdvanceWithInputsProxy::CreateProxyObjectForWait(UDolphinInstance* DolphinInstance, FFrameInputs FrameInputs, int32 NumberOfFrames)
 {
 	UK2Node_FrameAdvanceWithInputsProxy* Proxy = NewObject<UK2Node_FrameAdvanceWithInputsProxy>();
 	Proxy->SetFlags(RF_StrongRefOnFrame);
@@ -37,7 +37,7 @@ UK2Node_FrameAdvanceWithInputsProxy* UK2Node_FrameAdvanceWithInputsProxy::Create
 	if (DolphinInstance != nullptr)
 	{
 		DolphinInstance->OnInstanceCommandCompleteEvent.AddUObject(Proxy, &UK2Node_FrameAdvanceWithInputsProxy::OnInstanceReady);
-		UDolphinUnrealBlueprintLibrary::FrameAdvanceWithInput(NumberOfFrames, FrameInputs);
+		UDolphinUnrealBlueprintLibrary::FrameAdvanceWithInput(FrameInputs, NumberOfFrames);
 	}
 
 	return Proxy;

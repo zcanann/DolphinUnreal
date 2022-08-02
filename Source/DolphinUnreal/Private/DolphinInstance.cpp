@@ -310,7 +310,7 @@ void UDolphinInstance::RequestFrameAdvance(int32 NumberOfFrames)
     ipcSendToInstance(ipcData);
 }
 
-void UDolphinInstance::RequestFrameAdvanceWithInput(int32 NumberOfFrames, FFrameInputs FrameInputs)
+void UDolphinInstance::RequestFrameAdvanceWithInput(FFrameInputs FrameInputs, int32 NumberOfFrames)
 {
     DolphinIpcToInstanceData ipcData;
     std::shared_ptr<ToInstanceParams_FrameAdvanceWithInput> data = std::make_shared<ToInstanceParams_FrameAdvanceWithInput>();

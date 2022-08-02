@@ -14,12 +14,12 @@ UK2Node_FrameAdvance::UK2Node_FrameAdvance(const FObjectInitializer& ObjectIniti
 
 FText UK2Node_FrameAdvance::GetTooltipText() const
 {
-	return LOCTEXT("K2Node_FrameAdvance_Tooltip", "Sends an input table to the Dolphin instance for playback");
+	return LOCTEXT("K2Node_FrameAdvance_Tooltip", "Advances the emulation for the specified Dolphin instance (or default) by a specified number of frames.");
 }
 
 FText UK2Node_FrameAdvance::GetNodeTitle(ENodeTitleType::Type TitleType) const
 {
-	return LOCTEXT("K2Node_FrameAdvance_Title", "Play Input Table");
+	return LOCTEXT("K2Node_FrameAdvance_Title", "Frame Advance");
 }
 
 FText UK2Node_FrameAdvance::GetMenuCategory() const

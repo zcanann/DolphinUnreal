@@ -73,7 +73,7 @@ public:
 	void RequestFrameAdvance(int32 NumberOfFrames);
 
 	UFUNCTION()
-	void RequestFrameAdvanceWithInput(int32 NumberOfFrames, FFrameInputs FrameInputs);
+	void RequestFrameAdvanceWithInput(FFrameInputs FrameInputs, int32 NumberOfFrames = 1);
 
 	UFUNCTION()
 	void RequestTerminate();

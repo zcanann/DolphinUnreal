@@ -65,7 +65,7 @@ public:
 	static void FrameAdvance(int32 NumberOfFrames, UDolphinInstance* DolphinInstance = nullptr);
 
 	UFUNCTION()
-	static void FrameAdvanceWithInput(int32 NumberOfFrames, FFrameInputs FrameInputs, UDolphinInstance* DolphinInstance = nullptr);
+	static void FrameAdvanceWithInput(FFrameInputs FrameInputs, int32 NumberOfFrames = 1, UDolphinInstance* DolphinInstance = nullptr);
 
 	UFUNCTION()
 	static void Terminate(UDolphinInstance* DolphinInstance = nullptr);
