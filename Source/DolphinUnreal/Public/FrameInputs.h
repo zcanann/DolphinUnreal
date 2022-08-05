@@ -122,19 +122,28 @@ FORCEINLINE FArchive& operator <<(FArchive& Ar, FFrameInputs& InFrameInputs)
 	Ar << InFrameInputs.bButtonX;
 	Ar << InFrameInputs.bButtonY;
 	Ar << InFrameInputs.bButtonZ;
+
 	Ar << InFrameInputs.bButtonDUp;
 	Ar << InFrameInputs.bButtonDDown;
 	Ar << InFrameInputs.bButtonDLeft;
 	Ar << InFrameInputs.bButtonDRight;
+
 	Ar << InFrameInputs.bButtonStart;
+
 	Ar << InFrameInputs.bButtonL;
 	Ar << InFrameInputs.bButtonR;
 	Ar << InFrameInputs.TriggerLeft;
 	Ar << InFrameInputs.TriggerRight;
+
 	Ar << InFrameInputs.MainStickX;
 	Ar << InFrameInputs.MainStickY;
 	Ar << InFrameInputs.CStickX;
 	Ar << InFrameInputs.CStickY;
+
+	Ar << InFrameInputs.bDiscChange;
+	Ar << InFrameInputs.bConsoleReset;
+	Ar << InFrameInputs.bIsControllerConnected;
+	Ar << InFrameInputs.bOriginReset;
 
 	return Ar;
 }

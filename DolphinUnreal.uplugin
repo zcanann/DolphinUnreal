@@ -18,7 +18,7 @@
 		{
 			"Name": "DolphinUnreal",
 			"Type": "Runtime",
-			"LoadingPhase": "Default"
+			"LoadingPhase": "PreDefault"
 		}
 	]
 }
