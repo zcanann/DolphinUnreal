@@ -138,6 +138,92 @@ SERVER_FUNC_BODY(UDolphinInstance, OnInstanceMemoryCardFormatted, params)
 {
 }
 
+SERVER_FUNC_BODY(UDolphinInstance, OnInstanceMemoryRead, params)
+{
+    switch (params._dataType)
+    {
+        case DolphinDataType::Int8:
+        {
+            OnInstanceMemoryReadInt8.Broadcast(this, FDolphinInt8(params._dolphinValue._valueInt8));
+            break;
+        }
+        case DolphinDataType::UInt8:
+        {
+            OnInstanceMemoryReadUInt8.Broadcast(this, FDolphinUInt8(params._dolphinValue._valueUInt8));
+            break;
+        }
+        case DolphinDataType::Int16:
+        {
+            OnInstanceMemoryReadInt16.Broadcast(this, FDolphinInt16(params._dolphinValue._valueInt16));
+            break;
+        }
+        case DolphinDataType::UInt16:
+        {
+            OnInstanceMemoryReadUInt16.Broadcast(this, FDolphinUInt16(params._dolphinValue._valueUInt16));
+            break;
+        }
+        case DolphinDataType::Int32:
+        {
+            OnInstanceMemoryReadInt32.Broadcast(this, FDolphinInt32(params._dolphinValue._valueInt32));
+            break;
+        }
+        case DolphinDataType::UInt32:
+        {
+            OnInstanceMemoryReadUInt32.Broadcast(this, FDolphinUInt32(params._dolphinValue._valueUInt32));
+            break;
+        }
+        case DolphinDataType::Int64:
+        {
+            OnInstanceMemoryReadInt64.Broadcast(this, FDolphinInt64(params._dolphinValue._valueInt64));
+            break;
+        }
+        case DolphinDataType::UInt64:
+        {
+            OnInstanceMemoryReadUInt64.Broadcast(this, FDolphinUInt64(params._dolphinValue._valueInt64));
+            break;
+        }
+        case DolphinDataType::Float:
+        {
+            OnInstanceMemoryReadFloat.Broadcast(this, FDolphinFloat(params._dolphinValue._valueFloat));
+            break;
+        }
+        case DolphinDataType::Double:
+        {
+            OnInstanceMemoryReadDouble.Broadcast(this, FDolphinDouble(params._dolphinValue._valueDouble));
+            break;
+        }
+        case DolphinDataType::String:
+        {
+            OnInstanceMemoryReadString.Broadcast(this, FString(params._dolphinValue._valueString.c_str()));
+            break;
+        }
+        case DolphinDataType::ArrayOfBytes:
+        {
+            TArray<FDolphinInt8> ArrayOfBytes;
+            for (signed char Next : params._dolphinValue._valueArrayOfBytes)
+            {
+                ArrayOfBytes.Add(FDolphinInt8(Next));
+            }
+            OnInstanceMemoryReadArrayOfBytes.Broadcast(this, ArrayOfBytes);
+            break;
+        }
+        case DolphinDataType::UArrayOfBytes:
+        {
+            TArray<FDolphinUInt8> ArrayOfUBytes;
+            for (signed char Next : params._dolphinValue._valueArrayOfBytes)
+            {
+                ArrayOfUBytes.Add(FDolphinUInt8(Next));
+            }
+            OnInstanceMemoryReadUnsignedArrayOfBytes.Broadcast(this, ArrayOfUBytes);
+            break;
+        }
+    }
+}
+
+SERVER_FUNC_BODY(UDolphinInstance, OnInstanceMemoryWrite, params)
+{
+}
+
 void UDolphinInstance::LaunchInstance(UIsoAsset* InIsoAsset, bool bStartPaused, bool bBeginRecording)
 {
     static FString PluginContentDirectory = FPaths::ConvertRelativePathToFull(IPluginManager::Get().FindPlugin(TEXT("DolphinUnreal"))->GetContentDir());
