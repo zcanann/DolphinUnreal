@@ -38,5 +38,5 @@ public:
 	FDolphinStopRecordingMulticastDelegate OnSuccess;
 
 private:
-	void OnInstanceReady(UDolphinInstance* InInstance);
+	void OnInstanceReady(UDolphinInstance* InInstance, uint64 CommandId);
 };

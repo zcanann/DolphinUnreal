@@ -37,7 +37,7 @@ UK2Node_ResumeEmulationProxy* UK2Node_ResumeEmulationProxy::CreateProxyObjectFor
 	if (DolphinInstance != nullptr)
 	{
 		DolphinInstance->OnInstanceCommandCompleteEvent.AddUObject(Proxy, &UK2Node_ResumeEmulationProxy::OnInstanceReady);
-		UDolphinUnrealBlueprintLibrary::ResumeEmulation(DolphinInstance);
+		DolphinInstance->RequestResume();
 	}
 
 	return Proxy;
@@ -47,7 +47,7 @@ UK2Node_ResumeEmulationProxy::UK2Node_ResumeEmulationProxy(const FObjectInitiali
 {
 }
 
-void UK2Node_ResumeEmulationProxy::OnInstanceReady(UDolphinInstance* InInstance)
+void UK2Node_ResumeEmulationProxy::OnInstanceReady(UDolphinInstance* InInstance, uint64 CommandId)
 {
 	if (InInstance)
 	{

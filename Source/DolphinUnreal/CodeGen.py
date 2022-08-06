@@ -16,51 +16,61 @@ dataTypeTable = {
     {
         "primitive" : "uint8",
         "keywords" : "unsigned uint8 char byte ubyte",
+        "bytes" : 1,
     },
     "UInt16" :
     {
         "primitive" : "uint16",
         "keywords" : "unsigned uint16 short ushort",
+        "bytes" : 2,
     },
     "UInt32" :
     {
         "primitive" : "uint32",
         "keywords" : "unsigned uint32 int uint integer",
+        "bytes" : 4,
     },
     "UInt64" :
     {
         "primitive" : "uint64",
         "keywords" : "unsigned uint64 long int ulong integer",
+        "bytes" : 8,
     },
     "Int8" :
     {
         "primitive" : "int8",
         "keywords" : "signed int8 char byte",
+        "bytes" : 1,
     },
     "Int16" :
     {
         "primitive" : "int16",
         "keywords" : "signed int16 short",
+        "bytes" : 2,
     },
     "Int32" :
     {
         "primitive" : "int32",
         "keywords" : "signed int32 int int integer",
+        "bytes" : 4,
     },
     "Int64" :
     {
         "primitive" : "int64",
         "keywords" : "signed int64 long int integer",
+        "bytes" : 8,
     },
     "Float" :
     {
         "primitive" : "float",
         "keywords" : "float decimal single single-precision",
+        "bytes" : 4,
     },
     "Double" :
     {
         "primitive" : "double",
         "keywords" : "double decimal double-precision float",
+        "bytes" : 8,
     },
 }
 
@@ -129,6 +139,8 @@ operatorsTable = {
     },
 }
 
+favorites = "\n"
+
 def main():
     processTemplateFiles()
     
@@ -154,63 +166,97 @@ def processTemplateFiles():
                 hTemplateInputContents = hTemplateInputContents.replace("#ifdef DOLPHIN_DATA_TYPES_TEMPLATE", header)
                 hTemplateInputContents = hTemplateInputContents.replace("#endif // DOLPHIN_DATA_TYPES_TEMPLATE", "")
                 hTemplateInputContents = hTemplateInputContents.replace("{{UE_HEADER}}", 'UCLASS(ClassGroup = "Dolphin|CPP UE4FundamentalType Wrapper", BlueprintType)')
-                hTemplateInputContents = hTemplateInputContents.replace("{{CREATE}}", generateCreatorsForAllDataTypes())
+                hTemplateInputContents = hTemplateInputContents.replace("{{MAKE}}", generateMakeForAllDataTypes())
                 hTemplateInputContents = hTemplateInputContents.replace("{{CAST}}", generateCastsForAllDataTypes())
                 hTemplateInputContents = hTemplateInputContents.replace("{{OPERATORS}}", generateOperatorsForAllDataTypes())
+                hTemplateInputContents = hTemplateInputContents.replace("{{FAVORITES}}", generateAccumulatedFavorites())
                 hWriter.write(hTemplateInputContents)
 
-# Creators
+# Make
 
-def generateCreateHeader(dataType):
-    return '\tUFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Create Dolphin ' + dataType + '")\n'
+def generateMakeHeader(dataType):
+    dataTypeKeywords = dataTypeTable[dataType]['keywords']
+    return '\tUFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Make Dolphin ' + dataType + \
+        '", meta = (Keywords = "Make Create ' + dataTypeKeywords + '"))\n'
     
-def generateCreateForDataType(dataType, castPrimitive, primitive):
-    return generateCreateHeader(dataType) + \
-        '\tstatic FDolphin' + dataType + ' Create' + dataType + '(' + primitive + ' Value)\n' + \
+def generatePrimitiveMakeForDataType(dataType, unrealPrimitive):
+    functionName = 'Make' + dataType
+    generateFavoriteForFunctionName(functionName)
+    
+    castPrimitive = dataTypeTable[dataType]['primitive']
+    return generateMakeHeader(dataType) + \
+        '\tstatic FDolphin' + dataType + ' ' + functionName + '(' + unrealPrimitive + ' Value)\n' + \
         '\t{\n' + \
         '\t\treturn static_cast<' + castPrimitive + '>(Value);\n' + \
         '\t}\n\n'
+
+def generateArrayMakeHeader(dataType):
+    dataTypeKeywords = dataTypeTable[dataType]['keywords']
+    return '\tUFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Make Dolphin ' + dataType + \
+        ' from Bytes", meta = (Keywords = "Make Create ' + dataTypeKeywords + ' from Array of Bytes int8 uint8 char"))\n'
         
-def generateCreatorsForAllDataTypes():
+def generateArrayMakeForDataType(dataType, unrealPrimitive):
+    castPrimitive = dataTypeTable[dataType]['primitive']
+    numBytes = dataTypeTable[dataType]['bytes']
+    
+    if numBytes <= 1:
+        return ""
+    
+    parameters = ""
+    arrayInit = ""
+    arrayInitInverse = ""
+    
+    for index in range(numBytes):
+        numByte = index + 1
+        inverseNumByte = numBytes - index
+        parameters += "uint8 Byte" + str(numByte) + (", " if numByte < numBytes else "")
+        arrayInitInverse += "Byte" + str(numByte) + (", " if numByte < numBytes else "")
+        arrayInit += "Byte" + str(inverseNumByte) + (", " if numByte < numBytes else "")
+    
+    functionName = 'Make' + dataType + 'FromBytes'
+    generateFavoriteForFunctionName(functionName)
+    
+    return generateArrayMakeHeader(dataType) + \
+        '\tstatic FDolphin' + dataType + ' ' + functionName + '(' + parameters + ', bool bFirstByteIsLeastSignificant = true)\n' + \
+        '\t{\n' + \
+        '\t\tTArray<uint8> Bytes = bFirstByteIsLeastSignificant\n' + \
+        '\t\t\t? TArray<uint8>({ ' + arrayInit + ' })' + '\n' + \
+        '\t\t\t: TArray<uint8>({ ' + arrayInitInverse + ' })' + ';\n' + \
+        '\t\treturn *reinterpret_cast<' + castPrimitive + '*>(Bytes.GetData());\n' + \
+        '\t}\n\n'
+       
+# '\t\t' + castPrimitive + ' Value = 0;\n' + \
+# '\t\tfor (uint8 Index = 0; Index < Bytes.Num(); Index++)\n' + \
+# '\t\t{\n' + \
+# '\t\t\tValue += (' + castPrimitive + ')Bytes[Index] << 8 * Index;\n' + \
+# '\t\t}\n' + \ 
+# uint32 Result = 0;
+# for (uint8 ValueByte = 0; ValueByte < NumBytes; ++ValueByte)
+# {
+# Result += InBytes[InByteIndex] << 8 * ValueByte;
+# InByteIndex += ByteIndexStep;
+# }
+
+def generateMakesForDataType(dataType, unrealPrimitive):
+    return generatePrimitiveMakeForDataType(dataType, unrealPrimitive) + \
+        generateArrayMakeForDataType(dataType, unrealPrimitive)
+
+def generateMakeForAllDataTypes():
     header = """//////////////////////////////////////////////////////////////////////////////////
-    //                                    CREATE                                    //
+    //                                     MAKE                                     //
     //////////////////////////////////////////////////////////////////////////////////\n\n"""
     
     return header + \
-        generateCreateForDataType("UInt8", "uint8", "int32") + \
-        generateCreateForDataType("UInt16", "uint16", "int32") + \
-        generateCreateForDataType("UInt32", "uint32", "int32") + \
-        generateCreateForDataType("UInt64", "uint64", "int64") + \
-        generateCreateForDataType("Int8", "int8", "int32") + \
-        generateCreateForDataType("Int16", "int16", "int32") + \
-        generateCreateForDataType("Int32", "int32", "int32") + \
-        generateCreateForDataType("Int64", "int64", "int64") + \
-        generateCreateForDataType("Float", "float", "float") + \
-        generateCreateForDataType("Double", "double", "float")
-
-# Extractors
-
-def generateExtractHeader(dataType, operationName, operation):
-    return 'UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "' + dataType + " " + operation + " " + dataType + '")\n'
-
-def generateExtractorsForDataType(dataType):
-    return ""
-        
-def generateExtractorsForAllDataTypes():
-    header = """//////////////////////////////////////////////////////////////////////////////////
-    //                                    EXTRACT                                   //
-    //////////////////////////////////////////////////////////////////////////////////\n\n"""
-    return header + \
-        generateExtractorsForDataType("UInt8") + \
-        generateExtractorsForDataType("UInt16") + \
-        generateExtractorsForDataType("UInt32") + \
-        generateExtractorsForDataType("UInt64") + \
-        generateExtractorsForDataType("Int8") + \
-        generateExtractorsForDataType("Int16") + \
-        generateExtractorsForDataType("Int32") + \
-        generateExtractorsForDataType("Int64") + \
-        generateExtractorsForDataType("Float") + \
-        generateExtractorsForDataType("Double")
+        generateMakesForDataType("UInt8", "int32") + \
+        generateMakesForDataType("UInt16", "int32") + \
+        generateMakesForDataType("UInt32", "int32") + \
+        generateMakesForDataType("UInt64", "int64") + \
+        generateMakesForDataType("Int8", "int32") + \
+        generateMakesForDataType("Int16", "int32") + \
+        generateMakesForDataType("Int32", "int32") + \
+        generateMakesForDataType("Int64", "int64") + \
+        generateMakesForDataType("Float", "float") + \
+        generateMakesForDataType("Double", "float")
 
 # Casts
 
@@ -272,22 +318,27 @@ def generateCastsForAllDataTypes():
 # Operators
     
 def generateOperatorHeader(dataType, operator):
-    return '\tUFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "' + dataType + " " + operatorsTable[operator]['symbol'] + " " + dataType + \
+    return '\tUFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "' + \
+        operator + " " + dataType + " " + operatorsTable[operator]['symbol'] + " " + dataType + \
         '", meta = (Keywords = "' + operatorsTable[operator]['keywords'] + '"))\n'
     
 def generateOperator(dataType, operator):
+    functionName = 'Dolphin_' + dataType + operator + dataType
+    generateFavoriteForFunctionName(functionName)
     return generateOperatorHeader(dataType, operator) + \
-        "\tstatic FDolphin" + dataType + " Dolphin_" + dataType + operator + dataType + "(const FDolphin" + dataType + "& Value1, const FDolphin" + dataType + "& Value2)\n" + \
-        "\t{\n" + \
-        "\t\treturn Value1.Value " + operatorsTable[operator]['symbol'] + " Value2.Value;\n"  + \
-        "\t}\n\n"
+        '\tstatic FDolphin' + dataType + ' ' + functionName + '(const FDolphin' + dataType + '& Value1, const FDolphin' + dataType + '& Value2)\n' + \
+        '\t{\n' + \
+        '\t\treturn Value1.Value ' + operatorsTable[operator]['symbol'] + ' Value2.Value;\n'  + \
+        '\t}\n\n'
 
 def generateBoolOperator(dataType, operator):
+    functionName = 'Dolphin_' + dataType + operator + dataType
+    generateFavoriteForFunctionName(functionName)
     return generateOperatorHeader(dataType, operator) + \
-        "\tstatic bool Dolphin_" + dataType + operator + dataType + "(const FDolphin" + dataType + "& Value1, const FDolphin" + dataType + "& Value2)\n" + \
-        "\t{\n" + \
-        "\t\treturn Value1.Value " + operatorsTable[operator]['symbol'] + " Value2.Value;\n"  + \
-        "\t}\n\n"
+        '\tstatic bool ' + functionName + '(const FDolphin' + dataType + '& Value1, const FDolphin' + dataType + '& Value2)\n' + \
+        '\t{\n' + \
+        '\t\treturn Value1.Value ' + operatorsTable[operator]['symbol'] + ' Value2.Value;\n'  + \
+        '\t}\n\n'
 
 def generateOperatorsForDataType(dataType):
     result = ""
@@ -316,6 +367,13 @@ def generateOperatorsForAllDataTypes():
         generateOperatorsForDataType("Float") + \
         generateOperatorsForDataType("Double")
 
+def generateFavoriteForFunctionName(functionName):
+    global favorites
+    favorites += '\t\tAddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, ' + functionName + ')));\n'
+
+def generateAccumulatedFavorites():
+    global favorites
+    return favorites
 
 if __name__ == '__main__':
     main()

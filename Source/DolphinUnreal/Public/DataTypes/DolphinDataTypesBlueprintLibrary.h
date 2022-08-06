@@ -4,6 +4,11 @@
 
 #pragma once
 
+#include "BlueprintActionMenuItem.h"
+#include "BlueprintFunctionNodeSpawner.h"
+#include "BlueprintPaletteFavorites.h"
+#include "Editor/EditorPerProjectUserSettings.h"
+
 #include "DataTypes/DolphinDataTypes.h"
 
 #include "DolphinDataTypesBlueprintLibrary.generated.h"
@@ -18,69 +23,265 @@ class UDolphinDataTypesBlueprintLibrary : public UObject
 
 public:
 	UDolphinDataTypesBlueprintLibrary(const class FObjectInitializer& ObjectInitializer);
-	
+
+	UFUNCTION()
+	static void AutoFavoriteCommonDolphinFunctions()
+	{
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, MakeUInt8)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, MakeUInt16)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, MakeUInt16FromBytes)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, MakeUInt32)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, MakeUInt32FromBytes)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, MakeUInt64)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, MakeUInt64FromBytes)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, MakeInt8)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, MakeInt16)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, MakeInt16FromBytes)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, MakeInt32)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, MakeInt32FromBytes)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, MakeInt64)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, MakeInt64FromBytes)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, MakeFloat)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, MakeFloatFromBytes)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, MakeDouble)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, MakeDoubleFromBytes)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_UInt8SubtractUInt8)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_UInt8AddUInt8)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_UInt8MultiplyUInt8)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_UInt8DivideUInt8)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_UInt8EqualToUInt8)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_UInt8NotEqualToUInt8)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_UInt8LessThanUInt8)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_UInt8LessThanOrEqualToUInt8)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_UInt8GreaterThanUInt8)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_UInt8GreaterThanOrEqualToUInt8)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_UInt16SubtractUInt16)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_UInt16AddUInt16)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_UInt16MultiplyUInt16)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_UInt16DivideUInt16)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_UInt16EqualToUInt16)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_UInt16NotEqualToUInt16)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_UInt16LessThanUInt16)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_UInt16LessThanOrEqualToUInt16)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_UInt16GreaterThanUInt16)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_UInt16GreaterThanOrEqualToUInt16)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_UInt32SubtractUInt32)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_UInt32AddUInt32)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_UInt32MultiplyUInt32)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_UInt32DivideUInt32)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_UInt32EqualToUInt32)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_UInt32NotEqualToUInt32)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_UInt32LessThanUInt32)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_UInt32LessThanOrEqualToUInt32)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_UInt32GreaterThanUInt32)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_UInt32GreaterThanOrEqualToUInt32)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_UInt64SubtractUInt64)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_UInt64AddUInt64)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_UInt64MultiplyUInt64)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_UInt64DivideUInt64)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_UInt64EqualToUInt64)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_UInt64NotEqualToUInt64)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_UInt64LessThanUInt64)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_UInt64LessThanOrEqualToUInt64)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_UInt64GreaterThanUInt64)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_UInt64GreaterThanOrEqualToUInt64)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_Int8SubtractInt8)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_Int8AddInt8)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_Int8MultiplyInt8)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_Int8DivideInt8)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_Int8EqualToInt8)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_Int8NotEqualToInt8)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_Int8LessThanInt8)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_Int8LessThanOrEqualToInt8)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_Int8GreaterThanInt8)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_Int8GreaterThanOrEqualToInt8)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_Int16SubtractInt16)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_Int16AddInt16)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_Int16MultiplyInt16)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_Int16DivideInt16)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_Int16EqualToInt16)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_Int16NotEqualToInt16)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_Int16LessThanInt16)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_Int16LessThanOrEqualToInt16)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_Int16GreaterThanInt16)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_Int16GreaterThanOrEqualToInt16)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_Int32SubtractInt32)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_Int32AddInt32)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_Int32MultiplyInt32)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_Int32DivideInt32)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_Int32EqualToInt32)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_Int32NotEqualToInt32)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_Int32LessThanInt32)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_Int32LessThanOrEqualToInt32)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_Int32GreaterThanInt32)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_Int32GreaterThanOrEqualToInt32)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_Int64SubtractInt64)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_Int64AddInt64)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_Int64MultiplyInt64)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_Int64DivideInt64)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_Int64EqualToInt64)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_Int64NotEqualToInt64)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_Int64LessThanInt64)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_Int64LessThanOrEqualToInt64)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_Int64GreaterThanInt64)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_Int64GreaterThanOrEqualToInt64)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_FloatSubtractFloat)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_FloatAddFloat)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_FloatMultiplyFloat)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_FloatDivideFloat)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_FloatEqualToFloat)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_FloatNotEqualToFloat)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_FloatLessThanFloat)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_FloatLessThanOrEqualToFloat)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_FloatGreaterThanFloat)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_FloatGreaterThanOrEqualToFloat)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_DoubleSubtractDouble)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_DoubleAddDouble)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_DoubleMultiplyDouble)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_DoubleDivideDouble)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_DoubleEqualToDouble)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_DoubleNotEqualToDouble)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_DoubleLessThanDouble)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_DoubleLessThanOrEqualToDouble)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_DoubleGreaterThanDouble)));
+		AddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_DoubleGreaterThanOrEqualToDouble)));
+
+	}
+
 	//////////////////////////////////////////////////////////////////////////////////
-    //                                    CREATE                                    //
+    //                                     MAKE                                     //
     //////////////////////////////////////////////////////////////////////////////////
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Create Dolphin UInt8")
-	static FDolphinUInt8 CreateUInt8(int32 Value)
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Make Dolphin UInt8", meta = (Keywords = "Make Create unsigned uint8 char byte ubyte"))
+	static FDolphinUInt8 MakeUInt8(int32 Value)
 	{
 		return static_cast<uint8>(Value);
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Create Dolphin UInt16")
-	static FDolphinUInt16 CreateUInt16(int32 Value)
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Make Dolphin UInt16", meta = (Keywords = "Make Create unsigned uint16 short ushort"))
+	static FDolphinUInt16 MakeUInt16(int32 Value)
 	{
 		return static_cast<uint16>(Value);
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Create Dolphin UInt32")
-	static FDolphinUInt32 CreateUInt32(int32 Value)
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Make Dolphin UInt16 from Bytes", meta = (Keywords = "Make Create unsigned uint16 short ushort from Array of Bytes int8 uint8 char"))
+	static FDolphinUInt16 MakeUInt16FromBytes(uint8 Byte1, uint8 Byte2, bool bFirstByteIsLeastSignificant = true)
+	{
+		TArray<uint8> Bytes = bFirstByteIsLeastSignificant
+			? TArray<uint8>({ Byte2, Byte1 })
+			: TArray<uint8>({ Byte1, Byte2 });
+		return *reinterpret_cast<uint16*>(Bytes.GetData());
+	}
+
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Make Dolphin UInt32", meta = (Keywords = "Make Create unsigned uint32 int uint integer"))
+	static FDolphinUInt32 MakeUInt32(int32 Value)
 	{
 		return static_cast<uint32>(Value);
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Create Dolphin UInt64")
-	static FDolphinUInt64 CreateUInt64(int64 Value)
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Make Dolphin UInt32 from Bytes", meta = (Keywords = "Make Create unsigned uint32 int uint integer from Array of Bytes int8 uint8 char"))
+	static FDolphinUInt32 MakeUInt32FromBytes(uint8 Byte1, uint8 Byte2, uint8 Byte3, uint8 Byte4, bool bFirstByteIsLeastSignificant = true)
+	{
+		TArray<uint8> Bytes = bFirstByteIsLeastSignificant
+			? TArray<uint8>({ Byte4, Byte3, Byte2, Byte1 })
+			: TArray<uint8>({ Byte1, Byte2, Byte3, Byte4 });
+		return *reinterpret_cast<uint32*>(Bytes.GetData());
+	}
+
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Make Dolphin UInt64", meta = (Keywords = "Make Create unsigned uint64 long int ulong integer"))
+	static FDolphinUInt64 MakeUInt64(int64 Value)
 	{
 		return static_cast<uint64>(Value);
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Create Dolphin Int8")
-	static FDolphinInt8 CreateInt8(int32 Value)
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Make Dolphin UInt64 from Bytes", meta = (Keywords = "Make Create unsigned uint64 long int ulong integer from Array of Bytes int8 uint8 char"))
+	static FDolphinUInt64 MakeUInt64FromBytes(uint8 Byte1, uint8 Byte2, uint8 Byte3, uint8 Byte4, uint8 Byte5, uint8 Byte6, uint8 Byte7, uint8 Byte8, bool bFirstByteIsLeastSignificant = true)
+	{
+		TArray<uint8> Bytes = bFirstByteIsLeastSignificant
+			? TArray<uint8>({ Byte8, Byte7, Byte6, Byte5, Byte4, Byte3, Byte2, Byte1 })
+			: TArray<uint8>({ Byte1, Byte2, Byte3, Byte4, Byte5, Byte6, Byte7, Byte8 });
+		return *reinterpret_cast<uint64*>(Bytes.GetData());
+	}
+
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Make Dolphin Int8", meta = (Keywords = "Make Create signed int8 char byte"))
+	static FDolphinInt8 MakeInt8(int32 Value)
 	{
 		return static_cast<int8>(Value);
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Create Dolphin Int16")
-	static FDolphinInt16 CreateInt16(int32 Value)
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Make Dolphin Int16", meta = (Keywords = "Make Create signed int16 short"))
+	static FDolphinInt16 MakeInt16(int32 Value)
 	{
 		return static_cast<int16>(Value);
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Create Dolphin Int32")
-	static FDolphinInt32 CreateInt32(int32 Value)
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Make Dolphin Int16 from Bytes", meta = (Keywords = "Make Create signed int16 short from Array of Bytes int8 uint8 char"))
+	static FDolphinInt16 MakeInt16FromBytes(uint8 Byte1, uint8 Byte2, bool bFirstByteIsLeastSignificant = true)
+	{
+		TArray<uint8> Bytes = bFirstByteIsLeastSignificant
+			? TArray<uint8>({ Byte2, Byte1 })
+			: TArray<uint8>({ Byte1, Byte2 });
+		return *reinterpret_cast<int16*>(Bytes.GetData());
+	}
+
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Make Dolphin Int32", meta = (Keywords = "Make Create signed int32 int int integer"))
+	static FDolphinInt32 MakeInt32(int32 Value)
 	{
 		return static_cast<int32>(Value);
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Create Dolphin Int64")
-	static FDolphinInt64 CreateInt64(int64 Value)
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Make Dolphin Int32 from Bytes", meta = (Keywords = "Make Create signed int32 int int integer from Array of Bytes int8 uint8 char"))
+	static FDolphinInt32 MakeInt32FromBytes(uint8 Byte1, uint8 Byte2, uint8 Byte3, uint8 Byte4, bool bFirstByteIsLeastSignificant = true)
+	{
+		TArray<uint8> Bytes = bFirstByteIsLeastSignificant
+			? TArray<uint8>({ Byte4, Byte3, Byte2, Byte1 })
+			: TArray<uint8>({ Byte1, Byte2, Byte3, Byte4 });
+		return *reinterpret_cast<int32*>(Bytes.GetData());
+	}
+
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Make Dolphin Int64", meta = (Keywords = "Make Create signed int64 long int integer"))
+	static FDolphinInt64 MakeInt64(int64 Value)
 	{
 		return static_cast<int64>(Value);
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Create Dolphin Float")
-	static FDolphinFloat CreateFloat(float Value)
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Make Dolphin Int64 from Bytes", meta = (Keywords = "Make Create signed int64 long int integer from Array of Bytes int8 uint8 char"))
+	static FDolphinInt64 MakeInt64FromBytes(uint8 Byte1, uint8 Byte2, uint8 Byte3, uint8 Byte4, uint8 Byte5, uint8 Byte6, uint8 Byte7, uint8 Byte8, bool bFirstByteIsLeastSignificant = true)
+	{
+		TArray<uint8> Bytes = bFirstByteIsLeastSignificant
+			? TArray<uint8>({ Byte8, Byte7, Byte6, Byte5, Byte4, Byte3, Byte2, Byte1 })
+			: TArray<uint8>({ Byte1, Byte2, Byte3, Byte4, Byte5, Byte6, Byte7, Byte8 });
+		return *reinterpret_cast<int64*>(Bytes.GetData());
+	}
+
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Make Dolphin Float", meta = (Keywords = "Make Create float decimal single single-precision"))
+	static FDolphinFloat MakeFloat(float Value)
 	{
 		return static_cast<float>(Value);
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Create Dolphin Double")
-	static FDolphinDouble CreateDouble(float Value)
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Make Dolphin Float from Bytes", meta = (Keywords = "Make Create float decimal single single-precision from Array of Bytes int8 uint8 char"))
+	static FDolphinFloat MakeFloatFromBytes(uint8 Byte1, uint8 Byte2, uint8 Byte3, uint8 Byte4, bool bFirstByteIsLeastSignificant = true)
+	{
+		TArray<uint8> Bytes = bFirstByteIsLeastSignificant
+			? TArray<uint8>({ Byte4, Byte3, Byte2, Byte1 })
+			: TArray<uint8>({ Byte1, Byte2, Byte3, Byte4 });
+		return *reinterpret_cast<float*>(Bytes.GetData());
+	}
+
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Make Dolphin Double", meta = (Keywords = "Make Create double decimal double-precision float"))
+	static FDolphinDouble MakeDouble(float Value)
 	{
 		return static_cast<double>(Value);
+	}
+
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Make Dolphin Double from Bytes", meta = (Keywords = "Make Create double decimal double-precision float from Array of Bytes int8 uint8 char"))
+	static FDolphinDouble MakeDoubleFromBytes(uint8 Byte1, uint8 Byte2, uint8 Byte3, uint8 Byte4, uint8 Byte5, uint8 Byte6, uint8 Byte7, uint8 Byte8, bool bFirstByteIsLeastSignificant = true)
+	{
+		TArray<uint8> Bytes = bFirstByteIsLeastSignificant
+			? TArray<uint8>({ Byte8, Byte7, Byte6, Byte5, Byte4, Byte3, Byte2, Byte1 })
+			: TArray<uint8>({ Byte1, Byte2, Byte3, Byte4, Byte5, Byte6, Byte7, Byte8 });
+		return *reinterpret_cast<double*>(Bytes.GetData());
 	}
 
 
@@ -873,607 +1074,614 @@ public:
     //                                   OPERATORS                                  //
     //////////////////////////////////////////////////////////////////////////////////
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "UInt8 - UInt8", meta = (Keywords = "- Minus Subtract"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Subtract UInt8 - UInt8", meta = (Keywords = "- Minus Subtract"))
 	static FDolphinUInt8 Dolphin_UInt8SubtractUInt8(const FDolphinUInt8& Value1, const FDolphinUInt8& Value2)
 	{
 		return Value1.Value - Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "UInt8 + UInt8", meta = (Keywords = "+ Add Addition"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Add UInt8 + UInt8", meta = (Keywords = "+ Add Addition"))
 	static FDolphinUInt8 Dolphin_UInt8AddUInt8(const FDolphinUInt8& Value1, const FDolphinUInt8& Value2)
 	{
 		return Value1.Value + Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "UInt8 * UInt8", meta = (Keywords = "* Multiply Times"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Multiply UInt8 * UInt8", meta = (Keywords = "* Multiply Times"))
 	static FDolphinUInt8 Dolphin_UInt8MultiplyUInt8(const FDolphinUInt8& Value1, const FDolphinUInt8& Value2)
 	{
 		return Value1.Value * Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "UInt8 / UInt8", meta = (Keywords = "/ Divide By Division"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Divide UInt8 / UInt8", meta = (Keywords = "/ Divide By Division"))
 	static FDolphinUInt8 Dolphin_UInt8DivideUInt8(const FDolphinUInt8& Value1, const FDolphinUInt8& Value2)
 	{
 		return Value1.Value / Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "UInt8 == UInt8", meta = (Keywords = "== Equal To Equals"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "EqualTo UInt8 == UInt8", meta = (Keywords = "== Equal To Equals"))
 	static bool Dolphin_UInt8EqualToUInt8(const FDolphinUInt8& Value1, const FDolphinUInt8& Value2)
 	{
 		return Value1.Value == Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "UInt8 != UInt8", meta = (Keywords = "!= Not Equal To Equals"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "NotEqualTo UInt8 != UInt8", meta = (Keywords = "!= Not Equal To Equals"))
 	static bool Dolphin_UInt8NotEqualToUInt8(const FDolphinUInt8& Value1, const FDolphinUInt8& Value2)
 	{
 		return Value1.Value != Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "UInt8 < UInt8", meta = (Keywords = "< Less Than"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "LessThan UInt8 < UInt8", meta = (Keywords = "< Less Than"))
 	static bool Dolphin_UInt8LessThanUInt8(const FDolphinUInt8& Value1, const FDolphinUInt8& Value2)
 	{
 		return Value1.Value < Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "UInt8 <= UInt8", meta = (Keywords = "<= Less Than or Equal To Equals"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "LessThanOrEqualTo UInt8 <= UInt8", meta = (Keywords = "<= Less Than or Equal To Equals"))
 	static bool Dolphin_UInt8LessThanOrEqualToUInt8(const FDolphinUInt8& Value1, const FDolphinUInt8& Value2)
 	{
 		return Value1.Value <= Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "UInt8 > UInt8", meta = (Keywords = "> Greater Than"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "GreaterThan UInt8 > UInt8", meta = (Keywords = "> Greater Than"))
 	static bool Dolphin_UInt8GreaterThanUInt8(const FDolphinUInt8& Value1, const FDolphinUInt8& Value2)
 	{
 		return Value1.Value > Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "UInt8 >= UInt8", meta = (Keywords = ">= Greater Than or Equal To Equals"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "GreaterThanOrEqualTo UInt8 >= UInt8", meta = (Keywords = ">= Greater Than or Equal To Equals"))
 	static bool Dolphin_UInt8GreaterThanOrEqualToUInt8(const FDolphinUInt8& Value1, const FDolphinUInt8& Value2)
 	{
 		return Value1.Value >= Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "UInt16 - UInt16", meta = (Keywords = "- Minus Subtract"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Subtract UInt16 - UInt16", meta = (Keywords = "- Minus Subtract"))
 	static FDolphinUInt16 Dolphin_UInt16SubtractUInt16(const FDolphinUInt16& Value1, const FDolphinUInt16& Value2)
 	{
 		return Value1.Value - Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "UInt16 + UInt16", meta = (Keywords = "+ Add Addition"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Add UInt16 + UInt16", meta = (Keywords = "+ Add Addition"))
 	static FDolphinUInt16 Dolphin_UInt16AddUInt16(const FDolphinUInt16& Value1, const FDolphinUInt16& Value2)
 	{
 		return Value1.Value + Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "UInt16 * UInt16", meta = (Keywords = "* Multiply Times"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Multiply UInt16 * UInt16", meta = (Keywords = "* Multiply Times"))
 	static FDolphinUInt16 Dolphin_UInt16MultiplyUInt16(const FDolphinUInt16& Value1, const FDolphinUInt16& Value2)
 	{
 		return Value1.Value * Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "UInt16 / UInt16", meta = (Keywords = "/ Divide By Division"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Divide UInt16 / UInt16", meta = (Keywords = "/ Divide By Division"))
 	static FDolphinUInt16 Dolphin_UInt16DivideUInt16(const FDolphinUInt16& Value1, const FDolphinUInt16& Value2)
 	{
 		return Value1.Value / Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "UInt16 == UInt16", meta = (Keywords = "== Equal To Equals"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "EqualTo UInt16 == UInt16", meta = (Keywords = "== Equal To Equals"))
 	static bool Dolphin_UInt16EqualToUInt16(const FDolphinUInt16& Value1, const FDolphinUInt16& Value2)
 	{
 		return Value1.Value == Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "UInt16 != UInt16", meta = (Keywords = "!= Not Equal To Equals"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "NotEqualTo UInt16 != UInt16", meta = (Keywords = "!= Not Equal To Equals"))
 	static bool Dolphin_UInt16NotEqualToUInt16(const FDolphinUInt16& Value1, const FDolphinUInt16& Value2)
 	{
 		return Value1.Value != Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "UInt16 < UInt16", meta = (Keywords = "< Less Than"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "LessThan UInt16 < UInt16", meta = (Keywords = "< Less Than"))
 	static bool Dolphin_UInt16LessThanUInt16(const FDolphinUInt16& Value1, const FDolphinUInt16& Value2)
 	{
 		return Value1.Value < Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "UInt16 <= UInt16", meta = (Keywords = "<= Less Than or Equal To Equals"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "LessThanOrEqualTo UInt16 <= UInt16", meta = (Keywords = "<= Less Than or Equal To Equals"))
 	static bool Dolphin_UInt16LessThanOrEqualToUInt16(const FDolphinUInt16& Value1, const FDolphinUInt16& Value2)
 	{
 		return Value1.Value <= Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "UInt16 > UInt16", meta = (Keywords = "> Greater Than"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "GreaterThan UInt16 > UInt16", meta = (Keywords = "> Greater Than"))
 	static bool Dolphin_UInt16GreaterThanUInt16(const FDolphinUInt16& Value1, const FDolphinUInt16& Value2)
 	{
 		return Value1.Value > Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "UInt16 >= UInt16", meta = (Keywords = ">= Greater Than or Equal To Equals"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "GreaterThanOrEqualTo UInt16 >= UInt16", meta = (Keywords = ">= Greater Than or Equal To Equals"))
 	static bool Dolphin_UInt16GreaterThanOrEqualToUInt16(const FDolphinUInt16& Value1, const FDolphinUInt16& Value2)
 	{
 		return Value1.Value >= Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "UInt32 - UInt32", meta = (Keywords = "- Minus Subtract"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Subtract UInt32 - UInt32", meta = (Keywords = "- Minus Subtract"))
 	static FDolphinUInt32 Dolphin_UInt32SubtractUInt32(const FDolphinUInt32& Value1, const FDolphinUInt32& Value2)
 	{
 		return Value1.Value - Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "UInt32 + UInt32", meta = (Keywords = "+ Add Addition"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Add UInt32 + UInt32", meta = (Keywords = "+ Add Addition"))
 	static FDolphinUInt32 Dolphin_UInt32AddUInt32(const FDolphinUInt32& Value1, const FDolphinUInt32& Value2)
 	{
 		return Value1.Value + Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "UInt32 * UInt32", meta = (Keywords = "* Multiply Times"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Multiply UInt32 * UInt32", meta = (Keywords = "* Multiply Times"))
 	static FDolphinUInt32 Dolphin_UInt32MultiplyUInt32(const FDolphinUInt32& Value1, const FDolphinUInt32& Value2)
 	{
 		return Value1.Value * Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "UInt32 / UInt32", meta = (Keywords = "/ Divide By Division"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Divide UInt32 / UInt32", meta = (Keywords = "/ Divide By Division"))
 	static FDolphinUInt32 Dolphin_UInt32DivideUInt32(const FDolphinUInt32& Value1, const FDolphinUInt32& Value2)
 	{
 		return Value1.Value / Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "UInt32 == UInt32", meta = (Keywords = "== Equal To Equals"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "EqualTo UInt32 == UInt32", meta = (Keywords = "== Equal To Equals"))
 	static bool Dolphin_UInt32EqualToUInt32(const FDolphinUInt32& Value1, const FDolphinUInt32& Value2)
 	{
 		return Value1.Value == Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "UInt32 != UInt32", meta = (Keywords = "!= Not Equal To Equals"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "NotEqualTo UInt32 != UInt32", meta = (Keywords = "!= Not Equal To Equals"))
 	static bool Dolphin_UInt32NotEqualToUInt32(const FDolphinUInt32& Value1, const FDolphinUInt32& Value2)
 	{
 		return Value1.Value != Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "UInt32 < UInt32", meta = (Keywords = "< Less Than"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "LessThan UInt32 < UInt32", meta = (Keywords = "< Less Than"))
 	static bool Dolphin_UInt32LessThanUInt32(const FDolphinUInt32& Value1, const FDolphinUInt32& Value2)
 	{
 		return Value1.Value < Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "UInt32 <= UInt32", meta = (Keywords = "<= Less Than or Equal To Equals"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "LessThanOrEqualTo UInt32 <= UInt32", meta = (Keywords = "<= Less Than or Equal To Equals"))
 	static bool Dolphin_UInt32LessThanOrEqualToUInt32(const FDolphinUInt32& Value1, const FDolphinUInt32& Value2)
 	{
 		return Value1.Value <= Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "UInt32 > UInt32", meta = (Keywords = "> Greater Than"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "GreaterThan UInt32 > UInt32", meta = (Keywords = "> Greater Than"))
 	static bool Dolphin_UInt32GreaterThanUInt32(const FDolphinUInt32& Value1, const FDolphinUInt32& Value2)
 	{
 		return Value1.Value > Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "UInt32 >= UInt32", meta = (Keywords = ">= Greater Than or Equal To Equals"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "GreaterThanOrEqualTo UInt32 >= UInt32", meta = (Keywords = ">= Greater Than or Equal To Equals"))
 	static bool Dolphin_UInt32GreaterThanOrEqualToUInt32(const FDolphinUInt32& Value1, const FDolphinUInt32& Value2)
 	{
 		return Value1.Value >= Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "UInt64 - UInt64", meta = (Keywords = "- Minus Subtract"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Subtract UInt64 - UInt64", meta = (Keywords = "- Minus Subtract"))
 	static FDolphinUInt64 Dolphin_UInt64SubtractUInt64(const FDolphinUInt64& Value1, const FDolphinUInt64& Value2)
 	{
 		return Value1.Value - Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "UInt64 + UInt64", meta = (Keywords = "+ Add Addition"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Add UInt64 + UInt64", meta = (Keywords = "+ Add Addition"))
 	static FDolphinUInt64 Dolphin_UInt64AddUInt64(const FDolphinUInt64& Value1, const FDolphinUInt64& Value2)
 	{
 		return Value1.Value + Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "UInt64 * UInt64", meta = (Keywords = "* Multiply Times"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Multiply UInt64 * UInt64", meta = (Keywords = "* Multiply Times"))
 	static FDolphinUInt64 Dolphin_UInt64MultiplyUInt64(const FDolphinUInt64& Value1, const FDolphinUInt64& Value2)
 	{
 		return Value1.Value * Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "UInt64 / UInt64", meta = (Keywords = "/ Divide By Division"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Divide UInt64 / UInt64", meta = (Keywords = "/ Divide By Division"))
 	static FDolphinUInt64 Dolphin_UInt64DivideUInt64(const FDolphinUInt64& Value1, const FDolphinUInt64& Value2)
 	{
 		return Value1.Value / Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "UInt64 == UInt64", meta = (Keywords = "== Equal To Equals"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "EqualTo UInt64 == UInt64", meta = (Keywords = "== Equal To Equals"))
 	static bool Dolphin_UInt64EqualToUInt64(const FDolphinUInt64& Value1, const FDolphinUInt64& Value2)
 	{
 		return Value1.Value == Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "UInt64 != UInt64", meta = (Keywords = "!= Not Equal To Equals"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "NotEqualTo UInt64 != UInt64", meta = (Keywords = "!= Not Equal To Equals"))
 	static bool Dolphin_UInt64NotEqualToUInt64(const FDolphinUInt64& Value1, const FDolphinUInt64& Value2)
 	{
 		return Value1.Value != Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "UInt64 < UInt64", meta = (Keywords = "< Less Than"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "LessThan UInt64 < UInt64", meta = (Keywords = "< Less Than"))
 	static bool Dolphin_UInt64LessThanUInt64(const FDolphinUInt64& Value1, const FDolphinUInt64& Value2)
 	{
 		return Value1.Value < Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "UInt64 <= UInt64", meta = (Keywords = "<= Less Than or Equal To Equals"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "LessThanOrEqualTo UInt64 <= UInt64", meta = (Keywords = "<= Less Than or Equal To Equals"))
 	static bool Dolphin_UInt64LessThanOrEqualToUInt64(const FDolphinUInt64& Value1, const FDolphinUInt64& Value2)
 	{
 		return Value1.Value <= Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "UInt64 > UInt64", meta = (Keywords = "> Greater Than"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "GreaterThan UInt64 > UInt64", meta = (Keywords = "> Greater Than"))
 	static bool Dolphin_UInt64GreaterThanUInt64(const FDolphinUInt64& Value1, const FDolphinUInt64& Value2)
 	{
 		return Value1.Value > Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "UInt64 >= UInt64", meta = (Keywords = ">= Greater Than or Equal To Equals"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "GreaterThanOrEqualTo UInt64 >= UInt64", meta = (Keywords = ">= Greater Than or Equal To Equals"))
 	static bool Dolphin_UInt64GreaterThanOrEqualToUInt64(const FDolphinUInt64& Value1, const FDolphinUInt64& Value2)
 	{
 		return Value1.Value >= Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Int8 - Int8", meta = (Keywords = "- Minus Subtract"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Subtract Int8 - Int8", meta = (Keywords = "- Minus Subtract"))
 	static FDolphinInt8 Dolphin_Int8SubtractInt8(const FDolphinInt8& Value1, const FDolphinInt8& Value2)
 	{
 		return Value1.Value - Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Int8 + Int8", meta = (Keywords = "+ Add Addition"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Add Int8 + Int8", meta = (Keywords = "+ Add Addition"))
 	static FDolphinInt8 Dolphin_Int8AddInt8(const FDolphinInt8& Value1, const FDolphinInt8& Value2)
 	{
 		return Value1.Value + Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Int8 * Int8", meta = (Keywords = "* Multiply Times"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Multiply Int8 * Int8", meta = (Keywords = "* Multiply Times"))
 	static FDolphinInt8 Dolphin_Int8MultiplyInt8(const FDolphinInt8& Value1, const FDolphinInt8& Value2)
 	{
 		return Value1.Value * Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Int8 / Int8", meta = (Keywords = "/ Divide By Division"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Divide Int8 / Int8", meta = (Keywords = "/ Divide By Division"))
 	static FDolphinInt8 Dolphin_Int8DivideInt8(const FDolphinInt8& Value1, const FDolphinInt8& Value2)
 	{
 		return Value1.Value / Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Int8 == Int8", meta = (Keywords = "== Equal To Equals"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "EqualTo Int8 == Int8", meta = (Keywords = "== Equal To Equals"))
 	static bool Dolphin_Int8EqualToInt8(const FDolphinInt8& Value1, const FDolphinInt8& Value2)
 	{
 		return Value1.Value == Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Int8 != Int8", meta = (Keywords = "!= Not Equal To Equals"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "NotEqualTo Int8 != Int8", meta = (Keywords = "!= Not Equal To Equals"))
 	static bool Dolphin_Int8NotEqualToInt8(const FDolphinInt8& Value1, const FDolphinInt8& Value2)
 	{
 		return Value1.Value != Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Int8 < Int8", meta = (Keywords = "< Less Than"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "LessThan Int8 < Int8", meta = (Keywords = "< Less Than"))
 	static bool Dolphin_Int8LessThanInt8(const FDolphinInt8& Value1, const FDolphinInt8& Value2)
 	{
 		return Value1.Value < Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Int8 <= Int8", meta = (Keywords = "<= Less Than or Equal To Equals"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "LessThanOrEqualTo Int8 <= Int8", meta = (Keywords = "<= Less Than or Equal To Equals"))
 	static bool Dolphin_Int8LessThanOrEqualToInt8(const FDolphinInt8& Value1, const FDolphinInt8& Value2)
 	{
 		return Value1.Value <= Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Int8 > Int8", meta = (Keywords = "> Greater Than"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "GreaterThan Int8 > Int8", meta = (Keywords = "> Greater Than"))
 	static bool Dolphin_Int8GreaterThanInt8(const FDolphinInt8& Value1, const FDolphinInt8& Value2)
 	{
 		return Value1.Value > Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Int8 >= Int8", meta = (Keywords = ">= Greater Than or Equal To Equals"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "GreaterThanOrEqualTo Int8 >= Int8", meta = (Keywords = ">= Greater Than or Equal To Equals"))
 	static bool Dolphin_Int8GreaterThanOrEqualToInt8(const FDolphinInt8& Value1, const FDolphinInt8& Value2)
 	{
 		return Value1.Value >= Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Int16 - Int16", meta = (Keywords = "- Minus Subtract"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Subtract Int16 - Int16", meta = (Keywords = "- Minus Subtract"))
 	static FDolphinInt16 Dolphin_Int16SubtractInt16(const FDolphinInt16& Value1, const FDolphinInt16& Value2)
 	{
 		return Value1.Value - Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Int16 + Int16", meta = (Keywords = "+ Add Addition"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Add Int16 + Int16", meta = (Keywords = "+ Add Addition"))
 	static FDolphinInt16 Dolphin_Int16AddInt16(const FDolphinInt16& Value1, const FDolphinInt16& Value2)
 	{
 		return Value1.Value + Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Int16 * Int16", meta = (Keywords = "* Multiply Times"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Multiply Int16 * Int16", meta = (Keywords = "* Multiply Times"))
 	static FDolphinInt16 Dolphin_Int16MultiplyInt16(const FDolphinInt16& Value1, const FDolphinInt16& Value2)
 	{
 		return Value1.Value * Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Int16 / Int16", meta = (Keywords = "/ Divide By Division"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Divide Int16 / Int16", meta = (Keywords = "/ Divide By Division"))
 	static FDolphinInt16 Dolphin_Int16DivideInt16(const FDolphinInt16& Value1, const FDolphinInt16& Value2)
 	{
 		return Value1.Value / Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Int16 == Int16", meta = (Keywords = "== Equal To Equals"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "EqualTo Int16 == Int16", meta = (Keywords = "== Equal To Equals"))
 	static bool Dolphin_Int16EqualToInt16(const FDolphinInt16& Value1, const FDolphinInt16& Value2)
 	{
 		return Value1.Value == Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Int16 != Int16", meta = (Keywords = "!= Not Equal To Equals"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "NotEqualTo Int16 != Int16", meta = (Keywords = "!= Not Equal To Equals"))
 	static bool Dolphin_Int16NotEqualToInt16(const FDolphinInt16& Value1, const FDolphinInt16& Value2)
 	{
 		return Value1.Value != Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Int16 < Int16", meta = (Keywords = "< Less Than"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "LessThan Int16 < Int16", meta = (Keywords = "< Less Than"))
 	static bool Dolphin_Int16LessThanInt16(const FDolphinInt16& Value1, const FDolphinInt16& Value2)
 	{
 		return Value1.Value < Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Int16 <= Int16", meta = (Keywords = "<= Less Than or Equal To Equals"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "LessThanOrEqualTo Int16 <= Int16", meta = (Keywords = "<= Less Than or Equal To Equals"))
 	static bool Dolphin_Int16LessThanOrEqualToInt16(const FDolphinInt16& Value1, const FDolphinInt16& Value2)
 	{
 		return Value1.Value <= Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Int16 > Int16", meta = (Keywords = "> Greater Than"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "GreaterThan Int16 > Int16", meta = (Keywords = "> Greater Than"))
 	static bool Dolphin_Int16GreaterThanInt16(const FDolphinInt16& Value1, const FDolphinInt16& Value2)
 	{
 		return Value1.Value > Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Int16 >= Int16", meta = (Keywords = ">= Greater Than or Equal To Equals"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "GreaterThanOrEqualTo Int16 >= Int16", meta = (Keywords = ">= Greater Than or Equal To Equals"))
 	static bool Dolphin_Int16GreaterThanOrEqualToInt16(const FDolphinInt16& Value1, const FDolphinInt16& Value2)
 	{
 		return Value1.Value >= Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Int32 - Int32", meta = (Keywords = "- Minus Subtract"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Subtract Int32 - Int32", meta = (Keywords = "- Minus Subtract"))
 	static FDolphinInt32 Dolphin_Int32SubtractInt32(const FDolphinInt32& Value1, const FDolphinInt32& Value2)
 	{
 		return Value1.Value - Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Int32 + Int32", meta = (Keywords = "+ Add Addition"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Add Int32 + Int32", meta = (Keywords = "+ Add Addition"))
 	static FDolphinInt32 Dolphin_Int32AddInt32(const FDolphinInt32& Value1, const FDolphinInt32& Value2)
 	{
 		return Value1.Value + Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Int32 * Int32", meta = (Keywords = "* Multiply Times"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Multiply Int32 * Int32", meta = (Keywords = "* Multiply Times"))
 	static FDolphinInt32 Dolphin_Int32MultiplyInt32(const FDolphinInt32& Value1, const FDolphinInt32& Value2)
 	{
 		return Value1.Value * Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Int32 / Int32", meta = (Keywords = "/ Divide By Division"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Divide Int32 / Int32", meta = (Keywords = "/ Divide By Division"))
 	static FDolphinInt32 Dolphin_Int32DivideInt32(const FDolphinInt32& Value1, const FDolphinInt32& Value2)
 	{
 		return Value1.Value / Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Int32 == Int32", meta = (Keywords = "== Equal To Equals"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "EqualTo Int32 == Int32", meta = (Keywords = "== Equal To Equals"))
 	static bool Dolphin_Int32EqualToInt32(const FDolphinInt32& Value1, const FDolphinInt32& Value2)
 	{
 		return Value1.Value == Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Int32 != Int32", meta = (Keywords = "!= Not Equal To Equals"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "NotEqualTo Int32 != Int32", meta = (Keywords = "!= Not Equal To Equals"))
 	static bool Dolphin_Int32NotEqualToInt32(const FDolphinInt32& Value1, const FDolphinInt32& Value2)
 	{
 		return Value1.Value != Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Int32 < Int32", meta = (Keywords = "< Less Than"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "LessThan Int32 < Int32", meta = (Keywords = "< Less Than"))
 	static bool Dolphin_Int32LessThanInt32(const FDolphinInt32& Value1, const FDolphinInt32& Value2)
 	{
 		return Value1.Value < Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Int32 <= Int32", meta = (Keywords = "<= Less Than or Equal To Equals"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "LessThanOrEqualTo Int32 <= Int32", meta = (Keywords = "<= Less Than or Equal To Equals"))
 	static bool Dolphin_Int32LessThanOrEqualToInt32(const FDolphinInt32& Value1, const FDolphinInt32& Value2)
 	{
 		return Value1.Value <= Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Int32 > Int32", meta = (Keywords = "> Greater Than"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "GreaterThan Int32 > Int32", meta = (Keywords = "> Greater Than"))
 	static bool Dolphin_Int32GreaterThanInt32(const FDolphinInt32& Value1, const FDolphinInt32& Value2)
 	{
 		return Value1.Value > Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Int32 >= Int32", meta = (Keywords = ">= Greater Than or Equal To Equals"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "GreaterThanOrEqualTo Int32 >= Int32", meta = (Keywords = ">= Greater Than or Equal To Equals"))
 	static bool Dolphin_Int32GreaterThanOrEqualToInt32(const FDolphinInt32& Value1, const FDolphinInt32& Value2)
 	{
 		return Value1.Value >= Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Int64 - Int64", meta = (Keywords = "- Minus Subtract"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Subtract Int64 - Int64", meta = (Keywords = "- Minus Subtract"))
 	static FDolphinInt64 Dolphin_Int64SubtractInt64(const FDolphinInt64& Value1, const FDolphinInt64& Value2)
 	{
 		return Value1.Value - Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Int64 + Int64", meta = (Keywords = "+ Add Addition"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Add Int64 + Int64", meta = (Keywords = "+ Add Addition"))
 	static FDolphinInt64 Dolphin_Int64AddInt64(const FDolphinInt64& Value1, const FDolphinInt64& Value2)
 	{
 		return Value1.Value + Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Int64 * Int64", meta = (Keywords = "* Multiply Times"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Multiply Int64 * Int64", meta = (Keywords = "* Multiply Times"))
 	static FDolphinInt64 Dolphin_Int64MultiplyInt64(const FDolphinInt64& Value1, const FDolphinInt64& Value2)
 	{
 		return Value1.Value * Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Int64 / Int64", meta = (Keywords = "/ Divide By Division"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Divide Int64 / Int64", meta = (Keywords = "/ Divide By Division"))
 	static FDolphinInt64 Dolphin_Int64DivideInt64(const FDolphinInt64& Value1, const FDolphinInt64& Value2)
 	{
 		return Value1.Value / Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Int64 == Int64", meta = (Keywords = "== Equal To Equals"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "EqualTo Int64 == Int64", meta = (Keywords = "== Equal To Equals"))
 	static bool Dolphin_Int64EqualToInt64(const FDolphinInt64& Value1, const FDolphinInt64& Value2)
 	{
 		return Value1.Value == Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Int64 != Int64", meta = (Keywords = "!= Not Equal To Equals"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "NotEqualTo Int64 != Int64", meta = (Keywords = "!= Not Equal To Equals"))
 	static bool Dolphin_Int64NotEqualToInt64(const FDolphinInt64& Value1, const FDolphinInt64& Value2)
 	{
 		return Value1.Value != Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Int64 < Int64", meta = (Keywords = "< Less Than"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "LessThan Int64 < Int64", meta = (Keywords = "< Less Than"))
 	static bool Dolphin_Int64LessThanInt64(const FDolphinInt64& Value1, const FDolphinInt64& Value2)
 	{
 		return Value1.Value < Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Int64 <= Int64", meta = (Keywords = "<= Less Than or Equal To Equals"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "LessThanOrEqualTo Int64 <= Int64", meta = (Keywords = "<= Less Than or Equal To Equals"))
 	static bool Dolphin_Int64LessThanOrEqualToInt64(const FDolphinInt64& Value1, const FDolphinInt64& Value2)
 	{
 		return Value1.Value <= Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Int64 > Int64", meta = (Keywords = "> Greater Than"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "GreaterThan Int64 > Int64", meta = (Keywords = "> Greater Than"))
 	static bool Dolphin_Int64GreaterThanInt64(const FDolphinInt64& Value1, const FDolphinInt64& Value2)
 	{
 		return Value1.Value > Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Int64 >= Int64", meta = (Keywords = ">= Greater Than or Equal To Equals"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "GreaterThanOrEqualTo Int64 >= Int64", meta = (Keywords = ">= Greater Than or Equal To Equals"))
 	static bool Dolphin_Int64GreaterThanOrEqualToInt64(const FDolphinInt64& Value1, const FDolphinInt64& Value2)
 	{
 		return Value1.Value >= Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Float - Float", meta = (Keywords = "- Minus Subtract"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Subtract Float - Float", meta = (Keywords = "- Minus Subtract"))
 	static FDolphinFloat Dolphin_FloatSubtractFloat(const FDolphinFloat& Value1, const FDolphinFloat& Value2)
 	{
 		return Value1.Value - Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Float + Float", meta = (Keywords = "+ Add Addition"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Add Float + Float", meta = (Keywords = "+ Add Addition"))
 	static FDolphinFloat Dolphin_FloatAddFloat(const FDolphinFloat& Value1, const FDolphinFloat& Value2)
 	{
 		return Value1.Value + Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Float * Float", meta = (Keywords = "* Multiply Times"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Multiply Float * Float", meta = (Keywords = "* Multiply Times"))
 	static FDolphinFloat Dolphin_FloatMultiplyFloat(const FDolphinFloat& Value1, const FDolphinFloat& Value2)
 	{
 		return Value1.Value * Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Float / Float", meta = (Keywords = "/ Divide By Division"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Divide Float / Float", meta = (Keywords = "/ Divide By Division"))
 	static FDolphinFloat Dolphin_FloatDivideFloat(const FDolphinFloat& Value1, const FDolphinFloat& Value2)
 	{
 		return Value1.Value / Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Float == Float", meta = (Keywords = "== Equal To Equals"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "EqualTo Float == Float", meta = (Keywords = "== Equal To Equals"))
 	static bool Dolphin_FloatEqualToFloat(const FDolphinFloat& Value1, const FDolphinFloat& Value2)
 	{
 		return Value1.Value == Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Float != Float", meta = (Keywords = "!= Not Equal To Equals"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "NotEqualTo Float != Float", meta = (Keywords = "!= Not Equal To Equals"))
 	static bool Dolphin_FloatNotEqualToFloat(const FDolphinFloat& Value1, const FDolphinFloat& Value2)
 	{
 		return Value1.Value != Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Float < Float", meta = (Keywords = "< Less Than"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "LessThan Float < Float", meta = (Keywords = "< Less Than"))
 	static bool Dolphin_FloatLessThanFloat(const FDolphinFloat& Value1, const FDolphinFloat& Value2)
 	{
 		return Value1.Value < Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Float <= Float", meta = (Keywords = "<= Less Than or Equal To Equals"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "LessThanOrEqualTo Float <= Float", meta = (Keywords = "<= Less Than or Equal To Equals"))
 	static bool Dolphin_FloatLessThanOrEqualToFloat(const FDolphinFloat& Value1, const FDolphinFloat& Value2)
 	{
 		return Value1.Value <= Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Float > Float", meta = (Keywords = "> Greater Than"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "GreaterThan Float > Float", meta = (Keywords = "> Greater Than"))
 	static bool Dolphin_FloatGreaterThanFloat(const FDolphinFloat& Value1, const FDolphinFloat& Value2)
 	{
 		return Value1.Value > Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Float >= Float", meta = (Keywords = ">= Greater Than or Equal To Equals"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "GreaterThanOrEqualTo Float >= Float", meta = (Keywords = ">= Greater Than or Equal To Equals"))
 	static bool Dolphin_FloatGreaterThanOrEqualToFloat(const FDolphinFloat& Value1, const FDolphinFloat& Value2)
 	{
 		return Value1.Value >= Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Double - Double", meta = (Keywords = "- Minus Subtract"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Subtract Double - Double", meta = (Keywords = "- Minus Subtract"))
 	static FDolphinDouble Dolphin_DoubleSubtractDouble(const FDolphinDouble& Value1, const FDolphinDouble& Value2)
 	{
 		return Value1.Value - Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Double + Double", meta = (Keywords = "+ Add Addition"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Add Double + Double", meta = (Keywords = "+ Add Addition"))
 	static FDolphinDouble Dolphin_DoubleAddDouble(const FDolphinDouble& Value1, const FDolphinDouble& Value2)
 	{
 		return Value1.Value + Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Double * Double", meta = (Keywords = "* Multiply Times"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Multiply Double * Double", meta = (Keywords = "* Multiply Times"))
 	static FDolphinDouble Dolphin_DoubleMultiplyDouble(const FDolphinDouble& Value1, const FDolphinDouble& Value2)
 	{
 		return Value1.Value * Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Double / Double", meta = (Keywords = "/ Divide By Division"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Divide Double / Double", meta = (Keywords = "/ Divide By Division"))
 	static FDolphinDouble Dolphin_DoubleDivideDouble(const FDolphinDouble& Value1, const FDolphinDouble& Value2)
 	{
 		return Value1.Value / Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Double == Double", meta = (Keywords = "== Equal To Equals"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "EqualTo Double == Double", meta = (Keywords = "== Equal To Equals"))
 	static bool Dolphin_DoubleEqualToDouble(const FDolphinDouble& Value1, const FDolphinDouble& Value2)
 	{
 		return Value1.Value == Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Double != Double", meta = (Keywords = "!= Not Equal To Equals"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "NotEqualTo Double != Double", meta = (Keywords = "!= Not Equal To Equals"))
 	static bool Dolphin_DoubleNotEqualToDouble(const FDolphinDouble& Value1, const FDolphinDouble& Value2)
 	{
 		return Value1.Value != Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Double < Double", meta = (Keywords = "< Less Than"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "LessThan Double < Double", meta = (Keywords = "< Less Than"))
 	static bool Dolphin_DoubleLessThanDouble(const FDolphinDouble& Value1, const FDolphinDouble& Value2)
 	{
 		return Value1.Value < Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Double <= Double", meta = (Keywords = "<= Less Than or Equal To Equals"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "LessThanOrEqualTo Double <= Double", meta = (Keywords = "<= Less Than or Equal To Equals"))
 	static bool Dolphin_DoubleLessThanOrEqualToDouble(const FDolphinDouble& Value1, const FDolphinDouble& Value2)
 	{
 		return Value1.Value <= Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Double > Double", meta = (Keywords = "> Greater Than"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "GreaterThan Double > Double", meta = (Keywords = "> Greater Than"))
 	static bool Dolphin_DoubleGreaterThanDouble(const FDolphinDouble& Value1, const FDolphinDouble& Value2)
 	{
 		return Value1.Value > Value2.Value;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Double >= Double", meta = (Keywords = ">= Greater Than or Equal To Equals"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "GreaterThanOrEqualTo Double >= Double", meta = (Keywords = ">= Greater Than or Equal To Equals"))
 	static bool Dolphin_DoubleGreaterThanOrEqualToDouble(const FDolphinDouble& Value1, const FDolphinDouble& Value2)
 	{
 		return Value1.Value >= Value2.Value;
 	}
 
 
+
+private:
+	static void AddFunctionToFavorites(UFunction* Function)
+	{
+		TSharedPtr<FEdGraphSchemaAction> ActionPtr = MakeShareable(new FBlueprintActionMenuItem(UBlueprintFunctionNodeSpawner::Create(Function)));
+		GetMutableDefault<UEditorPerProjectUserSettings>()->BlueprintFavorites->AddFavorite(ActionPtr);
+	}
 };
 
 

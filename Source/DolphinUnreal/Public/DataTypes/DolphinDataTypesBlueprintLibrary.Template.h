@@ -2,6 +2,11 @@
 
 #pragma once
 
+#include "BlueprintActionMenuItem.h"
+#include "BlueprintFunctionNodeSpawner.h"
+#include "BlueprintPaletteFavorites.h"
+#include "Editor/EditorPerProjectUserSettings.h"
+
 #include "DataTypes/DolphinDataTypes.h"
 
 #include "DolphinDataTypesBlueprintLibrary.generated.h"
@@ -16,10 +21,22 @@ class UDolphinDataTypesBlueprintLibrary : public UObject
 
 public:
 	UDolphinDataTypesBlueprintLibrary(const class FObjectInitializer& ObjectInitializer);
-	
-	{{CREATE}}
+
+	UFUNCTION()
+	static void AutoFavoriteCommonDolphinFunctions()
+	{{{FAVORITES}}
+	}
+
+	{{MAKE}}
 	{{CAST}}
 	{{OPERATORS}}
+
+private:
+	static void AddFunctionToFavorites(UFunction* Function)
+	{
+		TSharedPtr<FEdGraphSchemaAction> ActionPtr = MakeShareable(new FBlueprintActionMenuItem(UBlueprintFunctionNodeSpawner::Create(Function)));
+		GetMutableDefault<UEditorPerProjectUserSettings>()->BlueprintFavorites->AddFavorite(ActionPtr);
+	}
 };
 
 #endif // DOLPHIN_DATA_TYPES_TEMPLATE

@@ -6,6 +6,7 @@
 #include "Modules/ModuleManager.h"
 #include "Interfaces/IPluginManager.h"
 
+#include "DataTypes/DolphinDataTypesBlueprintLibrary.h"
 #include "DolphinInstance.h"
 #include "DolphinUnrealStyle.h"
 
@@ -18,6 +19,7 @@ const FName FDolphinUnrealModule::ModuleName = FName("DolphinUnreal");
 void FDolphinUnrealModule::StartupModule()
 {
 	FDolphinUnrealStyle::Register();
+	UDolphinDataTypesBlueprintLibrary::AutoFavoriteCommonDolphinFunctions();
 }
 
 void FDolphinUnrealModule::ShutdownModule()

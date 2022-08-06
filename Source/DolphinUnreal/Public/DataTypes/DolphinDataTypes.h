@@ -6,6 +6,34 @@
 
 #include "DolphinDataTypes.generated.h"
 
+UENUM(BlueprintType)
+enum class EMemoryCardSlot : uint8
+{
+	SlotA,
+	SlotB,
+};
+ENUM_RANGE_BY_FIRST_AND_LAST(EMemoryCardSlot, EMemoryCardSlot::SlotA, EMemoryCardSlot::SlotB);
+
+UENUM(BlueprintType)
+enum class EMemoryCardSize : uint8
+{
+	GC_4_Mbit_59_Blocks UMETA(DisplayName = "4 Mbit (59 Blocks)"),
+	GC_8_Mbit_123_Blocks UMETA(DisplayName = "8 Mbit (123 Blocks)"),
+	GC_16_Mbit_251_Blocks UMETA(DisplayName = "16 Mbit (251 Blocks)"),
+	GC_32_Mbit_507_Blocks UMETA(DisplayName = "32 Mbit (507 Blocks)"),
+	GC_64_Mbit_1019_Blocks UMETA(DisplayName = "64 Mbit (1019 Blocks)"),
+	GC_128_Mbit_2043_Blocks UMETA(DisplayName = "128 Mbit (2043 Blocks)"),
+};
+ENUM_RANGE_BY_FIRST_AND_LAST(EMemoryCardSize, EMemoryCardSize::GC_4_Mbit_59_Blocks, EMemoryCardSize::GC_128_Mbit_2043_Blocks);
+
+UENUM(BlueprintType)
+enum class EMemoryCardEncoding : uint8
+{
+	Western,
+	Japanese,
+};
+ENUM_RANGE_BY_FIRST_AND_LAST(EMemoryCardEncoding, EMemoryCardEncoding::Western, EMemoryCardEncoding::Japanese);
+
 #define PACKED
 #pragma pack(push,1)
 

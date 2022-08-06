@@ -42,7 +42,7 @@ UK2Node_CreateDolphinInstanceProxy::UK2Node_CreateDolphinInstanceProxy(const FOb
 {
 }
 
-void UK2Node_CreateDolphinInstanceProxy::OnInstanceReady(UDolphinInstance* InInstance)
+void UK2Node_CreateDolphinInstanceProxy::OnInstanceReady(UDolphinInstance* InInstance, uint64 CommandId)
 {
 	if (InInstance)
 	{

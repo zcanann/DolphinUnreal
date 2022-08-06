@@ -37,7 +37,7 @@ UK2Node_FrameAdvanceProxy* UK2Node_FrameAdvanceProxy::CreateProxyObjectForWait(U
 	if (DolphinInstance != nullptr)
 	{
 		DolphinInstance->OnInstanceCommandCompleteEvent.AddUObject(Proxy, &UK2Node_FrameAdvanceProxy::OnInstanceReady);
-		UDolphinUnrealBlueprintLibrary::FrameAdvance(NumberOfFrames, DolphinInstance);
+		DolphinInstance->RequestFrameAdvance(NumberOfFrames);
 	}
 
 	return Proxy;
@@ -47,7 +47,7 @@ UK2Node_FrameAdvanceProxy::UK2Node_FrameAdvanceProxy(const FObjectInitializer& O
 {
 }
 
-void UK2Node_FrameAdvanceProxy::OnInstanceReady(UDolphinInstance* InInstance)
+void UK2Node_FrameAdvanceProxy::OnInstanceReady(UDolphinInstance* InInstance, uint64 CommandId)
 {
 	if (InInstance)
 	{

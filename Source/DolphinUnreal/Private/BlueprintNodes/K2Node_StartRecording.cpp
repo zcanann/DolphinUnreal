@@ -37,7 +37,7 @@ UK2Node_StartRecordingProxy* UK2Node_StartRecordingProxy::CreateProxyObjectForWa
 	if (DolphinInstance != nullptr)
 	{
 		DolphinInstance->OnInstanceCommandCompleteEvent.AddUObject(Proxy, &UK2Node_StartRecordingProxy::OnInstanceReady);
-		UDolphinUnrealBlueprintLibrary::StartRecording(DolphinInstance);
+		DolphinInstance->RequestStartRecording();
 	}
 
 	return Proxy;
@@ -47,7 +47,7 @@ UK2Node_StartRecordingProxy::UK2Node_StartRecordingProxy(const FObjectInitialize
 {
 }
 
-void UK2Node_StartRecordingProxy::OnInstanceReady(UDolphinInstance* InInstance)
+void UK2Node_StartRecordingProxy::OnInstanceReady(UDolphinInstance* InInstance, uint64 CommandId)
 {
 	if (InInstance)
 	{

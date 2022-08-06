@@ -37,7 +37,7 @@ UK2Node_PlayInputTableProxy* UK2Node_PlayInputTableProxy::CreateProxyObjectForWa
 	if (DolphinInstance != nullptr)
 	{
 		DolphinInstance->OnInstanceCommandCompleteEvent.AddUObject(Proxy, &UK2Node_PlayInputTableProxy::OnInstanceReady);
-		UDolphinUnrealBlueprintLibrary::PlayInputTable(FrameInputsTable, DolphinInstance);
+		DolphinInstance->RequestPlayInputTable(FrameInputsTable);
 	}
 
 	return Proxy;
@@ -47,7 +47,7 @@ UK2Node_PlayInputTableProxy::UK2Node_PlayInputTableProxy(const FObjectInitialize
 {
 }
 
-void UK2Node_PlayInputTableProxy::OnInstanceReady(UDolphinInstance* InInstance)
+void UK2Node_PlayInputTableProxy::OnInstanceReady(UDolphinInstance* InInstance, uint64 CommandId)
 {
 	if (InInstance)
 	{

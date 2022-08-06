@@ -38,7 +38,7 @@ UK2Node_LoadSaveStateProxy* UK2Node_LoadSaveStateProxy::CreateProxyObjectForWait
 	if (DolphinInstance != nullptr)
 	{
 		DolphinInstance->OnInstanceCommandCompleteEvent.AddUObject(Proxy, &UK2Node_LoadSaveStateProxy::OnInstanceReady);
-		UDolphinUnrealBlueprintLibrary::LoadSaveState(SavAsset, DolphinInstance);
+		DolphinInstance->RequestLoadSaveState(SavAsset);
 	}
 
 	return Proxy;
@@ -48,7 +48,7 @@ UK2Node_LoadSaveStateProxy::UK2Node_LoadSaveStateProxy(const FObjectInitializer&
 {
 }
 
-void UK2Node_LoadSaveStateProxy::OnInstanceReady(UDolphinInstance* InInstance)
+void UK2Node_LoadSaveStateProxy::OnInstanceReady(UDolphinInstance* InInstance, uint64 CommandId)
 {
 	if (InInstance)
 	{

@@ -37,7 +37,7 @@ UK2Node_PauseEmulationProxy* UK2Node_PauseEmulationProxy::CreateProxyObjectForWa
 	if (DolphinInstance != nullptr)
 	{
 		DolphinInstance->OnInstanceCommandCompleteEvent.AddUObject(Proxy, &UK2Node_PauseEmulationProxy::OnInstanceReady);
-		UDolphinUnrealBlueprintLibrary::PauseEmulation(DolphinInstance);
+		DolphinInstance->RequestPause();
 	}
 
 	return Proxy;
@@ -47,7 +47,7 @@ UK2Node_PauseEmulationProxy::UK2Node_PauseEmulationProxy(const FObjectInitialize
 {
 }
 
-void UK2Node_PauseEmulationProxy::OnInstanceReady(UDolphinInstance* InInstance)
+void UK2Node_PauseEmulationProxy::OnInstanceReady(UDolphinInstance* InInstance, uint64 CommandId)
 {
 	if (InInstance)
 	{

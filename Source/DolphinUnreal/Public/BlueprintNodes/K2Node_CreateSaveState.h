@@ -40,7 +40,7 @@ public:
 
 private:
 	void OnInstanceSaveStateCreated(UDolphinInstance* InInstance, USavAsset* InSavAsset);
-	void OnInstanceReady(UDolphinInstance* InInstance);
+	void OnInstanceReady(UDolphinInstance* InInstance, uint64 CommandId);
 
 	UPROPERTY()
 	USavAsset* SavAsset;

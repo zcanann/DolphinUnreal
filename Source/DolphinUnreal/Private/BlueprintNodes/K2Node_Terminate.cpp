@@ -37,7 +37,7 @@ UK2Node_TerminateProxy* UK2Node_TerminateProxy::CreateProxyObjectForWait(UDolphi
 	if (DolphinInstance != nullptr)
 	{
 		DolphinInstance->OnInstanceCommandCompleteEvent.AddUObject(Proxy, &UK2Node_TerminateProxy::OnInstanceReady);
-		UDolphinUnrealBlueprintLibrary::Terminate(DolphinInstance);
+		DolphinInstance->RequestTerminate();
 	}
 
 	return Proxy;
@@ -47,7 +47,7 @@ UK2Node_TerminateProxy::UK2Node_TerminateProxy(const FObjectInitializer& ObjectI
 {
 }
 
-void UK2Node_TerminateProxy::OnInstanceReady(UDolphinInstance* InInstance)
+void UK2Node_TerminateProxy::OnInstanceReady(UDolphinInstance* InInstance, uint64 CommandId)
 {
 	if (InInstance)
 	{

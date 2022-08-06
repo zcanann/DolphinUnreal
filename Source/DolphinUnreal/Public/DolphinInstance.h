@@ -34,7 +34,7 @@ public:
 	TStatId GetStatId() const override { return TStatId(); }
 	void Tick(float DeltaTime) override;
 
-	DECLARE_MULTICAST_DELEGATE_OneParam(FOnInstanceCommandComplete, UDolphinInstance*);
+	DECLARE_MULTICAST_DELEGATE_TwoParams(FOnInstanceCommandComplete, UDolphinInstance*, uint64);
 	FOnInstanceCommandComplete OnInstanceCommandCompleteEvent;
 
 	DECLARE_MULTICAST_DELEGATE_TwoParams(FOnSaveStateCreated, UDolphinInstance*, USavAsset*);
@@ -79,44 +79,38 @@ public:
 	DECLARE_MULTICAST_DELEGATE_TwoParams(FOnMemoryReadUnsignedArrayOfBytes, UDolphinInstance*, TArray<FDolphinUInt8>);
 	FOnMemoryReadUnsignedArrayOfBytes OnInstanceMemoryReadUnsignedArrayOfBytes;
 	
-	UFUNCTION()
 	void RequestCreateSaveState(FString SaveName);
 	
-	UFUNCTION()
 	void RequestLoadSaveState(USavAsset* SavAsset);
 
-	UFUNCTION()
 	void RequestPause();
 
-	UFUNCTION()
 	void RequestResume();
 
 	UFUNCTION(BlueprintPure)
 	bool IsPaused() const;
 
-	UFUNCTION()
 	void RequestStartRecording();
 
-	UFUNCTION()
 	void RequestStopRecording();
 
 	UFUNCTION(BlueprintPure)
 	bool IsRecording() const;
 
-	UFUNCTION()
 	void RequestPlayInputTable(UDataTable* FrameInputsTable);
 
-	UFUNCTION()
 	void RequestPlayInputs(const TArray<FFrameInputs>& FrameInputs);
 
-	UFUNCTION()
 	void RequestFrameAdvance(int32 NumberOfFrames);
 
-	UFUNCTION()
 	void RequestFrameAdvanceWithInput(FFrameInputs FrameInputs, int32 NumberOfFrames = 1);
 
-	UFUNCTION()
+	void RequestFormatMemoryCard(EMemoryCardSlot MemoryCardSlot, EMemoryCardSize MemoryCardSize, EMemoryCardEncoding MemoryCardEncoding);
+
 	void RequestTerminate();
+
+	UFUNCTION()
+	uint64 GetNextCommandId() const { return NextCommandId; }
 
 protected:
 	SERVER_FUNC_OVERRIDE(OnInstanceConnected)
@@ -138,4 +132,5 @@ private:
 
 	bool bIsRecordingInput = false;
 	bool bIsPaused = false;
+	uint64 NextCommandId = 0;
 };
