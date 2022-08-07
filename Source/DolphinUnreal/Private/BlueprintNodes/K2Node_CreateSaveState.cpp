@@ -27,7 +27,7 @@ FText UK2Node_CreateSaveState::GetMenuCategory() const
 	return LOCTEXT("K2Node_CreateSaveState_Category", "Dolphin");
 }
 
-UK2Node_CreateSaveStateProxy* UK2Node_CreateSaveStateProxy::CreateProxyObjectForWait(FString SaveName, UDolphinInstance* DolphinInstance)
+UK2Node_CreateSaveStateProxy* UK2Node_CreateSaveStateProxy::CreateProxyObjectForWait(UDolphinInstance* DolphinInstance, FString SaveName)
 {
 	UK2Node_CreateSaveStateProxy* Proxy = NewObject<UK2Node_CreateSaveStateProxy>();
 	Proxy->SetFlags(RF_StrongRefOnFrame);
@@ -36,8 +36,8 @@ UK2Node_CreateSaveStateProxy* UK2Node_CreateSaveStateProxy::CreateProxyObjectFor
 
 	if (DolphinInstance != nullptr)
 	{
-		DolphinInstance->OnInstanceSaveStateCreated.AddUObject(Proxy, &UK2Node_CreateSaveStateProxy::OnInstanceSaveStateCreated);
 		DolphinInstance->OnInstanceCommandCompleteEvent.AddUObject(Proxy, &UK2Node_CreateSaveStateProxy::OnInstanceReady);
+		DolphinInstance->OnInstanceSaveStateCreated.AddUObject(Proxy, &UK2Node_CreateSaveStateProxy::OnInstanceSaveStateCreated);
 		DolphinInstance->RequestCreateSaveState(SaveName);
 	}
 

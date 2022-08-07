@@ -224,21 +224,43 @@ def generateArrayMakeForDataType(dataType, unrealPrimitive):
         '\t\t\t: TArray<uint8>({ ' + arrayInitInverse + ' })' + ';\n' + \
         '\t\treturn *reinterpret_cast<' + castPrimitive + '*>(Bytes.GetData());\n' + \
         '\t}\n\n'
-       
-# '\t\t' + castPrimitive + ' Value = 0;\n' + \
-# '\t\tfor (uint8 Index = 0; Index < Bytes.Num(); Index++)\n' + \
-# '\t\t{\n' + \
-# '\t\t\tValue += (' + castPrimitive + ')Bytes[Index] << 8 * Index;\n' + \
-# '\t\t}\n' + \ 
-# uint32 Result = 0;
-# for (uint8 ValueByte = 0; ValueByte < NumBytes; ++ValueByte)
+
+def generateHexMakeHeader(dataType):
+    dataTypeKeywords = dataTypeTable[dataType]['keywords']
+    primitive = dataTypeTable[dataType]['primitive']
+    return '\tUFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Make Dolphin ' + dataType + \
+        ' from Hex String", meta = (ToolTip = "Creates a Dolphin-compatible ' + primitive + ' from the given hex string. Hex prefix (0x) and spaces will be ignored."' + \
+        ', Keywords = "Make Create ' + dataTypeKeywords + ' from FString String Hex Hexadecimal"))\n'
+        
+def generateHexMakeForDataType(dataType, unrealPrimitive):
+    castPrimitive = dataTypeTable[dataType]['primitive']
+    numBytes = dataTypeTable[dataType]['bytes']
+    
+    functionName = 'Make' + dataType + 'FromHexString'
+    generateFavoriteForFunctionName(functionName)
+    
+    return generateHexMakeHeader(dataType) + \
+        '\tstatic FDolphin' + dataType + ' ' + functionName + '(FString HexString)\n' + \
+        '\t{\n' + \
+        '\t\tTArray<uint8> Bytes = CreateArrayFromHex(HexString, ' + str(numBytes) + ');\n' + \
+        '\t\treturn *reinterpret_cast<' + castPrimitive + '*>(Bytes.GetData());\n' + \
+        '\t}\n\n'
+
+# TArray<uint8> Bytes = TArray<uint8>();
+# Bytes.AddDefaulted(8);
+# if (Hex.StartsWith("0x") || Hex.StartsWith("0X"))
 # {
-# Result += InBytes[InByteIndex] << 8 * ValueByte;
-# InByteIndex += ByteIndexStep;
+# Hex = Hex.LeftChop(2);
 # }
+# if (Hex.Len() <= 8)
+# {
+# HexToBytes(Hex, Bytes.GetData());
+# }
+# return *reinterpret_cast<double*>(Bytes.GetData());
 
 def generateMakesForDataType(dataType, unrealPrimitive):
     return generatePrimitiveMakeForDataType(dataType, unrealPrimitive) + \
+        generateHexMakeForDataType(dataType, unrealPrimitive) + \
         generateArrayMakeForDataType(dataType, unrealPrimitive)
 
 def generateMakeForAllDataTypes():
@@ -369,7 +391,7 @@ def generateOperatorsForAllDataTypes():
 
 def generateFavoriteForFunctionName(functionName):
     global favorites
-    favorites += '\t\tAddFunctionToFavorites(UDolphinDataTypesBlueprintLibrary::StaticClass()->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, ' + functionName + ')));\n'
+    favorites += '\t\tAddFunctionToFavorites(DolphinDataTypesBlueprintLibrary->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, ' + functionName + ')));\n'
 
 def generateAccumulatedFavorites():
     global favorites

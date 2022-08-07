@@ -32,8 +32,8 @@ class UK2Node_ReadInt8Proxy : public UObject
 	GENERATED_UCLASS_BODY()
 
 public:
-	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"))
-	static UK2Node_ReadInt8Proxy* CreateProxyObjectForWait(FDolphinUInt32 Address, TArray<FDolphinInt32> Offsets, UDolphinInstance* DolphinInstance);
+	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true", AutoCreateRefTerm = "Offsets"))
+	static UK2Node_ReadInt8Proxy* CreateProxyObjectForWait(UDolphinInstance* DolphinInstance, FDolphinUInt32 Address, TArray<FDolphinInt32> Offsets);
 	
 	UPROPERTY(BlueprintAssignable)
 	FDolphinReadInt8MulticastDelegate OnSuccess;

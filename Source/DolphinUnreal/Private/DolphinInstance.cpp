@@ -217,6 +217,9 @@ SERVER_FUNC_BODY(UDolphinInstance, OnInstanceMemoryWrite, params)
 {
 }
 
+#include "Windows/AllowWindowsPlatformTypes.h"
+#include <shellapi.h>
+#include "Windows/HideWindowsPlatformTypes.h"
 void UDolphinInstance::LaunchInstance(UIsoAsset* InIsoAsset, bool bStartPaused, bool bBeginRecording)
 {
     static FString PluginContentDirectory = FPaths::ConvertRelativePathToFull(IPluginManager::Get().FindPlugin(TEXT("DolphinUnreal"))->GetContentDir());
@@ -242,13 +245,8 @@ void UDolphinInstance::LaunchInstance(UIsoAsset* InIsoAsset, bool bStartPaused, 
     uint32 OutProcessID = 0;
     uint32 PriorityModifier = 0;
 
-    /*
-    #include "Windows/AllowWindowsPlatformTypes.h"
-    #include <shellapi.h>
-    #include "Windows/HideWindowsPlatformTypes.h"
     ShellExecute(NULL, TEXT("open"), *DolphinBinaryPath, *Params, *OptionalWorkingDirectory, SW_SHOWDEFAULT);
-    */
-    DolphinProcHandle = FWindowsPlatformProcess::CreateProc(
+    /*DolphinProcHandle = FWindowsPlatformProcess::CreateProc(
         *DolphinBinaryPath,
         *Params,
         bLaunchDetached,
@@ -258,7 +256,7 @@ void UDolphinInstance::LaunchInstance(UIsoAsset* InIsoAsset, bool bStartPaused, 
         PriorityModifier,
         (OptionalWorkingDirectory != "") ? *OptionalWorkingDirectory : nullptr,
         nullptr
-    );
+    );*/
 }
 
 void UDolphinInstance::RequestCreateSaveState(FString SaveName)
@@ -383,10 +381,31 @@ void UDolphinInstance::RequestFrameAdvanceWithInput(FFrameInputs FrameInputs, in
 void UDolphinInstance::RequestFormatMemoryCard(EMemoryCardSlot MemoryCardSlot, EMemoryCardSize MemoryCardSize, EMemoryCardEncoding MemoryCardEncoding)
 {
     CREATE_TO_INSTANCE_DATA(FormatMemoryCard, ipcData, data)
-    data->_cardSize = (ToInstanceParams_FormatMemoryCard::CardSize)MemoryCardSize;
-    data->_cardSize = (ToInstanceParams_FormatMemoryCard::CardSize)MemoryCardSize;
+    data->_slot = (DolphinSlot)MemoryCardSlot;
+    data->_encoding = (ToInstanceParams_FormatMemoryCard::CardEncoding)MemoryCardEncoding;
     data->_cardSize = (ToInstanceParams_FormatMemoryCard::CardSize)MemoryCardSize;
     ipcSendToInstance(ipcData);
+}
+
+void UDolphinInstance::RequestReadInt8(FDolphinUInt32 Address, TArray<FDolphinInt32> Offsets)
+{
+    CREATE_TO_INSTANCE_DATA(ReadMemory, ipcData, data)
+    data->_dataType = DolphinDataType::Int8;
+    data->_address = Address.Value;
+    data->_pointerOffsets = ConvertPointerOffsets(Offsets);
+    ipcSendToInstance(ipcData);
+}
+
+std::vector<int> UDolphinInstance::ConvertPointerOffsets(const TArray<FDolphinInt32>& Offsets)
+{
+    std::vector<int> PointerOffsets;
+
+    for (const FDolphinInt32& Offset : Offsets)
+    {
+        PointerOffsets.push_back(Offset.Value);
+    }
+
+    return PointerOffsets;
 }
 
 void UDolphinInstance::RequestTerminate()

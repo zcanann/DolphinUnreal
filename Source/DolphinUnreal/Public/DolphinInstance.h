@@ -36,77 +36,53 @@ public:
 
 	DECLARE_MULTICAST_DELEGATE_TwoParams(FOnInstanceCommandComplete, UDolphinInstance*, uint64);
 	FOnInstanceCommandComplete OnInstanceCommandCompleteEvent;
-
 	DECLARE_MULTICAST_DELEGATE_TwoParams(FOnSaveStateCreated, UDolphinInstance*, USavAsset*);
 	FOnSaveStateCreated OnInstanceSaveStateCreated;
-
 	DECLARE_MULTICAST_DELEGATE_TwoParams(FOnMemoryReadInt8, UDolphinInstance*, FDolphinInt8);
 	FOnMemoryReadInt8 OnInstanceMemoryReadInt8;
-
 	DECLARE_MULTICAST_DELEGATE_TwoParams(FOnMemoryReadInt16, UDolphinInstance*, FDolphinInt16);
 	FOnMemoryReadInt16 OnInstanceMemoryReadInt16;
-
 	DECLARE_MULTICAST_DELEGATE_TwoParams(FOnMemoryReadInt32, UDolphinInstance*, FDolphinInt32);
 	FOnMemoryReadInt32 OnInstanceMemoryReadInt32;
-
 	DECLARE_MULTICAST_DELEGATE_TwoParams(FOnMemoryReadInt64, UDolphinInstance*, FDolphinInt64);
 	FOnMemoryReadInt64 OnInstanceMemoryReadInt64;
-
 	DECLARE_MULTICAST_DELEGATE_TwoParams(FOnMemoryReadUInt8, UDolphinInstance*, FDolphinUInt8);
 	FOnMemoryReadUInt8 OnInstanceMemoryReadUInt8;
-
 	DECLARE_MULTICAST_DELEGATE_TwoParams(FOnMemoryReadUInt16, UDolphinInstance*, FDolphinUInt16);
 	FOnMemoryReadUInt16 OnInstanceMemoryReadUInt16;
-
 	DECLARE_MULTICAST_DELEGATE_TwoParams(FOnMemoryReadUInt32, UDolphinInstance*, FDolphinUInt32);
 	FOnMemoryReadUInt32 OnInstanceMemoryReadUInt32;
-
 	DECLARE_MULTICAST_DELEGATE_TwoParams(FOnMemoryReadUInt64, UDolphinInstance*, FDolphinUInt64);
 	FOnMemoryReadUInt64 OnInstanceMemoryReadUInt64;
-
 	DECLARE_MULTICAST_DELEGATE_TwoParams(FOnMemoryReadFloat, UDolphinInstance*, FDolphinFloat);
 	FOnMemoryReadFloat OnInstanceMemoryReadFloat;
-
 	DECLARE_MULTICAST_DELEGATE_TwoParams(FOnMemoryReadDouble, UDolphinInstance*, FDolphinDouble);
 	FOnMemoryReadDouble OnInstanceMemoryReadDouble;
-
 	DECLARE_MULTICAST_DELEGATE_TwoParams(FOnMemoryReadString, UDolphinInstance*, FString);
 	FOnMemoryReadString OnInstanceMemoryReadString;
-
 	DECLARE_MULTICAST_DELEGATE_TwoParams(FOnMemoryReadArrayOfBytes, UDolphinInstance*, TArray<FDolphinInt8>);
 	FOnMemoryReadArrayOfBytes OnInstanceMemoryReadArrayOfBytes;
-
 	DECLARE_MULTICAST_DELEGATE_TwoParams(FOnMemoryReadUnsignedArrayOfBytes, UDolphinInstance*, TArray<FDolphinUInt8>);
 	FOnMemoryReadUnsignedArrayOfBytes OnInstanceMemoryReadUnsignedArrayOfBytes;
-	
-	void RequestCreateSaveState(FString SaveName);
-	
-	void RequestLoadSaveState(USavAsset* SavAsset);
-
-	void RequestPause();
-
-	void RequestResume();
 
 	UFUNCTION(BlueprintPure)
 	bool IsPaused() const;
 
-	void RequestStartRecording();
-
-	void RequestStopRecording();
-
 	UFUNCTION(BlueprintPure)
 	bool IsRecording() const;
 
+	void RequestCreateSaveState(FString SaveName);
+	void RequestLoadSaveState(USavAsset* SavAsset);
+	void RequestPause();
+	void RequestResume();
+	void RequestStartRecording();
+	void RequestStopRecording();
 	void RequestPlayInputTable(UDataTable* FrameInputsTable);
-
 	void RequestPlayInputs(const TArray<FFrameInputs>& FrameInputs);
-
 	void RequestFrameAdvance(int32 NumberOfFrames);
-
 	void RequestFrameAdvanceWithInput(FFrameInputs FrameInputs, int32 NumberOfFrames = 1);
-
 	void RequestFormatMemoryCard(EMemoryCardSlot MemoryCardSlot, EMemoryCardSize MemoryCardSize, EMemoryCardEncoding MemoryCardEncoding);
-
+	void RequestReadInt8(FDolphinUInt32 Address, TArray<FDolphinInt32> Offsets);
 	void RequestTerminate();
 
 	UFUNCTION()
@@ -126,6 +102,7 @@ protected:
 
 private:
 	void LaunchInstance(UIsoAsset* InIsoAsset, bool bStartPaused, bool bBeginRecording);
+	std::vector<int> ConvertPointerOffsets(const TArray<FDolphinInt32>& Offsets);
 
 	FString InstanceId;
 	FProcHandle DolphinProcHandle;

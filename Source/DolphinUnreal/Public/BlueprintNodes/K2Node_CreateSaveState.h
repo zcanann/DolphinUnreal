@@ -33,7 +33,7 @@ class UK2Node_CreateSaveStateProxy : public UObject
 
 public:
 	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"))
-	static UK2Node_CreateSaveStateProxy* CreateProxyObjectForWait(FString SaveName, UDolphinInstance* DolphinInstance);
+	static UK2Node_CreateSaveStateProxy* CreateProxyObjectForWait(UDolphinInstance* DolphinInstance, FString SaveName);
 	
 	UPROPERTY(BlueprintAssignable)
 	FDolphinCreateSaveStateMulticastDelegate OnSuccess;

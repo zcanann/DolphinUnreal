@@ -27,7 +27,7 @@ FText UK2Node_ReadInt8::GetMenuCategory() const
 	return LOCTEXT("K2Node_ReadInt8_Category", "Dolphin");
 }
 
-UK2Node_ReadInt8Proxy* UK2Node_ReadInt8Proxy::CreateProxyObjectForWait(FDolphinUInt32 Address, TArray<FDolphinInt32> Offsets, UDolphinInstance* DolphinInstance)
+UK2Node_ReadInt8Proxy* UK2Node_ReadInt8Proxy::CreateProxyObjectForWait(UDolphinInstance* DolphinInstance, FDolphinUInt32 Address, TArray<FDolphinInt32> Offsets)
 {
 	UK2Node_ReadInt8Proxy* Proxy = NewObject<UK2Node_ReadInt8Proxy>();
 	Proxy->SetFlags(RF_StrongRefOnFrame);
@@ -37,10 +37,9 @@ UK2Node_ReadInt8Proxy* UK2Node_ReadInt8Proxy::CreateProxyObjectForWait(FDolphinU
 
 	if (DolphinInstance != nullptr)
 	{
-		DolphinInstance->OnInstanceMemoryReadInt8.AddUObject(Proxy, &UK2Node_ReadInt8Proxy::OnInstanceMemoryReadInt8);
 		DolphinInstance->OnInstanceCommandCompleteEvent.AddUObject(Proxy, &UK2Node_ReadInt8Proxy::OnInstanceReady);
-
-		// DolphinInstance->RequestReadMemory();
+		DolphinInstance->OnInstanceMemoryReadInt8.AddUObject(Proxy, &UK2Node_ReadInt8Proxy::OnInstanceMemoryReadInt8);
+		DolphinInstance->RequestReadInt8(Address, Offsets);
 	}
 
 	return Proxy;
@@ -54,7 +53,7 @@ void UK2Node_ReadInt8Proxy::OnInstanceMemoryReadInt8(UDolphinInstance* InInstanc
 {
 	if (InInstance)
 	{
-		InInstance->OnInstanceSaveStateCreated.RemoveAll(this);
+		InInstance->OnInstanceMemoryReadInt8.RemoveAll(this);
 	}
 
 	Value = InValue;

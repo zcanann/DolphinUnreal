@@ -32,8 +32,9 @@ UK2Node_CreateDolphinInstanceProxy* UK2Node_CreateDolphinInstanceProxy::CreatePr
 	UK2Node_CreateDolphinInstanceProxy* Proxy = NewObject<UK2Node_CreateDolphinInstanceProxy>();
 	Proxy->SetFlags(RF_StrongRefOnFrame);
 
-	UDolphinInstance* Instance = UDolphinUnrealBlueprintLibrary::CreateDolphinInstance(bRegisterAsDefaultInstance, bStartPaused, bBeginRecording, IsoAsset);
+	UDolphinInstance* Instance = UDolphinUnrealBlueprintLibrary::CreateDolphinInstance(bRegisterAsDefaultInstance);
 	Instance->OnInstanceCommandCompleteEvent.AddUObject(Proxy, &UK2Node_CreateDolphinInstanceProxy::OnInstanceReady);
+	Instance->Initialize(IsoAsset, bStartPaused, bBeginRecording);
 
 	return Proxy;
 }
