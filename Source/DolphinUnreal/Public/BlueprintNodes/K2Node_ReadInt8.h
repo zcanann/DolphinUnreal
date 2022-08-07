@@ -4,6 +4,8 @@
 #include "UObject/ObjectMacros.h"
 #include "K2Node_BaseAsyncTask.h"
 
+#include "DataTypes/DolphinDataTypes.h"
+
 #include "K2Node_ReadInt8.generated.h"
 
 UCLASS()

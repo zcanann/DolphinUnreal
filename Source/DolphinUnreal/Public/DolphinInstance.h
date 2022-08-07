@@ -62,8 +62,8 @@ public:
 	FOnMemoryReadString OnInstanceMemoryReadString;
 	DECLARE_MULTICAST_DELEGATE_TwoParams(FOnMemoryReadArrayOfBytes, UDolphinInstance*, TArray<FDolphinInt8>);
 	FOnMemoryReadArrayOfBytes OnInstanceMemoryReadArrayOfBytes;
-	DECLARE_MULTICAST_DELEGATE_TwoParams(FOnMemoryReadUnsignedArrayOfBytes, UDolphinInstance*, TArray<FDolphinUInt8>);
-	FOnMemoryReadUnsignedArrayOfBytes OnInstanceMemoryReadUnsignedArrayOfBytes;
+	DECLARE_MULTICAST_DELEGATE_TwoParams(FOnMemoryReadArrayOfUBytes, UDolphinInstance*, TArray<FDolphinUInt8>);
+	FOnMemoryReadArrayOfUBytes OnInstanceMemoryReadArrayOfUBytes;
 
 	UFUNCTION(BlueprintPure)
 	bool IsPaused() const;
@@ -83,6 +83,18 @@ public:
 	void RequestFrameAdvanceWithInput(FFrameInputs FrameInputs, int32 NumberOfFrames = 1);
 	void RequestFormatMemoryCard(EMemoryCardSlot MemoryCardSlot, EMemoryCardSize MemoryCardSize, EMemoryCardEncoding MemoryCardEncoding);
 	void RequestReadInt8(FDolphinUInt32 Address, TArray<FDolphinInt32> Offsets);
+	void RequestReadInt16(FDolphinUInt32 Address, TArray<FDolphinInt32> Offsets);
+	void RequestReadInt32(FDolphinUInt32 Address, TArray<FDolphinInt32> Offsets);
+	void RequestReadInt64(FDolphinUInt32 Address, TArray<FDolphinInt32> Offsets);
+	void RequestReadUInt8(FDolphinUInt32 Address, TArray<FDolphinInt32> Offsets);
+	void RequestReadUInt16(FDolphinUInt32 Address, TArray<FDolphinInt32> Offsets);
+	void RequestReadUInt32(FDolphinUInt32 Address, TArray<FDolphinInt32> Offsets);
+	void RequestReadUInt64(FDolphinUInt32 Address, TArray<FDolphinInt32> Offsets);
+	void RequestReadFloat(FDolphinUInt32 Address, TArray<FDolphinInt32> Offsets);
+	void RequestReadDouble(FDolphinUInt32 Address, TArray<FDolphinInt32> Offsets);
+	void RequestReadString(FDolphinUInt32 Address, TArray<FDolphinInt32> Offsets, int32 StringLength);
+	void RequestReadArrayOfBytes(FDolphinUInt32 Address, TArray<FDolphinInt32> Offsets, int32 ByteCount);
+	void RequestReadArrayOfUBytes(FDolphinUInt32 Address, TArray<FDolphinInt32> Offsets, int32 ByteCount);
 	void RequestTerminate();
 
 	UFUNCTION()

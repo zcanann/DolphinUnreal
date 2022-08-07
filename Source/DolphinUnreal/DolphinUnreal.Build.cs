@@ -12,7 +12,7 @@ public class DolphinUnreal : ModuleRules
 		public string Path { get; set; }
 
 		public bool IsRecursive { get; set; }
-
+		
 		public IncludePath(string path, bool isRecursive)
 		{
 			this.Path = path;

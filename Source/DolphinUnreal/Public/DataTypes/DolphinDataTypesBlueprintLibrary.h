@@ -1767,19 +1767,32 @@ private:
 
 	static TArray<uint8> CreateArrayFromHex(FString HexString, int32 ByteCount)
 	{
+		// TODO: This can probably be optimized significantly
 		TArray<uint8> Bytes = TArray<uint8>();
 		Bytes.AddDefaulted(ByteCount);
 		HexString = HexString.TrimStartAndEnd().Replace(TEXT(" "), TEXT(""));
 
 		if (HexString.StartsWith("0x") || HexString.StartsWith("0X"))
 		{
-			HexString = HexString.LeftChop(2);
+			HexString.RightChopInline(2);
 		}
 
-		if (HexString.Len() <= ByteCount)
+		while (HexString.Len() < ByteCount)
 		{
-			HexToBytes(HexString, Bytes.GetData());
+			HexString = "0" + HexString;
 		}
+
+		FString OriginalHexString = HexString;
+
+		for (int32 Index = 0; Index < HexString.Len(); Index++)
+		{
+			int32 SwapIndex = Index % 2 == 0 ? Index + 1 : Index - 1;
+			HexString[SwapIndex] = OriginalHexString[Index];
+		}
+
+		HexToBytes(HexString.Reverse(), Bytes.GetData());
+
+		uint32 Okay = *reinterpret_cast<uint32*>(Bytes.GetData());
 
 		return Bytes;
 	}

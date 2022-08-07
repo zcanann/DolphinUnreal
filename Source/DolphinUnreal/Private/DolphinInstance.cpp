@@ -200,14 +200,14 @@ SERVER_FUNC_BODY(UDolphinInstance, OnInstanceMemoryRead, params)
             OnInstanceMemoryReadArrayOfBytes.Broadcast(this, ArrayOfBytes);
             break;
         }
-        case DolphinDataType::UArrayOfBytes:
+        case DolphinDataType::ArrayOfUBytes:
         {
             TArray<FDolphinUInt8> ArrayOfUBytes;
-            for (signed char Next : params._dolphinValue._valueArrayOfBytes)
+            for (signed char Next : params._dolphinValue._valueArrayOfUBytes)
             {
                 ArrayOfUBytes.Add(FDolphinUInt8(Next));
             }
-            OnInstanceMemoryReadUnsignedArrayOfBytes.Broadcast(this, ArrayOfUBytes);
+            OnInstanceMemoryReadArrayOfUBytes.Broadcast(this, ArrayOfUBytes);
             break;
         }
     }
@@ -217,9 +217,6 @@ SERVER_FUNC_BODY(UDolphinInstance, OnInstanceMemoryWrite, params)
 {
 }
 
-#include "Windows/AllowWindowsPlatformTypes.h"
-#include <shellapi.h>
-#include "Windows/HideWindowsPlatformTypes.h"
 void UDolphinInstance::LaunchInstance(UIsoAsset* InIsoAsset, bool bStartPaused, bool bBeginRecording)
 {
     static FString PluginContentDirectory = FPaths::ConvertRelativePathToFull(IPluginManager::Get().FindPlugin(TEXT("DolphinUnreal"))->GetContentDir());
@@ -245,8 +242,13 @@ void UDolphinInstance::LaunchInstance(UIsoAsset* InIsoAsset, bool bStartPaused, 
     uint32 OutProcessID = 0;
     uint32 PriorityModifier = 0;
 
-    ShellExecute(NULL, TEXT("open"), *DolphinBinaryPath, *Params, *OptionalWorkingDirectory, SW_SHOWDEFAULT);
-    /*DolphinProcHandle = FWindowsPlatformProcess::CreateProc(
+    /*
+    #include "Windows/AllowWindowsPlatformTypes.h"
+    #include <shellapi.h>
+    #include "Windows/HideWindowsPlatformTypes.h"
+    */
+    /*ShellExecute(NULL, TEXT("open"), *DolphinBinaryPath, *Params, *OptionalWorkingDirectory, SW_SHOWDEFAULT);*/
+    DolphinProcHandle = FWindowsPlatformProcess::CreateProc(
         *DolphinBinaryPath,
         *Params,
         bLaunchDetached,
@@ -256,7 +258,7 @@ void UDolphinInstance::LaunchInstance(UIsoAsset* InIsoAsset, bool bStartPaused, 
         PriorityModifier,
         (OptionalWorkingDirectory != "") ? *OptionalWorkingDirectory : nullptr,
         nullptr
-    );*/
+    );
 }
 
 void UDolphinInstance::RequestCreateSaveState(FString SaveName)
@@ -393,6 +395,117 @@ void UDolphinInstance::RequestReadInt8(FDolphinUInt32 Address, TArray<FDolphinIn
     data->_dataType = DolphinDataType::Int8;
     data->_address = Address.Value;
     data->_pointerOffsets = ConvertPointerOffsets(Offsets);
+    ipcSendToInstance(ipcData);
+}
+
+void UDolphinInstance::RequestReadInt16(FDolphinUInt32 Address, TArray<FDolphinInt32> Offsets)
+{
+    CREATE_TO_INSTANCE_DATA(ReadMemory, ipcData, data)
+    data->_dataType = DolphinDataType::Int16;
+    data->_address = Address.Value;
+    data->_pointerOffsets = ConvertPointerOffsets(Offsets);
+    ipcSendToInstance(ipcData);
+}
+
+void UDolphinInstance::RequestReadInt32(FDolphinUInt32 Address, TArray<FDolphinInt32> Offsets)
+{
+    CREATE_TO_INSTANCE_DATA(ReadMemory, ipcData, data)
+    data->_dataType = DolphinDataType::Int32;
+    data->_address = Address.Value;
+    data->_pointerOffsets = ConvertPointerOffsets(Offsets);
+    ipcSendToInstance(ipcData);
+}
+
+void UDolphinInstance::RequestReadInt64(FDolphinUInt32 Address, TArray<FDolphinInt32> Offsets)
+{
+    CREATE_TO_INSTANCE_DATA(ReadMemory, ipcData, data)
+    data->_dataType = DolphinDataType::Int64;
+    data->_address = Address.Value;
+    data->_pointerOffsets = ConvertPointerOffsets(Offsets);
+    ipcSendToInstance(ipcData);
+}
+
+void UDolphinInstance::RequestReadUInt8(FDolphinUInt32 Address, TArray<FDolphinInt32> Offsets)
+{
+    CREATE_TO_INSTANCE_DATA(ReadMemory, ipcData, data)
+    data->_dataType = DolphinDataType::UInt8;
+    data->_address = Address.Value;
+    data->_pointerOffsets = ConvertPointerOffsets(Offsets);
+    ipcSendToInstance(ipcData);
+}
+
+void UDolphinInstance::RequestReadUInt16(FDolphinUInt32 Address, TArray<FDolphinInt32> Offsets)
+{
+    CREATE_TO_INSTANCE_DATA(ReadMemory, ipcData, data)
+    data->_dataType = DolphinDataType::UInt16;
+    data->_address = Address.Value;
+    data->_pointerOffsets = ConvertPointerOffsets(Offsets);
+    ipcSendToInstance(ipcData);
+}
+
+void UDolphinInstance::RequestReadUInt32(FDolphinUInt32 Address, TArray<FDolphinInt32> Offsets)
+{
+    CREATE_TO_INSTANCE_DATA(ReadMemory, ipcData, data)
+    data->_dataType = DolphinDataType::UInt32;
+    data->_address = Address.Value;
+    data->_pointerOffsets = ConvertPointerOffsets(Offsets);
+    ipcSendToInstance(ipcData);
+}
+
+void UDolphinInstance::RequestReadUInt64(FDolphinUInt32 Address, TArray<FDolphinInt32> Offsets)
+{
+    CREATE_TO_INSTANCE_DATA(ReadMemory, ipcData, data)
+    data->_dataType = DolphinDataType::UInt64;
+    data->_address = Address.Value;
+    data->_pointerOffsets = ConvertPointerOffsets(Offsets);
+    ipcSendToInstance(ipcData);
+}
+
+void UDolphinInstance::RequestReadFloat(FDolphinUInt32 Address, TArray<FDolphinInt32> Offsets)
+{
+    CREATE_TO_INSTANCE_DATA(ReadMemory, ipcData, data)
+    data->_dataType = DolphinDataType::Float;
+    data->_address = Address.Value;
+    data->_pointerOffsets = ConvertPointerOffsets(Offsets);
+    ipcSendToInstance(ipcData);
+}
+
+void UDolphinInstance::RequestReadDouble(FDolphinUInt32 Address, TArray<FDolphinInt32> Offsets)
+{
+    CREATE_TO_INSTANCE_DATA(ReadMemory, ipcData, data)
+    data->_dataType = DolphinDataType::Double;
+    data->_address = Address.Value;
+    data->_pointerOffsets = ConvertPointerOffsets(Offsets);
+    ipcSendToInstance(ipcData);
+}
+
+void UDolphinInstance::RequestReadString(FDolphinUInt32 Address, TArray<FDolphinInt32> Offsets, int32 StringLength)
+{
+    CREATE_TO_INSTANCE_DATA(ReadMemory, ipcData, data)
+    data->_dataType = DolphinDataType::String;
+    data->_address = Address.Value;
+    data->_pointerOffsets = ConvertPointerOffsets(Offsets);
+    data->_stringOrVectorLength = StringLength;
+    ipcSendToInstance(ipcData);
+}
+
+void UDolphinInstance::RequestReadArrayOfBytes(FDolphinUInt32 Address, TArray<FDolphinInt32> Offsets, int32 ByteCount)
+{
+    CREATE_TO_INSTANCE_DATA(ReadMemory, ipcData, data)
+    data->_dataType = DolphinDataType::ArrayOfBytes;
+    data->_address = Address.Value;
+    data->_pointerOffsets = ConvertPointerOffsets(Offsets);
+    data->_stringOrVectorLength = ByteCount;
+    ipcSendToInstance(ipcData);
+}
+
+void UDolphinInstance::RequestReadArrayOfUBytes(FDolphinUInt32 Address, TArray<FDolphinInt32> Offsets, int32 ByteCount)
+{
+    CREATE_TO_INSTANCE_DATA(ReadMemory, ipcData, data)
+    data->_dataType = DolphinDataType::ArrayOfUBytes;
+    data->_address = Address.Value;
+    data->_pointerOffsets = ConvertPointerOffsets(Offsets);
+    data->_stringOrVectorLength = ByteCount;
     ipcSendToInstance(ipcData);
 }
 
