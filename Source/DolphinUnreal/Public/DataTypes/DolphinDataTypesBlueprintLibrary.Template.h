@@ -29,6 +29,30 @@ public:
 		{{FAVORITES}}
 	}
 
+	UFUNCTION(BlueprintPure, Category = "Dolphin|Dolphin Data Types", DisplayName = "Make Offset", meta = (Keywords = "Make Create Int32 int integer Offsets Array"))
+	static TArray<FDolphinInt32> MakeOffset(int32 A)
+	{
+		return TArray<FDolphinInt32> { FDolphinInt32(A) };
+	}
+
+	UFUNCTION(BlueprintPure, Category = "Dolphin|Dolphin Data Types", DisplayName = "Make Offsets", meta = (CommutativeAssociativeBinaryOperator = "true", Keywords = "Make Create Int32 int integer Offsets Array"))
+	static TArray<FDolphinInt32> MakeOffsets(int32 A, int32 B)
+	{
+		return TArray<FDolphinInt32> { FDolphinInt32(A), FDolphinInt32(B) };
+	}
+
+	UFUNCTION(BlueprintPure, Category = "Dolphin|Dolphin Data Types", DisplayName = "Make Offset from Hex", meta = (Keywords = "Make Create Int32 int integer Offsets Array from Hex Hexadecimal"))
+	static TArray<FDolphinInt32> MakeOffsetFromHex(FString A)
+	{
+		return TArray<FDolphinInt32> { FDolphinInt32(FParse::HexNumber(*CleanHexString(A, 4))) };
+	}
+
+	UFUNCTION(BlueprintPure, Category = "Dolphin|Dolphin Data Types", DisplayName = "Make Offsets from Hex", meta = (CommutativeAssociativeBinaryOperator = "true", Keywords = "Make Create Int32 int integer Offsets Array from Hex Hexadecimal"))
+	static TArray<FDolphinInt32> MakeOffsetsFromHex(const FString& A, const FString& B)
+	{
+		return TArray<FDolphinInt32> { FDolphinInt32(FParse::HexNumber(*CleanHexString(A, 4))), FDolphinInt32(FParse::HexNumber(*CleanHexString(B, 4))) };
+	}
+
 	{{MAKE}}
 	{{CAST}}
 	{{OPERATORS}}
@@ -45,18 +69,8 @@ private:
 		// TODO: This can probably be optimized significantly
 		TArray<uint8> Bytes = TArray<uint8>();
 		Bytes.AddDefaulted(ByteCount);
-		HexString = HexString.TrimStartAndEnd().Replace(TEXT(" "), TEXT(""));
 
-		if (HexString.StartsWith("0x") || HexString.StartsWith("0X"))
-		{
-			HexString.RightChopInline(2);
-		}
-
-		while (HexString.Len() < ByteCount)
-		{
-			HexString = "0" + HexString;
-		}
-
+		HexString = CleanHexString(HexString, ByteCount);
 		FString OriginalHexString = HexString;
 
 		for (int32 Index = 0; Index < HexString.Len(); Index++)
@@ -70,6 +84,36 @@ private:
 		uint32 Okay = *reinterpret_cast<uint32*>(Bytes.GetData());
 
 		return Bytes;
+	}
+
+	static FString CleanHexString(FString HexString, int32 ByteCount)
+	{
+		HexString = HexString.TrimStartAndEnd().Replace(TEXT(" "), TEXT(""));
+
+		if (HexString.StartsWith("0x") || HexString.StartsWith("0X"))
+		{
+			HexString.RightChopInline(2);
+		}
+
+		while (HexString.Len() < ByteCount)
+		{
+			HexString = "0" + HexString;
+		}
+
+		if (HexString.Len() > ByteCount)
+		{
+			HexString.LeftChopInline(HexString.Len() - ByteCount);
+		}
+
+		for (int32 Index = 0; Index < HexString.Len(); Index++)
+		{
+			if (!CheckTCharIsHex(HexString[Index]))
+			{
+				HexString[Index] = '0';
+			}
+		}
+
+		return HexString;
 	}
 };
 

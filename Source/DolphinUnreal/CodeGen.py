@@ -313,6 +313,20 @@ def generateArrayCastHeader(dataType, castDataType):
     return '\tUFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast ' + dataType + " Array to " + castDataType + ' Array"' + \
         ', meta = (Keywords = "Cast Convert Array ' + dataType + ' ' + dataTypeKeywords + ' to ' + castDataType + ' ' + castDataTypeKeywords + '"))\n'
         
+def generateToUnrealArrayCastHeader(dataType, unrealDataType):
+    unrealPrimitive = dataTypeTable[unrealDataType]['primitive']
+    dataTypeKeywords = dataTypeTable[dataType]['keywords']
+    unrealDataTypeKeywords = dataTypeTable[unrealDataType]['keywords']
+    return '\tUFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast ' + dataType + " Array to Unreal " + unrealPrimitive + ' Array"' + \
+        ', meta = (Keywords = "Cast Convert ' + dataType + ' ' + dataTypeKeywords + ' Array to ' + unrealDataType + ' ' + unrealDataTypeKeywords + '"))\n'
+        
+def generateFromUnrealArrayCastHeader(dataType, unrealDataType):
+    unrealPrimitive = dataTypeTable[unrealDataType]['primitive']
+    dataTypeKeywords = dataTypeTable[dataType]['keywords']
+    unrealDataTypeKeywords = dataTypeTable[unrealDataType]['keywords']
+    return '\tUFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Unreal ' + unrealPrimitive + " Array to " + dataType + ' Array"' + \
+        ', meta = (Keywords = "Cast Convert ' + dataType + ' ' + dataTypeKeywords + ' Array to ' + unrealDataType + ' ' + unrealDataTypeKeywords + '"))\n'
+        
 def generateArrayCastsForDataType(dataType):
     result = ""
     primitive = dataTypeTable[dataType]['primitive']
@@ -334,7 +348,7 @@ def generateArrayCastsForDataType(dataType):
 
     for unrealDataType in unrealDataTypes:
         unrealPrimitive = dataTypeTable[unrealDataType]['primitive']
-        result += generateUnrealCastHeader(dataType, unrealDataType)
+        result += generateToUnrealArrayCastHeader(dataType, unrealDataType)
         result += '\tstatic TArray<' + unrealPrimitive + '> Cast' + dataType + 'ArrayToUnreal' + unrealDataType + 'Array(const TArray<FDolphin' + dataType + '>& Value)\n'
         result += '\t{\n'
         result += '\t\tTArray<' + unrealPrimitive + '> Results;\n'
@@ -344,12 +358,60 @@ def generateArrayCastsForDataType(dataType):
         result += '\t\t}\n'
         result += '\t\treturn Results;\n'
         result += '\t}\n\n'
+
+    for unrealDataType in unrealDataTypes:
+        unrealPrimitive = dataTypeTable[unrealDataType]['primitive']
+        result += generateFromUnrealArrayCastHeader(dataType, unrealDataType)
+        result += '\tstatic TArray<FDolphin' + dataType + '> CastUnreal' + unrealDataType + 'ArrayTo' + dataType + 'Array(const TArray<' + unrealPrimitive + '>& Value)\n'
+        result += '\t{\n'
+        result += '\t\tTArray<FDolphin' + dataType + '> Results;\n'
+        result += '\t\tfor (const ' + unrealPrimitive + '& Next : Value)\n'
+        result += '\t\t{\n'
+        result += '\t\t\tResults.Add(static_cast<' + primitive + '>(Next));\n'
+        result += '\t\t}\n'
+        result += '\t\treturn Results;\n'
+        result += '\t}\n\n'
         
     return result
 
+def generateByteArrayHeader(dataType, signed):
+    dataTypeKeywords = dataTypeTable[dataType]['keywords']
+    name = "Bytes" if signed else "UBytes"
+    return '\tUFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Extract ' + dataType + ' To Raw ' + name + '"' + \
+        ', meta = (Keywords = "Get Cast Convert Extract ' + dataType + ' ' + dataTypeKeywords + ' to Raw ' + name + '"))\n'
+
+def generateByteArrayForDataType(dataType):
+    result = ""
+    primitive = dataTypeTable[dataType]['primitive']
+    numBytes = dataTypeTable[dataType]['bytes']
+    
+    if numBytes <= 1:
+        return ""
+     
+    result += generateByteArrayHeader(dataType, True)
+    result += '\tstatic TArray<FDolphinInt8> Extract' + dataType + 'ToRawBytes(const FDolphin' + dataType + '& Value)\n'
+    result += '\t{\n'
+    result += '\t\tTArray<uint8> Bytes;\n'
+    result += '\t\tBytes.AddZeroed(sizeof(Value.Value));\n'
+    result += '\t\tFMemory::Memcpy(Bytes.GetData(), &Value.Value, sizeof(Value.Value));\n'
+    result += '\t\treturn CastUnrealUInt8ArrayToInt8Array(Bytes);\n'
+    result += '\t}\n\n'
+    
+    result += generateByteArrayHeader(dataType, False)
+    result += '\tstatic TArray<FDolphinUInt8> Extract' + dataType + 'ToRawUBytes(const FDolphin' + dataType + '& Value)\n'
+    result += '\t{\n'
+    result += '\t\tTArray<uint8> Bytes;\n'
+    result += '\t\tBytes.AddZeroed(sizeof(Value.Value));\n'
+    result += '\t\tFMemory::Memcpy(Bytes.GetData(), &Value.Value, sizeof(Value.Value));\n'
+    result += '\t\treturn CastUnrealUInt8ArrayToUInt8Array(Bytes);\n'
+    result += '\t}\n\n'
+        
+    return result
+    
 def generateCastsForDataType(dataType):
     return generatePrimitiveCastsForDataType(dataType) + \
-        generateArrayCastsForDataType(dataType)
+        generateArrayCastsForDataType(dataType) + \
+        generateByteArrayForDataType(dataType)
 
 def generateCastsForAllDataTypes():
     header = """//////////////////////////////////////////////////////////////////////////////////

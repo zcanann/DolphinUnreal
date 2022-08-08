@@ -160,6 +160,30 @@ public:
 
 	}
 
+	UFUNCTION(BlueprintPure, Category = "Dolphin|Dolphin Data Types", DisplayName = "Make Offset", meta = (Keywords = "Make Create Int32 int integer Offsets Array"))
+	static TArray<FDolphinInt32> MakeOffset(int32 A)
+	{
+		return TArray<FDolphinInt32> { FDolphinInt32(A) };
+	}
+
+	UFUNCTION(BlueprintPure, Category = "Dolphin|Dolphin Data Types", DisplayName = "Make Offsets", meta = (CommutativeAssociativeBinaryOperator = "true", Keywords = "Make Create Int32 int integer Offsets Array"))
+	static TArray<FDolphinInt32> MakeOffsets(int32 A, int32 B)
+	{
+		return TArray<FDolphinInt32> { FDolphinInt32(A), FDolphinInt32(B) };
+	}
+
+	UFUNCTION(BlueprintPure, Category = "Dolphin|Dolphin Data Types", DisplayName = "Make Offset from Hex", meta = (Keywords = "Make Create Int32 int integer Offsets Array from Hex Hexadecimal"))
+	static TArray<FDolphinInt32> MakeOffsetFromHex(FString A)
+	{
+		return TArray<FDolphinInt32> { FDolphinInt32(FParse::HexNumber(*CleanHexString(A, 4))) };
+	}
+
+	UFUNCTION(BlueprintPure, Category = "Dolphin|Dolphin Data Types", DisplayName = "Make Offsets from Hex", meta = (CommutativeAssociativeBinaryOperator = "true", Keywords = "Make Create Int32 int integer Offsets Array from Hex Hexadecimal"))
+	static TArray<FDolphinInt32> MakeOffsetsFromHex(const FString& A, const FString& B)
+	{
+		return TArray<FDolphinInt32> { FDolphinInt32(FParse::HexNumber(*CleanHexString(A, 4))), FDolphinInt32(FParse::HexNumber(*CleanHexString(B, 4))) };
+	}
+
 	//////////////////////////////////////////////////////////////////////////////////
     //                                     MAKE                                     //
     //////////////////////////////////////////////////////////////////////////////////
@@ -548,7 +572,7 @@ public:
 		return Results;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast UInt8 to Unreal uint8", meta = (Keywords = "Cast Convert UInt8 unsigned uint8 char byte ubyte to UInt8 unsigned uint8 char byte ubyte"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast UInt8 Array to Unreal uint8 Array", meta = (Keywords = "Cast Convert UInt8 unsigned uint8 char byte ubyte Array to UInt8 unsigned uint8 char byte ubyte"))
 	static TArray<uint8> CastUInt8ArrayToUnrealUInt8Array(const TArray<FDolphinUInt8>& Value)
 	{
 		TArray<uint8> Results;
@@ -559,7 +583,7 @@ public:
 		return Results;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast UInt8 to Unreal int32", meta = (Keywords = "Cast Convert UInt8 unsigned uint8 char byte ubyte to Int32 signed int32 int int integer"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast UInt8 Array to Unreal int32 Array", meta = (Keywords = "Cast Convert UInt8 unsigned uint8 char byte ubyte Array to Int32 signed int32 int int integer"))
 	static TArray<int32> CastUInt8ArrayToUnrealInt32Array(const TArray<FDolphinUInt8>& Value)
 	{
 		TArray<int32> Results;
@@ -570,7 +594,7 @@ public:
 		return Results;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast UInt8 to Unreal int64", meta = (Keywords = "Cast Convert UInt8 unsigned uint8 char byte ubyte to Int64 signed int64 long int integer"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast UInt8 Array to Unreal int64 Array", meta = (Keywords = "Cast Convert UInt8 unsigned uint8 char byte ubyte Array to Int64 signed int64 long int integer"))
 	static TArray<int64> CastUInt8ArrayToUnrealInt64Array(const TArray<FDolphinUInt8>& Value)
 	{
 		TArray<int64> Results;
@@ -581,13 +605,57 @@ public:
 		return Results;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast UInt8 to Unreal float", meta = (Keywords = "Cast Convert UInt8 unsigned uint8 char byte ubyte to Float float decimal single single-precision"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast UInt8 Array to Unreal float Array", meta = (Keywords = "Cast Convert UInt8 unsigned uint8 char byte ubyte Array to Float float decimal single single-precision"))
 	static TArray<float> CastUInt8ArrayToUnrealFloatArray(const TArray<FDolphinUInt8>& Value)
 	{
 		TArray<float> Results;
 		for (const FDolphinUInt8& Next : Value)
 		{
 			Results.Add(static_cast<float>(Next));
+		}
+		return Results;
+	}
+
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Unreal uint8 Array to UInt8 Array", meta = (Keywords = "Cast Convert UInt8 unsigned uint8 char byte ubyte Array to UInt8 unsigned uint8 char byte ubyte"))
+	static TArray<FDolphinUInt8> CastUnrealUInt8ArrayToUInt8Array(const TArray<uint8>& Value)
+	{
+		TArray<FDolphinUInt8> Results;
+		for (const uint8& Next : Value)
+		{
+			Results.Add(static_cast<uint8>(Next));
+		}
+		return Results;
+	}
+
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Unreal int32 Array to UInt8 Array", meta = (Keywords = "Cast Convert UInt8 unsigned uint8 char byte ubyte Array to Int32 signed int32 int int integer"))
+	static TArray<FDolphinUInt8> CastUnrealInt32ArrayToUInt8Array(const TArray<int32>& Value)
+	{
+		TArray<FDolphinUInt8> Results;
+		for (const int32& Next : Value)
+		{
+			Results.Add(static_cast<uint8>(Next));
+		}
+		return Results;
+	}
+
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Unreal int64 Array to UInt8 Array", meta = (Keywords = "Cast Convert UInt8 unsigned uint8 char byte ubyte Array to Int64 signed int64 long int integer"))
+	static TArray<FDolphinUInt8> CastUnrealInt64ArrayToUInt8Array(const TArray<int64>& Value)
+	{
+		TArray<FDolphinUInt8> Results;
+		for (const int64& Next : Value)
+		{
+			Results.Add(static_cast<uint8>(Next));
+		}
+		return Results;
+	}
+
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Unreal float Array to UInt8 Array", meta = (Keywords = "Cast Convert UInt8 unsigned uint8 char byte ubyte Array to Float float decimal single single-precision"))
+	static TArray<FDolphinUInt8> CastUnrealFloatArrayToUInt8Array(const TArray<float>& Value)
+	{
+		TArray<FDolphinUInt8> Results;
+		for (const float& Next : Value)
+		{
+			Results.Add(static_cast<uint8>(Next));
 		}
 		return Results;
 	}
@@ -769,7 +837,7 @@ public:
 		return Results;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast UInt16 to Unreal uint8", meta = (Keywords = "Cast Convert UInt16 unsigned uint16 short ushort to UInt8 unsigned uint8 char byte ubyte"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast UInt16 Array to Unreal uint8 Array", meta = (Keywords = "Cast Convert UInt16 unsigned uint16 short ushort Array to UInt8 unsigned uint8 char byte ubyte"))
 	static TArray<uint8> CastUInt16ArrayToUnrealUInt8Array(const TArray<FDolphinUInt16>& Value)
 	{
 		TArray<uint8> Results;
@@ -780,7 +848,7 @@ public:
 		return Results;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast UInt16 to Unreal int32", meta = (Keywords = "Cast Convert UInt16 unsigned uint16 short ushort to Int32 signed int32 int int integer"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast UInt16 Array to Unreal int32 Array", meta = (Keywords = "Cast Convert UInt16 unsigned uint16 short ushort Array to Int32 signed int32 int int integer"))
 	static TArray<int32> CastUInt16ArrayToUnrealInt32Array(const TArray<FDolphinUInt16>& Value)
 	{
 		TArray<int32> Results;
@@ -791,7 +859,7 @@ public:
 		return Results;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast UInt16 to Unreal int64", meta = (Keywords = "Cast Convert UInt16 unsigned uint16 short ushort to Int64 signed int64 long int integer"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast UInt16 Array to Unreal int64 Array", meta = (Keywords = "Cast Convert UInt16 unsigned uint16 short ushort Array to Int64 signed int64 long int integer"))
 	static TArray<int64> CastUInt16ArrayToUnrealInt64Array(const TArray<FDolphinUInt16>& Value)
 	{
 		TArray<int64> Results;
@@ -802,7 +870,7 @@ public:
 		return Results;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast UInt16 to Unreal float", meta = (Keywords = "Cast Convert UInt16 unsigned uint16 short ushort to Float float decimal single single-precision"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast UInt16 Array to Unreal float Array", meta = (Keywords = "Cast Convert UInt16 unsigned uint16 short ushort Array to Float float decimal single single-precision"))
 	static TArray<float> CastUInt16ArrayToUnrealFloatArray(const TArray<FDolphinUInt16>& Value)
 	{
 		TArray<float> Results;
@@ -811,6 +879,68 @@ public:
 			Results.Add(static_cast<float>(Next));
 		}
 		return Results;
+	}
+
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Unreal uint8 Array to UInt16 Array", meta = (Keywords = "Cast Convert UInt16 unsigned uint16 short ushort Array to UInt8 unsigned uint8 char byte ubyte"))
+	static TArray<FDolphinUInt16> CastUnrealUInt8ArrayToUInt16Array(const TArray<uint8>& Value)
+	{
+		TArray<FDolphinUInt16> Results;
+		for (const uint8& Next : Value)
+		{
+			Results.Add(static_cast<uint16>(Next));
+		}
+		return Results;
+	}
+
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Unreal int32 Array to UInt16 Array", meta = (Keywords = "Cast Convert UInt16 unsigned uint16 short ushort Array to Int32 signed int32 int int integer"))
+	static TArray<FDolphinUInt16> CastUnrealInt32ArrayToUInt16Array(const TArray<int32>& Value)
+	{
+		TArray<FDolphinUInt16> Results;
+		for (const int32& Next : Value)
+		{
+			Results.Add(static_cast<uint16>(Next));
+		}
+		return Results;
+	}
+
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Unreal int64 Array to UInt16 Array", meta = (Keywords = "Cast Convert UInt16 unsigned uint16 short ushort Array to Int64 signed int64 long int integer"))
+	static TArray<FDolphinUInt16> CastUnrealInt64ArrayToUInt16Array(const TArray<int64>& Value)
+	{
+		TArray<FDolphinUInt16> Results;
+		for (const int64& Next : Value)
+		{
+			Results.Add(static_cast<uint16>(Next));
+		}
+		return Results;
+	}
+
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Unreal float Array to UInt16 Array", meta = (Keywords = "Cast Convert UInt16 unsigned uint16 short ushort Array to Float float decimal single single-precision"))
+	static TArray<FDolphinUInt16> CastUnrealFloatArrayToUInt16Array(const TArray<float>& Value)
+	{
+		TArray<FDolphinUInt16> Results;
+		for (const float& Next : Value)
+		{
+			Results.Add(static_cast<uint16>(Next));
+		}
+		return Results;
+	}
+
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Extract UInt16 To Raw Bytes", meta = (Keywords = "Get Cast Convert Extract UInt16 unsigned uint16 short ushort to Raw Bytes"))
+	static TArray<FDolphinInt8> ExtractUInt16ToRawBytes(const FDolphinUInt16& Value)
+	{
+		TArray<uint8> Bytes;
+		Bytes.AddZeroed(sizeof(Value.Value));
+		FMemory::Memcpy(Bytes.GetData(), &Value.Value, sizeof(Value.Value));
+		return CastUnrealUInt8ArrayToInt8Array(Bytes);
+	}
+
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Extract UInt16 To Raw UBytes", meta = (Keywords = "Get Cast Convert Extract UInt16 unsigned uint16 short ushort to Raw UBytes"))
+	static TArray<FDolphinUInt8> ExtractUInt16ToRawUBytes(const FDolphinUInt16& Value)
+	{
+		TArray<uint8> Bytes;
+		Bytes.AddZeroed(sizeof(Value.Value));
+		FMemory::Memcpy(Bytes.GetData(), &Value.Value, sizeof(Value.Value));
+		return CastUnrealUInt8ArrayToUInt8Array(Bytes);
 	}
 
 	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast UInt32 to UInt8", meta = (Keywords = "Cast Convert UInt32 unsigned uint32 int uint integer to UInt8 unsigned uint8 char byte ubyte"))
@@ -990,7 +1120,7 @@ public:
 		return Results;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast UInt32 to Unreal uint8", meta = (Keywords = "Cast Convert UInt32 unsigned uint32 int uint integer to UInt8 unsigned uint8 char byte ubyte"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast UInt32 Array to Unreal uint8 Array", meta = (Keywords = "Cast Convert UInt32 unsigned uint32 int uint integer Array to UInt8 unsigned uint8 char byte ubyte"))
 	static TArray<uint8> CastUInt32ArrayToUnrealUInt8Array(const TArray<FDolphinUInt32>& Value)
 	{
 		TArray<uint8> Results;
@@ -1001,7 +1131,7 @@ public:
 		return Results;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast UInt32 to Unreal int32", meta = (Keywords = "Cast Convert UInt32 unsigned uint32 int uint integer to Int32 signed int32 int int integer"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast UInt32 Array to Unreal int32 Array", meta = (Keywords = "Cast Convert UInt32 unsigned uint32 int uint integer Array to Int32 signed int32 int int integer"))
 	static TArray<int32> CastUInt32ArrayToUnrealInt32Array(const TArray<FDolphinUInt32>& Value)
 	{
 		TArray<int32> Results;
@@ -1012,7 +1142,7 @@ public:
 		return Results;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast UInt32 to Unreal int64", meta = (Keywords = "Cast Convert UInt32 unsigned uint32 int uint integer to Int64 signed int64 long int integer"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast UInt32 Array to Unreal int64 Array", meta = (Keywords = "Cast Convert UInt32 unsigned uint32 int uint integer Array to Int64 signed int64 long int integer"))
 	static TArray<int64> CastUInt32ArrayToUnrealInt64Array(const TArray<FDolphinUInt32>& Value)
 	{
 		TArray<int64> Results;
@@ -1023,7 +1153,7 @@ public:
 		return Results;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast UInt32 to Unreal float", meta = (Keywords = "Cast Convert UInt32 unsigned uint32 int uint integer to Float float decimal single single-precision"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast UInt32 Array to Unreal float Array", meta = (Keywords = "Cast Convert UInt32 unsigned uint32 int uint integer Array to Float float decimal single single-precision"))
 	static TArray<float> CastUInt32ArrayToUnrealFloatArray(const TArray<FDolphinUInt32>& Value)
 	{
 		TArray<float> Results;
@@ -1032,6 +1162,68 @@ public:
 			Results.Add(static_cast<float>(Next));
 		}
 		return Results;
+	}
+
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Unreal uint8 Array to UInt32 Array", meta = (Keywords = "Cast Convert UInt32 unsigned uint32 int uint integer Array to UInt8 unsigned uint8 char byte ubyte"))
+	static TArray<FDolphinUInt32> CastUnrealUInt8ArrayToUInt32Array(const TArray<uint8>& Value)
+	{
+		TArray<FDolphinUInt32> Results;
+		for (const uint8& Next : Value)
+		{
+			Results.Add(static_cast<uint32>(Next));
+		}
+		return Results;
+	}
+
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Unreal int32 Array to UInt32 Array", meta = (Keywords = "Cast Convert UInt32 unsigned uint32 int uint integer Array to Int32 signed int32 int int integer"))
+	static TArray<FDolphinUInt32> CastUnrealInt32ArrayToUInt32Array(const TArray<int32>& Value)
+	{
+		TArray<FDolphinUInt32> Results;
+		for (const int32& Next : Value)
+		{
+			Results.Add(static_cast<uint32>(Next));
+		}
+		return Results;
+	}
+
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Unreal int64 Array to UInt32 Array", meta = (Keywords = "Cast Convert UInt32 unsigned uint32 int uint integer Array to Int64 signed int64 long int integer"))
+	static TArray<FDolphinUInt32> CastUnrealInt64ArrayToUInt32Array(const TArray<int64>& Value)
+	{
+		TArray<FDolphinUInt32> Results;
+		for (const int64& Next : Value)
+		{
+			Results.Add(static_cast<uint32>(Next));
+		}
+		return Results;
+	}
+
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Unreal float Array to UInt32 Array", meta = (Keywords = "Cast Convert UInt32 unsigned uint32 int uint integer Array to Float float decimal single single-precision"))
+	static TArray<FDolphinUInt32> CastUnrealFloatArrayToUInt32Array(const TArray<float>& Value)
+	{
+		TArray<FDolphinUInt32> Results;
+		for (const float& Next : Value)
+		{
+			Results.Add(static_cast<uint32>(Next));
+		}
+		return Results;
+	}
+
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Extract UInt32 To Raw Bytes", meta = (Keywords = "Get Cast Convert Extract UInt32 unsigned uint32 int uint integer to Raw Bytes"))
+	static TArray<FDolphinInt8> ExtractUInt32ToRawBytes(const FDolphinUInt32& Value)
+	{
+		TArray<uint8> Bytes;
+		Bytes.AddZeroed(sizeof(Value.Value));
+		FMemory::Memcpy(Bytes.GetData(), &Value.Value, sizeof(Value.Value));
+		return CastUnrealUInt8ArrayToInt8Array(Bytes);
+	}
+
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Extract UInt32 To Raw UBytes", meta = (Keywords = "Get Cast Convert Extract UInt32 unsigned uint32 int uint integer to Raw UBytes"))
+	static TArray<FDolphinUInt8> ExtractUInt32ToRawUBytes(const FDolphinUInt32& Value)
+	{
+		TArray<uint8> Bytes;
+		Bytes.AddZeroed(sizeof(Value.Value));
+		FMemory::Memcpy(Bytes.GetData(), &Value.Value, sizeof(Value.Value));
+		return CastUnrealUInt8ArrayToUInt8Array(Bytes);
 	}
 
 	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast UInt64 to UInt8", meta = (Keywords = "Cast Convert UInt64 unsigned uint64 long int ulong integer to UInt8 unsigned uint8 char byte ubyte"))
@@ -1211,7 +1403,7 @@ public:
 		return Results;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast UInt64 to Unreal uint8", meta = (Keywords = "Cast Convert UInt64 unsigned uint64 long int ulong integer to UInt8 unsigned uint8 char byte ubyte"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast UInt64 Array to Unreal uint8 Array", meta = (Keywords = "Cast Convert UInt64 unsigned uint64 long int ulong integer Array to UInt8 unsigned uint8 char byte ubyte"))
 	static TArray<uint8> CastUInt64ArrayToUnrealUInt8Array(const TArray<FDolphinUInt64>& Value)
 	{
 		TArray<uint8> Results;
@@ -1222,7 +1414,7 @@ public:
 		return Results;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast UInt64 to Unreal int32", meta = (Keywords = "Cast Convert UInt64 unsigned uint64 long int ulong integer to Int32 signed int32 int int integer"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast UInt64 Array to Unreal int32 Array", meta = (Keywords = "Cast Convert UInt64 unsigned uint64 long int ulong integer Array to Int32 signed int32 int int integer"))
 	static TArray<int32> CastUInt64ArrayToUnrealInt32Array(const TArray<FDolphinUInt64>& Value)
 	{
 		TArray<int32> Results;
@@ -1233,7 +1425,7 @@ public:
 		return Results;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast UInt64 to Unreal int64", meta = (Keywords = "Cast Convert UInt64 unsigned uint64 long int ulong integer to Int64 signed int64 long int integer"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast UInt64 Array to Unreal int64 Array", meta = (Keywords = "Cast Convert UInt64 unsigned uint64 long int ulong integer Array to Int64 signed int64 long int integer"))
 	static TArray<int64> CastUInt64ArrayToUnrealInt64Array(const TArray<FDolphinUInt64>& Value)
 	{
 		TArray<int64> Results;
@@ -1244,7 +1436,7 @@ public:
 		return Results;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast UInt64 to Unreal float", meta = (Keywords = "Cast Convert UInt64 unsigned uint64 long int ulong integer to Float float decimal single single-precision"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast UInt64 Array to Unreal float Array", meta = (Keywords = "Cast Convert UInt64 unsigned uint64 long int ulong integer Array to Float float decimal single single-precision"))
 	static TArray<float> CastUInt64ArrayToUnrealFloatArray(const TArray<FDolphinUInt64>& Value)
 	{
 		TArray<float> Results;
@@ -1253,6 +1445,68 @@ public:
 			Results.Add(static_cast<float>(Next));
 		}
 		return Results;
+	}
+
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Unreal uint8 Array to UInt64 Array", meta = (Keywords = "Cast Convert UInt64 unsigned uint64 long int ulong integer Array to UInt8 unsigned uint8 char byte ubyte"))
+	static TArray<FDolphinUInt64> CastUnrealUInt8ArrayToUInt64Array(const TArray<uint8>& Value)
+	{
+		TArray<FDolphinUInt64> Results;
+		for (const uint8& Next : Value)
+		{
+			Results.Add(static_cast<uint64>(Next));
+		}
+		return Results;
+	}
+
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Unreal int32 Array to UInt64 Array", meta = (Keywords = "Cast Convert UInt64 unsigned uint64 long int ulong integer Array to Int32 signed int32 int int integer"))
+	static TArray<FDolphinUInt64> CastUnrealInt32ArrayToUInt64Array(const TArray<int32>& Value)
+	{
+		TArray<FDolphinUInt64> Results;
+		for (const int32& Next : Value)
+		{
+			Results.Add(static_cast<uint64>(Next));
+		}
+		return Results;
+	}
+
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Unreal int64 Array to UInt64 Array", meta = (Keywords = "Cast Convert UInt64 unsigned uint64 long int ulong integer Array to Int64 signed int64 long int integer"))
+	static TArray<FDolphinUInt64> CastUnrealInt64ArrayToUInt64Array(const TArray<int64>& Value)
+	{
+		TArray<FDolphinUInt64> Results;
+		for (const int64& Next : Value)
+		{
+			Results.Add(static_cast<uint64>(Next));
+		}
+		return Results;
+	}
+
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Unreal float Array to UInt64 Array", meta = (Keywords = "Cast Convert UInt64 unsigned uint64 long int ulong integer Array to Float float decimal single single-precision"))
+	static TArray<FDolphinUInt64> CastUnrealFloatArrayToUInt64Array(const TArray<float>& Value)
+	{
+		TArray<FDolphinUInt64> Results;
+		for (const float& Next : Value)
+		{
+			Results.Add(static_cast<uint64>(Next));
+		}
+		return Results;
+	}
+
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Extract UInt64 To Raw Bytes", meta = (Keywords = "Get Cast Convert Extract UInt64 unsigned uint64 long int ulong integer to Raw Bytes"))
+	static TArray<FDolphinInt8> ExtractUInt64ToRawBytes(const FDolphinUInt64& Value)
+	{
+		TArray<uint8> Bytes;
+		Bytes.AddZeroed(sizeof(Value.Value));
+		FMemory::Memcpy(Bytes.GetData(), &Value.Value, sizeof(Value.Value));
+		return CastUnrealUInt8ArrayToInt8Array(Bytes);
+	}
+
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Extract UInt64 To Raw UBytes", meta = (Keywords = "Get Cast Convert Extract UInt64 unsigned uint64 long int ulong integer to Raw UBytes"))
+	static TArray<FDolphinUInt8> ExtractUInt64ToRawUBytes(const FDolphinUInt64& Value)
+	{
+		TArray<uint8> Bytes;
+		Bytes.AddZeroed(sizeof(Value.Value));
+		FMemory::Memcpy(Bytes.GetData(), &Value.Value, sizeof(Value.Value));
+		return CastUnrealUInt8ArrayToUInt8Array(Bytes);
 	}
 
 	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Int8 to UInt8", meta = (Keywords = "Cast Convert Int8 signed int8 char byte to UInt8 unsigned uint8 char byte ubyte"))
@@ -1432,7 +1686,7 @@ public:
 		return Results;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Int8 to Unreal uint8", meta = (Keywords = "Cast Convert Int8 signed int8 char byte to UInt8 unsigned uint8 char byte ubyte"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Int8 Array to Unreal uint8 Array", meta = (Keywords = "Cast Convert Int8 signed int8 char byte Array to UInt8 unsigned uint8 char byte ubyte"))
 	static TArray<uint8> CastInt8ArrayToUnrealUInt8Array(const TArray<FDolphinInt8>& Value)
 	{
 		TArray<uint8> Results;
@@ -1443,7 +1697,7 @@ public:
 		return Results;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Int8 to Unreal int32", meta = (Keywords = "Cast Convert Int8 signed int8 char byte to Int32 signed int32 int int integer"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Int8 Array to Unreal int32 Array", meta = (Keywords = "Cast Convert Int8 signed int8 char byte Array to Int32 signed int32 int int integer"))
 	static TArray<int32> CastInt8ArrayToUnrealInt32Array(const TArray<FDolphinInt8>& Value)
 	{
 		TArray<int32> Results;
@@ -1454,7 +1708,7 @@ public:
 		return Results;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Int8 to Unreal int64", meta = (Keywords = "Cast Convert Int8 signed int8 char byte to Int64 signed int64 long int integer"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Int8 Array to Unreal int64 Array", meta = (Keywords = "Cast Convert Int8 signed int8 char byte Array to Int64 signed int64 long int integer"))
 	static TArray<int64> CastInt8ArrayToUnrealInt64Array(const TArray<FDolphinInt8>& Value)
 	{
 		TArray<int64> Results;
@@ -1465,13 +1719,57 @@ public:
 		return Results;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Int8 to Unreal float", meta = (Keywords = "Cast Convert Int8 signed int8 char byte to Float float decimal single single-precision"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Int8 Array to Unreal float Array", meta = (Keywords = "Cast Convert Int8 signed int8 char byte Array to Float float decimal single single-precision"))
 	static TArray<float> CastInt8ArrayToUnrealFloatArray(const TArray<FDolphinInt8>& Value)
 	{
 		TArray<float> Results;
 		for (const FDolphinInt8& Next : Value)
 		{
 			Results.Add(static_cast<float>(Next));
+		}
+		return Results;
+	}
+
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Unreal uint8 Array to Int8 Array", meta = (Keywords = "Cast Convert Int8 signed int8 char byte Array to UInt8 unsigned uint8 char byte ubyte"))
+	static TArray<FDolphinInt8> CastUnrealUInt8ArrayToInt8Array(const TArray<uint8>& Value)
+	{
+		TArray<FDolphinInt8> Results;
+		for (const uint8& Next : Value)
+		{
+			Results.Add(static_cast<int8>(Next));
+		}
+		return Results;
+	}
+
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Unreal int32 Array to Int8 Array", meta = (Keywords = "Cast Convert Int8 signed int8 char byte Array to Int32 signed int32 int int integer"))
+	static TArray<FDolphinInt8> CastUnrealInt32ArrayToInt8Array(const TArray<int32>& Value)
+	{
+		TArray<FDolphinInt8> Results;
+		for (const int32& Next : Value)
+		{
+			Results.Add(static_cast<int8>(Next));
+		}
+		return Results;
+	}
+
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Unreal int64 Array to Int8 Array", meta = (Keywords = "Cast Convert Int8 signed int8 char byte Array to Int64 signed int64 long int integer"))
+	static TArray<FDolphinInt8> CastUnrealInt64ArrayToInt8Array(const TArray<int64>& Value)
+	{
+		TArray<FDolphinInt8> Results;
+		for (const int64& Next : Value)
+		{
+			Results.Add(static_cast<int8>(Next));
+		}
+		return Results;
+	}
+
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Unreal float Array to Int8 Array", meta = (Keywords = "Cast Convert Int8 signed int8 char byte Array to Float float decimal single single-precision"))
+	static TArray<FDolphinInt8> CastUnrealFloatArrayToInt8Array(const TArray<float>& Value)
+	{
+		TArray<FDolphinInt8> Results;
+		for (const float& Next : Value)
+		{
+			Results.Add(static_cast<int8>(Next));
 		}
 		return Results;
 	}
@@ -1653,7 +1951,7 @@ public:
 		return Results;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Int16 to Unreal uint8", meta = (Keywords = "Cast Convert Int16 signed int16 short to UInt8 unsigned uint8 char byte ubyte"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Int16 Array to Unreal uint8 Array", meta = (Keywords = "Cast Convert Int16 signed int16 short Array to UInt8 unsigned uint8 char byte ubyte"))
 	static TArray<uint8> CastInt16ArrayToUnrealUInt8Array(const TArray<FDolphinInt16>& Value)
 	{
 		TArray<uint8> Results;
@@ -1664,7 +1962,7 @@ public:
 		return Results;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Int16 to Unreal int32", meta = (Keywords = "Cast Convert Int16 signed int16 short to Int32 signed int32 int int integer"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Int16 Array to Unreal int32 Array", meta = (Keywords = "Cast Convert Int16 signed int16 short Array to Int32 signed int32 int int integer"))
 	static TArray<int32> CastInt16ArrayToUnrealInt32Array(const TArray<FDolphinInt16>& Value)
 	{
 		TArray<int32> Results;
@@ -1675,7 +1973,7 @@ public:
 		return Results;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Int16 to Unreal int64", meta = (Keywords = "Cast Convert Int16 signed int16 short to Int64 signed int64 long int integer"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Int16 Array to Unreal int64 Array", meta = (Keywords = "Cast Convert Int16 signed int16 short Array to Int64 signed int64 long int integer"))
 	static TArray<int64> CastInt16ArrayToUnrealInt64Array(const TArray<FDolphinInt16>& Value)
 	{
 		TArray<int64> Results;
@@ -1686,7 +1984,7 @@ public:
 		return Results;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Int16 to Unreal float", meta = (Keywords = "Cast Convert Int16 signed int16 short to Float float decimal single single-precision"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Int16 Array to Unreal float Array", meta = (Keywords = "Cast Convert Int16 signed int16 short Array to Float float decimal single single-precision"))
 	static TArray<float> CastInt16ArrayToUnrealFloatArray(const TArray<FDolphinInt16>& Value)
 	{
 		TArray<float> Results;
@@ -1695,6 +1993,68 @@ public:
 			Results.Add(static_cast<float>(Next));
 		}
 		return Results;
+	}
+
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Unreal uint8 Array to Int16 Array", meta = (Keywords = "Cast Convert Int16 signed int16 short Array to UInt8 unsigned uint8 char byte ubyte"))
+	static TArray<FDolphinInt16> CastUnrealUInt8ArrayToInt16Array(const TArray<uint8>& Value)
+	{
+		TArray<FDolphinInt16> Results;
+		for (const uint8& Next : Value)
+		{
+			Results.Add(static_cast<int16>(Next));
+		}
+		return Results;
+	}
+
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Unreal int32 Array to Int16 Array", meta = (Keywords = "Cast Convert Int16 signed int16 short Array to Int32 signed int32 int int integer"))
+	static TArray<FDolphinInt16> CastUnrealInt32ArrayToInt16Array(const TArray<int32>& Value)
+	{
+		TArray<FDolphinInt16> Results;
+		for (const int32& Next : Value)
+		{
+			Results.Add(static_cast<int16>(Next));
+		}
+		return Results;
+	}
+
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Unreal int64 Array to Int16 Array", meta = (Keywords = "Cast Convert Int16 signed int16 short Array to Int64 signed int64 long int integer"))
+	static TArray<FDolphinInt16> CastUnrealInt64ArrayToInt16Array(const TArray<int64>& Value)
+	{
+		TArray<FDolphinInt16> Results;
+		for (const int64& Next : Value)
+		{
+			Results.Add(static_cast<int16>(Next));
+		}
+		return Results;
+	}
+
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Unreal float Array to Int16 Array", meta = (Keywords = "Cast Convert Int16 signed int16 short Array to Float float decimal single single-precision"))
+	static TArray<FDolphinInt16> CastUnrealFloatArrayToInt16Array(const TArray<float>& Value)
+	{
+		TArray<FDolphinInt16> Results;
+		for (const float& Next : Value)
+		{
+			Results.Add(static_cast<int16>(Next));
+		}
+		return Results;
+	}
+
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Extract Int16 To Raw Bytes", meta = (Keywords = "Get Cast Convert Extract Int16 signed int16 short to Raw Bytes"))
+	static TArray<FDolphinInt8> ExtractInt16ToRawBytes(const FDolphinInt16& Value)
+	{
+		TArray<uint8> Bytes;
+		Bytes.AddZeroed(sizeof(Value.Value));
+		FMemory::Memcpy(Bytes.GetData(), &Value.Value, sizeof(Value.Value));
+		return CastUnrealUInt8ArrayToInt8Array(Bytes);
+	}
+
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Extract Int16 To Raw UBytes", meta = (Keywords = "Get Cast Convert Extract Int16 signed int16 short to Raw UBytes"))
+	static TArray<FDolphinUInt8> ExtractInt16ToRawUBytes(const FDolphinInt16& Value)
+	{
+		TArray<uint8> Bytes;
+		Bytes.AddZeroed(sizeof(Value.Value));
+		FMemory::Memcpy(Bytes.GetData(), &Value.Value, sizeof(Value.Value));
+		return CastUnrealUInt8ArrayToUInt8Array(Bytes);
 	}
 
 	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Int32 to UInt8", meta = (Keywords = "Cast Convert Int32 signed int32 int int integer to UInt8 unsigned uint8 char byte ubyte"))
@@ -1874,7 +2234,7 @@ public:
 		return Results;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Int32 to Unreal uint8", meta = (Keywords = "Cast Convert Int32 signed int32 int int integer to UInt8 unsigned uint8 char byte ubyte"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Int32 Array to Unreal uint8 Array", meta = (Keywords = "Cast Convert Int32 signed int32 int int integer Array to UInt8 unsigned uint8 char byte ubyte"))
 	static TArray<uint8> CastInt32ArrayToUnrealUInt8Array(const TArray<FDolphinInt32>& Value)
 	{
 		TArray<uint8> Results;
@@ -1885,7 +2245,7 @@ public:
 		return Results;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Int32 to Unreal int32", meta = (Keywords = "Cast Convert Int32 signed int32 int int integer to Int32 signed int32 int int integer"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Int32 Array to Unreal int32 Array", meta = (Keywords = "Cast Convert Int32 signed int32 int int integer Array to Int32 signed int32 int int integer"))
 	static TArray<int32> CastInt32ArrayToUnrealInt32Array(const TArray<FDolphinInt32>& Value)
 	{
 		TArray<int32> Results;
@@ -1896,7 +2256,7 @@ public:
 		return Results;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Int32 to Unreal int64", meta = (Keywords = "Cast Convert Int32 signed int32 int int integer to Int64 signed int64 long int integer"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Int32 Array to Unreal int64 Array", meta = (Keywords = "Cast Convert Int32 signed int32 int int integer Array to Int64 signed int64 long int integer"))
 	static TArray<int64> CastInt32ArrayToUnrealInt64Array(const TArray<FDolphinInt32>& Value)
 	{
 		TArray<int64> Results;
@@ -1907,7 +2267,7 @@ public:
 		return Results;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Int32 to Unreal float", meta = (Keywords = "Cast Convert Int32 signed int32 int int integer to Float float decimal single single-precision"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Int32 Array to Unreal float Array", meta = (Keywords = "Cast Convert Int32 signed int32 int int integer Array to Float float decimal single single-precision"))
 	static TArray<float> CastInt32ArrayToUnrealFloatArray(const TArray<FDolphinInt32>& Value)
 	{
 		TArray<float> Results;
@@ -1916,6 +2276,68 @@ public:
 			Results.Add(static_cast<float>(Next));
 		}
 		return Results;
+	}
+
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Unreal uint8 Array to Int32 Array", meta = (Keywords = "Cast Convert Int32 signed int32 int int integer Array to UInt8 unsigned uint8 char byte ubyte"))
+	static TArray<FDolphinInt32> CastUnrealUInt8ArrayToInt32Array(const TArray<uint8>& Value)
+	{
+		TArray<FDolphinInt32> Results;
+		for (const uint8& Next : Value)
+		{
+			Results.Add(static_cast<int32>(Next));
+		}
+		return Results;
+	}
+
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Unreal int32 Array to Int32 Array", meta = (Keywords = "Cast Convert Int32 signed int32 int int integer Array to Int32 signed int32 int int integer"))
+	static TArray<FDolphinInt32> CastUnrealInt32ArrayToInt32Array(const TArray<int32>& Value)
+	{
+		TArray<FDolphinInt32> Results;
+		for (const int32& Next : Value)
+		{
+			Results.Add(static_cast<int32>(Next));
+		}
+		return Results;
+	}
+
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Unreal int64 Array to Int32 Array", meta = (Keywords = "Cast Convert Int32 signed int32 int int integer Array to Int64 signed int64 long int integer"))
+	static TArray<FDolphinInt32> CastUnrealInt64ArrayToInt32Array(const TArray<int64>& Value)
+	{
+		TArray<FDolphinInt32> Results;
+		for (const int64& Next : Value)
+		{
+			Results.Add(static_cast<int32>(Next));
+		}
+		return Results;
+	}
+
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Unreal float Array to Int32 Array", meta = (Keywords = "Cast Convert Int32 signed int32 int int integer Array to Float float decimal single single-precision"))
+	static TArray<FDolphinInt32> CastUnrealFloatArrayToInt32Array(const TArray<float>& Value)
+	{
+		TArray<FDolphinInt32> Results;
+		for (const float& Next : Value)
+		{
+			Results.Add(static_cast<int32>(Next));
+		}
+		return Results;
+	}
+
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Extract Int32 To Raw Bytes", meta = (Keywords = "Get Cast Convert Extract Int32 signed int32 int int integer to Raw Bytes"))
+	static TArray<FDolphinInt8> ExtractInt32ToRawBytes(const FDolphinInt32& Value)
+	{
+		TArray<uint8> Bytes;
+		Bytes.AddZeroed(sizeof(Value.Value));
+		FMemory::Memcpy(Bytes.GetData(), &Value.Value, sizeof(Value.Value));
+		return CastUnrealUInt8ArrayToInt8Array(Bytes);
+	}
+
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Extract Int32 To Raw UBytes", meta = (Keywords = "Get Cast Convert Extract Int32 signed int32 int int integer to Raw UBytes"))
+	static TArray<FDolphinUInt8> ExtractInt32ToRawUBytes(const FDolphinInt32& Value)
+	{
+		TArray<uint8> Bytes;
+		Bytes.AddZeroed(sizeof(Value.Value));
+		FMemory::Memcpy(Bytes.GetData(), &Value.Value, sizeof(Value.Value));
+		return CastUnrealUInt8ArrayToUInt8Array(Bytes);
 	}
 
 	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Int64 to UInt8", meta = (Keywords = "Cast Convert Int64 signed int64 long int integer to UInt8 unsigned uint8 char byte ubyte"))
@@ -2095,7 +2517,7 @@ public:
 		return Results;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Int64 to Unreal uint8", meta = (Keywords = "Cast Convert Int64 signed int64 long int integer to UInt8 unsigned uint8 char byte ubyte"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Int64 Array to Unreal uint8 Array", meta = (Keywords = "Cast Convert Int64 signed int64 long int integer Array to UInt8 unsigned uint8 char byte ubyte"))
 	static TArray<uint8> CastInt64ArrayToUnrealUInt8Array(const TArray<FDolphinInt64>& Value)
 	{
 		TArray<uint8> Results;
@@ -2106,7 +2528,7 @@ public:
 		return Results;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Int64 to Unreal int32", meta = (Keywords = "Cast Convert Int64 signed int64 long int integer to Int32 signed int32 int int integer"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Int64 Array to Unreal int32 Array", meta = (Keywords = "Cast Convert Int64 signed int64 long int integer Array to Int32 signed int32 int int integer"))
 	static TArray<int32> CastInt64ArrayToUnrealInt32Array(const TArray<FDolphinInt64>& Value)
 	{
 		TArray<int32> Results;
@@ -2117,7 +2539,7 @@ public:
 		return Results;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Int64 to Unreal int64", meta = (Keywords = "Cast Convert Int64 signed int64 long int integer to Int64 signed int64 long int integer"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Int64 Array to Unreal int64 Array", meta = (Keywords = "Cast Convert Int64 signed int64 long int integer Array to Int64 signed int64 long int integer"))
 	static TArray<int64> CastInt64ArrayToUnrealInt64Array(const TArray<FDolphinInt64>& Value)
 	{
 		TArray<int64> Results;
@@ -2128,7 +2550,7 @@ public:
 		return Results;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Int64 to Unreal float", meta = (Keywords = "Cast Convert Int64 signed int64 long int integer to Float float decimal single single-precision"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Int64 Array to Unreal float Array", meta = (Keywords = "Cast Convert Int64 signed int64 long int integer Array to Float float decimal single single-precision"))
 	static TArray<float> CastInt64ArrayToUnrealFloatArray(const TArray<FDolphinInt64>& Value)
 	{
 		TArray<float> Results;
@@ -2137,6 +2559,68 @@ public:
 			Results.Add(static_cast<float>(Next));
 		}
 		return Results;
+	}
+
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Unreal uint8 Array to Int64 Array", meta = (Keywords = "Cast Convert Int64 signed int64 long int integer Array to UInt8 unsigned uint8 char byte ubyte"))
+	static TArray<FDolphinInt64> CastUnrealUInt8ArrayToInt64Array(const TArray<uint8>& Value)
+	{
+		TArray<FDolphinInt64> Results;
+		for (const uint8& Next : Value)
+		{
+			Results.Add(static_cast<int64>(Next));
+		}
+		return Results;
+	}
+
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Unreal int32 Array to Int64 Array", meta = (Keywords = "Cast Convert Int64 signed int64 long int integer Array to Int32 signed int32 int int integer"))
+	static TArray<FDolphinInt64> CastUnrealInt32ArrayToInt64Array(const TArray<int32>& Value)
+	{
+		TArray<FDolphinInt64> Results;
+		for (const int32& Next : Value)
+		{
+			Results.Add(static_cast<int64>(Next));
+		}
+		return Results;
+	}
+
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Unreal int64 Array to Int64 Array", meta = (Keywords = "Cast Convert Int64 signed int64 long int integer Array to Int64 signed int64 long int integer"))
+	static TArray<FDolphinInt64> CastUnrealInt64ArrayToInt64Array(const TArray<int64>& Value)
+	{
+		TArray<FDolphinInt64> Results;
+		for (const int64& Next : Value)
+		{
+			Results.Add(static_cast<int64>(Next));
+		}
+		return Results;
+	}
+
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Unreal float Array to Int64 Array", meta = (Keywords = "Cast Convert Int64 signed int64 long int integer Array to Float float decimal single single-precision"))
+	static TArray<FDolphinInt64> CastUnrealFloatArrayToInt64Array(const TArray<float>& Value)
+	{
+		TArray<FDolphinInt64> Results;
+		for (const float& Next : Value)
+		{
+			Results.Add(static_cast<int64>(Next));
+		}
+		return Results;
+	}
+
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Extract Int64 To Raw Bytes", meta = (Keywords = "Get Cast Convert Extract Int64 signed int64 long int integer to Raw Bytes"))
+	static TArray<FDolphinInt8> ExtractInt64ToRawBytes(const FDolphinInt64& Value)
+	{
+		TArray<uint8> Bytes;
+		Bytes.AddZeroed(sizeof(Value.Value));
+		FMemory::Memcpy(Bytes.GetData(), &Value.Value, sizeof(Value.Value));
+		return CastUnrealUInt8ArrayToInt8Array(Bytes);
+	}
+
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Extract Int64 To Raw UBytes", meta = (Keywords = "Get Cast Convert Extract Int64 signed int64 long int integer to Raw UBytes"))
+	static TArray<FDolphinUInt8> ExtractInt64ToRawUBytes(const FDolphinInt64& Value)
+	{
+		TArray<uint8> Bytes;
+		Bytes.AddZeroed(sizeof(Value.Value));
+		FMemory::Memcpy(Bytes.GetData(), &Value.Value, sizeof(Value.Value));
+		return CastUnrealUInt8ArrayToUInt8Array(Bytes);
 	}
 
 	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Float to UInt8", meta = (Keywords = "Cast Convert Float float decimal single single-precision to UInt8 unsigned uint8 char byte ubyte"))
@@ -2316,7 +2800,7 @@ public:
 		return Results;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Float to Unreal uint8", meta = (Keywords = "Cast Convert Float float decimal single single-precision to UInt8 unsigned uint8 char byte ubyte"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Float Array to Unreal uint8 Array", meta = (Keywords = "Cast Convert Float float decimal single single-precision Array to UInt8 unsigned uint8 char byte ubyte"))
 	static TArray<uint8> CastFloatArrayToUnrealUInt8Array(const TArray<FDolphinFloat>& Value)
 	{
 		TArray<uint8> Results;
@@ -2327,7 +2811,7 @@ public:
 		return Results;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Float to Unreal int32", meta = (Keywords = "Cast Convert Float float decimal single single-precision to Int32 signed int32 int int integer"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Float Array to Unreal int32 Array", meta = (Keywords = "Cast Convert Float float decimal single single-precision Array to Int32 signed int32 int int integer"))
 	static TArray<int32> CastFloatArrayToUnrealInt32Array(const TArray<FDolphinFloat>& Value)
 	{
 		TArray<int32> Results;
@@ -2338,7 +2822,7 @@ public:
 		return Results;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Float to Unreal int64", meta = (Keywords = "Cast Convert Float float decimal single single-precision to Int64 signed int64 long int integer"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Float Array to Unreal int64 Array", meta = (Keywords = "Cast Convert Float float decimal single single-precision Array to Int64 signed int64 long int integer"))
 	static TArray<int64> CastFloatArrayToUnrealInt64Array(const TArray<FDolphinFloat>& Value)
 	{
 		TArray<int64> Results;
@@ -2349,7 +2833,7 @@ public:
 		return Results;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Float to Unreal float", meta = (Keywords = "Cast Convert Float float decimal single single-precision to Float float decimal single single-precision"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Float Array to Unreal float Array", meta = (Keywords = "Cast Convert Float float decimal single single-precision Array to Float float decimal single single-precision"))
 	static TArray<float> CastFloatArrayToUnrealFloatArray(const TArray<FDolphinFloat>& Value)
 	{
 		TArray<float> Results;
@@ -2358,6 +2842,68 @@ public:
 			Results.Add(static_cast<float>(Next));
 		}
 		return Results;
+	}
+
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Unreal uint8 Array to Float Array", meta = (Keywords = "Cast Convert Float float decimal single single-precision Array to UInt8 unsigned uint8 char byte ubyte"))
+	static TArray<FDolphinFloat> CastUnrealUInt8ArrayToFloatArray(const TArray<uint8>& Value)
+	{
+		TArray<FDolphinFloat> Results;
+		for (const uint8& Next : Value)
+		{
+			Results.Add(static_cast<float>(Next));
+		}
+		return Results;
+	}
+
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Unreal int32 Array to Float Array", meta = (Keywords = "Cast Convert Float float decimal single single-precision Array to Int32 signed int32 int int integer"))
+	static TArray<FDolphinFloat> CastUnrealInt32ArrayToFloatArray(const TArray<int32>& Value)
+	{
+		TArray<FDolphinFloat> Results;
+		for (const int32& Next : Value)
+		{
+			Results.Add(static_cast<float>(Next));
+		}
+		return Results;
+	}
+
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Unreal int64 Array to Float Array", meta = (Keywords = "Cast Convert Float float decimal single single-precision Array to Int64 signed int64 long int integer"))
+	static TArray<FDolphinFloat> CastUnrealInt64ArrayToFloatArray(const TArray<int64>& Value)
+	{
+		TArray<FDolphinFloat> Results;
+		for (const int64& Next : Value)
+		{
+			Results.Add(static_cast<float>(Next));
+		}
+		return Results;
+	}
+
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Unreal float Array to Float Array", meta = (Keywords = "Cast Convert Float float decimal single single-precision Array to Float float decimal single single-precision"))
+	static TArray<FDolphinFloat> CastUnrealFloatArrayToFloatArray(const TArray<float>& Value)
+	{
+		TArray<FDolphinFloat> Results;
+		for (const float& Next : Value)
+		{
+			Results.Add(static_cast<float>(Next));
+		}
+		return Results;
+	}
+
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Extract Float To Raw Bytes", meta = (Keywords = "Get Cast Convert Extract Float float decimal single single-precision to Raw Bytes"))
+	static TArray<FDolphinInt8> ExtractFloatToRawBytes(const FDolphinFloat& Value)
+	{
+		TArray<uint8> Bytes;
+		Bytes.AddZeroed(sizeof(Value.Value));
+		FMemory::Memcpy(Bytes.GetData(), &Value.Value, sizeof(Value.Value));
+		return CastUnrealUInt8ArrayToInt8Array(Bytes);
+	}
+
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Extract Float To Raw UBytes", meta = (Keywords = "Get Cast Convert Extract Float float decimal single single-precision to Raw UBytes"))
+	static TArray<FDolphinUInt8> ExtractFloatToRawUBytes(const FDolphinFloat& Value)
+	{
+		TArray<uint8> Bytes;
+		Bytes.AddZeroed(sizeof(Value.Value));
+		FMemory::Memcpy(Bytes.GetData(), &Value.Value, sizeof(Value.Value));
+		return CastUnrealUInt8ArrayToUInt8Array(Bytes);
 	}
 
 	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Double to UInt8", meta = (Keywords = "Cast Convert Double double decimal double-precision float to UInt8 unsigned uint8 char byte ubyte"))
@@ -2537,7 +3083,7 @@ public:
 		return Results;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Double to Unreal uint8", meta = (Keywords = "Cast Convert Double double decimal double-precision float to UInt8 unsigned uint8 char byte ubyte"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Double Array to Unreal uint8 Array", meta = (Keywords = "Cast Convert Double double decimal double-precision float Array to UInt8 unsigned uint8 char byte ubyte"))
 	static TArray<uint8> CastDoubleArrayToUnrealUInt8Array(const TArray<FDolphinDouble>& Value)
 	{
 		TArray<uint8> Results;
@@ -2548,7 +3094,7 @@ public:
 		return Results;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Double to Unreal int32", meta = (Keywords = "Cast Convert Double double decimal double-precision float to Int32 signed int32 int int integer"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Double Array to Unreal int32 Array", meta = (Keywords = "Cast Convert Double double decimal double-precision float Array to Int32 signed int32 int int integer"))
 	static TArray<int32> CastDoubleArrayToUnrealInt32Array(const TArray<FDolphinDouble>& Value)
 	{
 		TArray<int32> Results;
@@ -2559,7 +3105,7 @@ public:
 		return Results;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Double to Unreal int64", meta = (Keywords = "Cast Convert Double double decimal double-precision float to Int64 signed int64 long int integer"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Double Array to Unreal int64 Array", meta = (Keywords = "Cast Convert Double double decimal double-precision float Array to Int64 signed int64 long int integer"))
 	static TArray<int64> CastDoubleArrayToUnrealInt64Array(const TArray<FDolphinDouble>& Value)
 	{
 		TArray<int64> Results;
@@ -2570,7 +3116,7 @@ public:
 		return Results;
 	}
 
-	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Double to Unreal float", meta = (Keywords = "Cast Convert Double double decimal double-precision float to Float float decimal single single-precision"))
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Double Array to Unreal float Array", meta = (Keywords = "Cast Convert Double double decimal double-precision float Array to Float float decimal single single-precision"))
 	static TArray<float> CastDoubleArrayToUnrealFloatArray(const TArray<FDolphinDouble>& Value)
 	{
 		TArray<float> Results;
@@ -2579,6 +3125,68 @@ public:
 			Results.Add(static_cast<float>(Next));
 		}
 		return Results;
+	}
+
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Unreal uint8 Array to Double Array", meta = (Keywords = "Cast Convert Double double decimal double-precision float Array to UInt8 unsigned uint8 char byte ubyte"))
+	static TArray<FDolphinDouble> CastUnrealUInt8ArrayToDoubleArray(const TArray<uint8>& Value)
+	{
+		TArray<FDolphinDouble> Results;
+		for (const uint8& Next : Value)
+		{
+			Results.Add(static_cast<double>(Next));
+		}
+		return Results;
+	}
+
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Unreal int32 Array to Double Array", meta = (Keywords = "Cast Convert Double double decimal double-precision float Array to Int32 signed int32 int int integer"))
+	static TArray<FDolphinDouble> CastUnrealInt32ArrayToDoubleArray(const TArray<int32>& Value)
+	{
+		TArray<FDolphinDouble> Results;
+		for (const int32& Next : Value)
+		{
+			Results.Add(static_cast<double>(Next));
+		}
+		return Results;
+	}
+
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Unreal int64 Array to Double Array", meta = (Keywords = "Cast Convert Double double decimal double-precision float Array to Int64 signed int64 long int integer"))
+	static TArray<FDolphinDouble> CastUnrealInt64ArrayToDoubleArray(const TArray<int64>& Value)
+	{
+		TArray<FDolphinDouble> Results;
+		for (const int64& Next : Value)
+		{
+			Results.Add(static_cast<double>(Next));
+		}
+		return Results;
+	}
+
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast Unreal float Array to Double Array", meta = (Keywords = "Cast Convert Double double decimal double-precision float Array to Float float decimal single single-precision"))
+	static TArray<FDolphinDouble> CastUnrealFloatArrayToDoubleArray(const TArray<float>& Value)
+	{
+		TArray<FDolphinDouble> Results;
+		for (const float& Next : Value)
+		{
+			Results.Add(static_cast<double>(Next));
+		}
+		return Results;
+	}
+
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Extract Double To Raw Bytes", meta = (Keywords = "Get Cast Convert Extract Double double decimal double-precision float to Raw Bytes"))
+	static TArray<FDolphinInt8> ExtractDoubleToRawBytes(const FDolphinDouble& Value)
+	{
+		TArray<uint8> Bytes;
+		Bytes.AddZeroed(sizeof(Value.Value));
+		FMemory::Memcpy(Bytes.GetData(), &Value.Value, sizeof(Value.Value));
+		return CastUnrealUInt8ArrayToInt8Array(Bytes);
+	}
+
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Extract Double To Raw UBytes", meta = (Keywords = "Get Cast Convert Extract Double double decimal double-precision float to Raw UBytes"))
+	static TArray<FDolphinUInt8> ExtractDoubleToRawUBytes(const FDolphinDouble& Value)
+	{
+		TArray<uint8> Bytes;
+		Bytes.AddZeroed(sizeof(Value.Value));
+		FMemory::Memcpy(Bytes.GetData(), &Value.Value, sizeof(Value.Value));
+		return CastUnrealUInt8ArrayToUInt8Array(Bytes);
 	}
 
 
@@ -3200,18 +3808,8 @@ private:
 		// TODO: This can probably be optimized significantly
 		TArray<uint8> Bytes = TArray<uint8>();
 		Bytes.AddDefaulted(ByteCount);
-		HexString = HexString.TrimStartAndEnd().Replace(TEXT(" "), TEXT(""));
 
-		if (HexString.StartsWith("0x") || HexString.StartsWith("0X"))
-		{
-			HexString.RightChopInline(2);
-		}
-
-		while (HexString.Len() < ByteCount)
-		{
-			HexString = "0" + HexString;
-		}
-
+		HexString = CleanHexString(HexString, ByteCount);
 		FString OriginalHexString = HexString;
 
 		for (int32 Index = 0; Index < HexString.Len(); Index++)
@@ -3225,6 +3823,36 @@ private:
 		uint32 Okay = *reinterpret_cast<uint32*>(Bytes.GetData());
 
 		return Bytes;
+	}
+
+	static FString CleanHexString(FString HexString, int32 ByteCount)
+	{
+		HexString = HexString.TrimStartAndEnd().Replace(TEXT(" "), TEXT(""));
+
+		if (HexString.StartsWith("0x") || HexString.StartsWith("0X"))
+		{
+			HexString.RightChopInline(2);
+		}
+
+		while (HexString.Len() < ByteCount)
+		{
+			HexString = "0" + HexString;
+		}
+
+		if (HexString.Len() > ByteCount)
+		{
+			HexString.LeftChopInline(HexString.Len() - ByteCount);
+		}
+
+		for (int32 Index = 0; Index < HexString.Len(); Index++)
+		{
+			if (!CheckTCharIsHex(HexString[Index]))
+			{
+				HexString[Index] = '0';
+			}
+		}
+
+		return HexString;
 	}
 };
 
