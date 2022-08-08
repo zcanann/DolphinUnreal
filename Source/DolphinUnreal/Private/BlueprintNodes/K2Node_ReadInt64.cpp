@@ -38,8 +38,8 @@ UK2Node_ReadInt64Proxy* UK2Node_ReadInt64Proxy::CreateProxyObjectForWait(UDolphi
 	if (DolphinInstance != nullptr)
 	{
 		DolphinInstance->OnInstanceCommandCompleteEvent.AddUObject(Proxy, &UK2Node_ReadInt64Proxy::OnInstanceReady);
-		DolphinInstance->OnInstanceMemoryReadInt64.AddUObject(Proxy, &UK2Node_ReadInt64Proxy::OnInstanceMemoryReadInt64);
-		DolphinInstance->RequestReadInt64(Address, Offsets);
+		DolphinInstance->OnInstanceMemoryRead.AddUObject(Proxy, &UK2Node_ReadInt64Proxy::OnInstanceMemoryRead);
+		DolphinInstance->RequestReadMemory(Address, Offsets, sizeof(int64));
 	}
 
 	return Proxy;
@@ -49,14 +49,18 @@ UK2Node_ReadInt64Proxy::UK2Node_ReadInt64Proxy(const FObjectInitializer& ObjectI
 {
 }
 
-void UK2Node_ReadInt64Proxy::OnInstanceMemoryReadInt64(UDolphinInstance* InInstance, FDolphinInt64 InValue)
+void UK2Node_ReadInt64Proxy::OnInstanceMemoryRead(UDolphinInstance* InInstance, TArray<FDolphinUInt8> InValue)
 {
 	if (InInstance)
 	{
-		InInstance->OnInstanceMemoryReadInt64.RemoveAll(this);
+		InInstance->OnInstanceMemoryRead.RemoveAll(this);
 	}
 
-	Value = InValue;
+	if (InValue.Num() == sizeof(int64))
+	{
+		Value = UDolphinDataTypesBlueprintLibrary::MakeInt64FromBytes(InValue[0], InValue[1], InValue[2], InValue[3], InValue[4], InValue[5], InValue[6], InValue[7], true);
+	}
+
 	bSuccess = true;
 }
 

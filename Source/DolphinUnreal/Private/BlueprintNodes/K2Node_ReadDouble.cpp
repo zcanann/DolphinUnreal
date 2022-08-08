@@ -1,5 +1,6 @@
 #include "BlueprintNodes/K2Node_ReadDouble.h"
 
+#include "DataTypes/DolphinDataTypesBlueprintLibrary.h"
 #include "DolphinUnrealBlueprintLibrary.h"
 
 #define LOCTEXT_NAMESPACE "UK2Node_ReadDouble"
@@ -38,8 +39,8 @@ UK2Node_ReadDoubleProxy* UK2Node_ReadDoubleProxy::CreateProxyObjectForWait(UDolp
 	if (DolphinInstance != nullptr)
 	{
 		DolphinInstance->OnInstanceCommandCompleteEvent.AddUObject(Proxy, &UK2Node_ReadDoubleProxy::OnInstanceReady);
-		DolphinInstance->OnInstanceMemoryReadDouble.AddUObject(Proxy, &UK2Node_ReadDoubleProxy::OnInstanceMemoryReadDouble);
-		DolphinInstance->RequestReadDouble(Address, Offsets);
+		DolphinInstance->OnInstanceMemoryRead.AddUObject(Proxy, &UK2Node_ReadDoubleProxy::OnInstanceMemoryRead);
+		DolphinInstance->RequestReadMemory(Address, Offsets, sizeof(double));
 	}
 
 	return Proxy;
@@ -49,14 +50,18 @@ UK2Node_ReadDoubleProxy::UK2Node_ReadDoubleProxy(const FObjectInitializer& Objec
 {
 }
 
-void UK2Node_ReadDoubleProxy::OnInstanceMemoryReadDouble(UDolphinInstance* InInstance, FDolphinDouble InValue)
+void UK2Node_ReadDoubleProxy::OnInstanceMemoryRead(UDolphinInstance* InInstance, TArray<FDolphinUInt8> InValue)
 {
 	if (InInstance)
 	{
-		InInstance->OnInstanceMemoryReadDouble.RemoveAll(this);
+		InInstance->OnInstanceMemoryRead.RemoveAll(this);
 	}
 
-	Value = InValue;
+	if (InValue.Num() == sizeof(double))
+	{
+		Value = UDolphinDataTypesBlueprintLibrary::MakeDoubleFromBytes(InValue[0], InValue[1], InValue[2], InValue[3], InValue[4], InValue[5], InValue[6], InValue[7], true);
+	}
+
 	bSuccess = true;
 }
 

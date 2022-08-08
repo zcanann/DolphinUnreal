@@ -38,8 +38,8 @@ UK2Node_ReadArrayOfBytesProxy* UK2Node_ReadArrayOfBytesProxy::CreateProxyObjectF
 	if (DolphinInstance != nullptr)
 	{
 		DolphinInstance->OnInstanceCommandCompleteEvent.AddUObject(Proxy, &UK2Node_ReadArrayOfBytesProxy::OnInstanceReady);
-		DolphinInstance->OnInstanceMemoryReadArrayOfBytes.AddUObject(Proxy, &UK2Node_ReadArrayOfBytesProxy::OnInstanceMemoryReadArrayOfBytes);
-		DolphinInstance->RequestReadArrayOfBytes(Address, Offsets, NumberOfBytes);
+		DolphinInstance->OnInstanceMemoryRead.AddUObject(Proxy, &UK2Node_ReadArrayOfBytesProxy::OnInstanceMemoryRead);
+		DolphinInstance->RequestReadMemory(Address, Offsets, NumberOfBytes);
 	}
 
 	return Proxy;
@@ -49,14 +49,14 @@ UK2Node_ReadArrayOfBytesProxy::UK2Node_ReadArrayOfBytesProxy(const FObjectInitia
 {
 }
 
-void UK2Node_ReadArrayOfBytesProxy::OnInstanceMemoryReadArrayOfBytes(UDolphinInstance* InInstance, TArray<FDolphinInt8> InValue)
+void UK2Node_ReadArrayOfBytesProxy::OnInstanceMemoryRead(UDolphinInstance* InInstance, TArray<FDolphinUInt8> InValue)
 {
 	if (InInstance)
 	{
-		InInstance->OnInstanceMemoryReadArrayOfBytes.RemoveAll(this);
+		InInstance->OnInstanceMemoryRead.RemoveAll(this);
 	}
 
-	Value = InValue;
+	// Value = InValue;
 	bSuccess = true;
 }
 

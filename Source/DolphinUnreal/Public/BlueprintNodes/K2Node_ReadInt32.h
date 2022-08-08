@@ -41,7 +41,7 @@ public:
 	FDolphinReadInt32MulticastDelegate OnSuccess;
 
 private:
-	void OnInstanceMemoryReadInt32(UDolphinInstance* InInstance, FDolphinInt32 InValue);
+	void OnInstanceMemoryRead(UDolphinInstance* InInstance, TArray<FDolphinUInt8> InValue);
 	void OnInstanceReady(UDolphinInstance* InInstance, uint64 CommandId);
 
 	UPROPERTY()

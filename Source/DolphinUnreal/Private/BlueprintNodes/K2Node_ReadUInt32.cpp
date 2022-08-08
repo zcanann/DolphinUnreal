@@ -38,8 +38,8 @@ UK2Node_ReadUInt32Proxy* UK2Node_ReadUInt32Proxy::CreateProxyObjectForWait(UDolp
 	if (DolphinInstance != nullptr)
 	{
 		DolphinInstance->OnInstanceCommandCompleteEvent.AddUObject(Proxy, &UK2Node_ReadUInt32Proxy::OnInstanceReady);
-		DolphinInstance->OnInstanceMemoryReadUInt32.AddUObject(Proxy, &UK2Node_ReadUInt32Proxy::OnInstanceMemoryReadUInt32);
-		DolphinInstance->RequestReadUInt32(Address, Offsets);
+		DolphinInstance->OnInstanceMemoryRead.AddUObject(Proxy, &UK2Node_ReadUInt32Proxy::OnInstanceMemoryRead);
+		DolphinInstance->RequestReadMemory(Address, Offsets, sizeof(uint32));
 	}
 
 	return Proxy;
@@ -49,14 +49,18 @@ UK2Node_ReadUInt32Proxy::UK2Node_ReadUInt32Proxy(const FObjectInitializer& Objec
 {
 }
 
-void UK2Node_ReadUInt32Proxy::OnInstanceMemoryReadUInt32(UDolphinInstance* InInstance, FDolphinUInt32 InValue)
+void UK2Node_ReadUInt32Proxy::OnInstanceMemoryRead(UDolphinInstance* InInstance, TArray<FDolphinUInt8> InValue)
 {
 	if (InInstance)
 	{
-		InInstance->OnInstanceMemoryReadUInt32.RemoveAll(this);
+		InInstance->OnInstanceMemoryRead.RemoveAll(this);
 	}
 
-	Value = InValue;
+	if (InValue.Num() == sizeof(double))
+	{
+		Value = UDolphinDataTypesBlueprintLibrary::MakeUInt32FromBytes(InValue[0], InValue[1], InValue[2], InValue[3], true);
+	}
+
 	bSuccess = true;
 }
 

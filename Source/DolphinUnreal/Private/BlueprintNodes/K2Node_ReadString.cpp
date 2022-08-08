@@ -38,8 +38,8 @@ UK2Node_ReadStringProxy* UK2Node_ReadStringProxy::CreateProxyObjectForWait(UDolp
 	if (DolphinInstance != nullptr)
 	{
 		DolphinInstance->OnInstanceCommandCompleteEvent.AddUObject(Proxy, &UK2Node_ReadStringProxy::OnInstanceReady);
-		DolphinInstance->OnInstanceMemoryReadString.AddUObject(Proxy, &UK2Node_ReadStringProxy::OnInstanceMemoryReadString);
-		DolphinInstance->RequestReadString(Address, Offsets, StringLength);
+		DolphinInstance->OnInstanceMemoryRead.AddUObject(Proxy, &UK2Node_ReadStringProxy::OnInstanceMemoryRead);
+		DolphinInstance->RequestReadMemory(Address, Offsets, StringLength);
 	}
 
 	return Proxy;
@@ -49,14 +49,14 @@ UK2Node_ReadStringProxy::UK2Node_ReadStringProxy(const FObjectInitializer& Objec
 {
 }
 
-void UK2Node_ReadStringProxy::OnInstanceMemoryReadString(UDolphinInstance* InInstance, FString InValue)
+void UK2Node_ReadStringProxy::OnInstanceMemoryRead(UDolphinInstance* InInstance, TArray<FDolphinUInt8> InValue)
 {
 	if (InInstance)
 	{
-		InInstance->OnInstanceMemoryReadString.RemoveAll(this);
+		InInstance->OnInstanceMemoryRead.RemoveAll(this);
 	}
 
-	Value = InValue;
+	// Value = InValue;
 	bSuccess = true;
 }
 

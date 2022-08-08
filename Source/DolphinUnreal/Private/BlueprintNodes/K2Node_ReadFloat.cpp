@@ -38,8 +38,8 @@ UK2Node_ReadFloatProxy* UK2Node_ReadFloatProxy::CreateProxyObjectForWait(UDolphi
 	if (DolphinInstance != nullptr)
 	{
 		DolphinInstance->OnInstanceCommandCompleteEvent.AddUObject(Proxy, &UK2Node_ReadFloatProxy::OnInstanceReady);
-		DolphinInstance->OnInstanceMemoryReadFloat.AddUObject(Proxy, &UK2Node_ReadFloatProxy::OnInstanceMemoryReadFloat);
-		DolphinInstance->RequestReadFloat(Address, Offsets);
+		DolphinInstance->OnInstanceMemoryRead.AddUObject(Proxy, &UK2Node_ReadFloatProxy::OnInstanceMemoryRead);
+		DolphinInstance->RequestReadMemory(Address, Offsets, sizeof(float));
 	}
 
 	return Proxy;
@@ -49,14 +49,18 @@ UK2Node_ReadFloatProxy::UK2Node_ReadFloatProxy(const FObjectInitializer& ObjectI
 {
 }
 
-void UK2Node_ReadFloatProxy::OnInstanceMemoryReadFloat(UDolphinInstance* InInstance, FDolphinFloat InValue)
+void UK2Node_ReadFloatProxy::OnInstanceMemoryRead(UDolphinInstance* InInstance, TArray<FDolphinUInt8> InValue)
 {
 	if (InInstance)
 	{
-		InInstance->OnInstanceMemoryReadFloat.RemoveAll(this);
+		InInstance->OnInstanceMemoryRead.RemoveAll(this);
 	}
 
-	Value = InValue;
+	if (InValue.Num() == sizeof(float))
+	{
+		Value = UDolphinDataTypesBlueprintLibrary::MakeFloatFromBytes(InValue[0], InValue[1], InValue[2], InValue[3], true);
+	}
+
 	bSuccess = true;
 }
 

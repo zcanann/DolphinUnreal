@@ -246,18 +246,6 @@ def generateHexMakeForDataType(dataType, unrealPrimitive):
         '\t\treturn *reinterpret_cast<' + castPrimitive + '*>(Bytes.GetData());\n' + \
         '\t}\n\n'
 
-# TArray<uint8> Bytes = TArray<uint8>();
-# Bytes.AddDefaulted(8);
-# if (Hex.StartsWith("0x") || Hex.StartsWith("0X"))
-# {
-# Hex = Hex.LeftChop(2);
-# }
-# if (Hex.Len() <= 8)
-# {
-# HexToBytes(Hex, Bytes.GetData());
-# }
-# return *reinterpret_cast<double*>(Bytes.GetData());
-
 def generateMakesForDataType(dataType, unrealPrimitive):
     return generatePrimitiveMakeForDataType(dataType, unrealPrimitive) + \
         generateHexMakeForDataType(dataType, unrealPrimitive) + \
@@ -295,7 +283,7 @@ def generateUnrealCastHeader(dataType, unrealDataType):
     return '\tUFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast ' + dataType + " to Unreal " + unrealPrimitive + '"' + \
         ', meta = (Keywords = "Cast ' + dataType + ' ' + dataTypeKeywords + ' to ' + unrealDataType + ' ' + unrealDataTypeKeywords + '"))\n'
 
-def generateCastsForDataType(dataType):
+def generatePrimitiveCastsForDataType(dataType):
     result = ""
     primitive = dataTypeTable[dataType]['primitive']
     
@@ -316,9 +304,28 @@ def generateCastsForDataType(dataType):
         result += '\t{\n'
         result += '\t\treturn static_cast<' + unrealPrimitive + '>(Value);\n'
         result += '\t}\n\n'
-        
 
     return result
+
+def generateArrayCastsForDataType(dataType):
+    result = ""
+    primitive = dataTypeTable[dataType]['primitive']
+    
+    for castDataType in dataTypeTable:
+        castPrimitive = dataTypeTable[castDataType]['primitive']
+        if dataType == castDataType:
+            continue
+        #result += generateCastHeader(dataType, castDataType)
+        #result += '\tstatic FDolphin' + castDataType + ' Cast' + dataType + 'To' + castDataType + '(const FDolphin' + dataType + '& Value)\n'
+        #result += '\t{\n'
+        #result += '\t\treturn static_cast<' + castPrimitive + '>(Value);\n'
+        #result += '\t}\n\n'
+        
+    return result
+
+def generateCastsForDataType(dataType):
+    return generatePrimitiveCastsForDataType(dataType) + \
+        generateArrayCastsForDataType(dataType)
 
 def generateCastsForAllDataTypes():
     header = """//////////////////////////////////////////////////////////////////////////////////
