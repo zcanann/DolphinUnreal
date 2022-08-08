@@ -66,16 +66,18 @@ public class DolphinUnreal : ModuleRules
 		PrivateDependencyModuleNames.AddRange(
 			new string[]
 			{
+				"BlueprintGraph",
 				"CoreUObject",
 				"Engine",
-				"Slate",
-				"SlateCore",
 				"EditorStyle",
-				"UnrealEd",
 				"GraphEditor",
-				"BlueprintGraph",
 				"Kismet",
 				"KismetCompiler",
+                "RenderCore",
+				"Slate",
+				"SlateCore",
+				"UMG",
+				"UnrealEd",
 			}
 		);
 		
