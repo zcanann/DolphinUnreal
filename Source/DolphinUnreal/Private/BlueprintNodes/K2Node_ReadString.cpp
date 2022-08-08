@@ -58,7 +58,11 @@ void UK2Node_ReadStringProxy::OnInstanceMemoryRead(UDolphinInstance* InInstance,
 	}
 
 	TArray<uint8> Bytes = UDolphinDataTypesBlueprintLibrary::CastUInt8ArrayToUnrealUInt8Array(InValue);
-	Value = BytesToString(Bytes.GetData(), Bytes.Num());
+	Value.Empty();
+	for (const uint8 Byte : Bytes)
+	{
+		Value += TCHAR(Byte);
+	}
 	bSuccess = true;
 }
 
