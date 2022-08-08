@@ -1,5 +1,6 @@
 #include "BlueprintNodes/K2Node_ReadString.h"
 
+#include "DataTypes/DolphinDataTypesBlueprintLibrary.h"
 #include "DolphinUnrealBlueprintLibrary.h"
 
 #define LOCTEXT_NAMESPACE "UK2Node_ReadString"
@@ -56,7 +57,8 @@ void UK2Node_ReadStringProxy::OnInstanceMemoryRead(UDolphinInstance* InInstance,
 		InInstance->OnInstanceMemoryRead.RemoveAll(this);
 	}
 
-	// Value = InValue;
+	TArray<uint8> Bytes = UDolphinDataTypesBlueprintLibrary::CastUInt8ArrayToUnrealUInt8Array(InValue);
+	Value = BytesToString(Bytes.GetData(), Bytes.Num());
 	bSuccess = true;
 }
 

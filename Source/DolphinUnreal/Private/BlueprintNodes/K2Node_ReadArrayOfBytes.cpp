@@ -1,5 +1,6 @@
 #include "BlueprintNodes/K2Node_ReadArrayOfBytes.h"
 
+#include "DataTypes/DolphinDataTypesBlueprintLibrary.h"
 #include "DolphinUnrealBlueprintLibrary.h"
 
 #define LOCTEXT_NAMESPACE "UK2Node_ReadArrayOfBytes"
@@ -56,7 +57,7 @@ void UK2Node_ReadArrayOfBytesProxy::OnInstanceMemoryRead(UDolphinInstance* InIns
 		InInstance->OnInstanceMemoryRead.RemoveAll(this);
 	}
 
-	// Value = InValue;
+	Value = UDolphinDataTypesBlueprintLibrary::CastUInt8ArrayToInt8Array(InValue);
 	bSuccess = true;
 }
 

@@ -274,14 +274,14 @@ def generateCastHeader(dataType, castDataType):
     dataTypeKeywords = dataTypeTable[dataType]['keywords']
     castDataTypeKeywords = dataTypeTable[castDataType]['keywords']
     return '\tUFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast ' + dataType + " to " + castDataType + '"' + \
-        ', meta = (Keywords = "Cast ' + dataType + ' ' + dataTypeKeywords + ' to ' + castDataType + ' ' + castDataTypeKeywords + '"))\n'
+        ', meta = (Keywords = "Cast Convert ' + dataType + ' ' + dataTypeKeywords + ' to ' + castDataType + ' ' + castDataTypeKeywords + '"))\n'
 
 def generateUnrealCastHeader(dataType, unrealDataType):
     unrealPrimitive = dataTypeTable[unrealDataType]['primitive']
     dataTypeKeywords = dataTypeTable[dataType]['keywords']
     unrealDataTypeKeywords = dataTypeTable[unrealDataType]['keywords']
     return '\tUFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast ' + dataType + " to Unreal " + unrealPrimitive + '"' + \
-        ', meta = (Keywords = "Cast ' + dataType + ' ' + dataTypeKeywords + ' to ' + unrealDataType + ' ' + unrealDataTypeKeywords + '"))\n'
+        ', meta = (Keywords = "Cast Convert ' + dataType + ' ' + dataTypeKeywords + ' to ' + unrealDataType + ' ' + unrealDataTypeKeywords + '"))\n'
 
 def generatePrimitiveCastsForDataType(dataType):
     result = ""
@@ -307,6 +307,12 @@ def generatePrimitiveCastsForDataType(dataType):
 
     return result
 
+def generateArrayCastHeader(dataType, castDataType):
+    dataTypeKeywords = dataTypeTable[dataType]['keywords']
+    castDataTypeKeywords = dataTypeTable[castDataType]['keywords']
+    return '\tUFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Cast ' + dataType + " Array to " + castDataType + ' Array"' + \
+        ', meta = (Keywords = "Cast Convert Array ' + dataType + ' ' + dataTypeKeywords + ' to ' + castDataType + ' ' + castDataTypeKeywords + '"))\n'
+        
 def generateArrayCastsForDataType(dataType):
     result = ""
     primitive = dataTypeTable[dataType]['primitive']
@@ -315,11 +321,29 @@ def generateArrayCastsForDataType(dataType):
         castPrimitive = dataTypeTable[castDataType]['primitive']
         if dataType == castDataType:
             continue
-        #result += generateCastHeader(dataType, castDataType)
-        #result += '\tstatic FDolphin' + castDataType + ' Cast' + dataType + 'To' + castDataType + '(const FDolphin' + dataType + '& Value)\n'
-        #result += '\t{\n'
-        #result += '\t\treturn static_cast<' + castPrimitive + '>(Value);\n'
-        #result += '\t}\n\n'
+        result += generateArrayCastHeader(dataType, castDataType)
+        result += '\tstatic TArray<FDolphin' + castDataType + '> Cast' + dataType + 'ArrayTo' + castDataType + 'Array(const TArray<FDolphin' + dataType + '>& Value)\n'
+        result += '\t{\n'
+        result += '\t\tTArray<FDolphin' + castDataType + '> Results;\n'
+        result += '\t\tfor (const FDolphin' + dataType + '& Next : Value)\n'
+        result += '\t\t{\n'
+        result += '\t\t\tResults.Add(Cast' + dataType + 'To' + castDataType + '(Next));\n'
+        result += '\t\t}\n'
+        result += '\t\treturn Results;\n'
+        result += '\t}\n\n'
+
+    for unrealDataType in unrealDataTypes:
+        unrealPrimitive = dataTypeTable[unrealDataType]['primitive']
+        result += generateUnrealCastHeader(dataType, unrealDataType)
+        result += '\tstatic TArray<' + unrealPrimitive + '> Cast' + dataType + 'ArrayToUnreal' + unrealDataType + 'Array(const TArray<FDolphin' + dataType + '>& Value)\n'
+        result += '\t{\n'
+        result += '\t\tTArray<' + unrealPrimitive + '> Results;\n'
+        result += '\t\tfor (const FDolphin' + dataType + '& Next : Value)\n'
+        result += '\t\t{\n'
+        result += '\t\t\tResults.Add(static_cast<' + unrealPrimitive + '>(Next));\n'
+        result += '\t\t}\n'
+        result += '\t\treturn Results;\n'
+        result += '\t}\n\n'
         
     return result
 

@@ -1,5 +1,6 @@
 #include "BlueprintNodes/K2Node_ReadUInt8.h"
 
+#include "DataTypes/DolphinDataTypesBlueprintLibrary.h"
 #include "DolphinUnrealBlueprintLibrary.h"
 
 #define LOCTEXT_NAMESPACE "UK2Node_ReadUInt8"
