@@ -13,8 +13,6 @@
 #include <dwmapi.h>
 #endif
 
-#pragma optimize("", off)
-
 UCaptureMachine::UCaptureMachine()
 {
 }
@@ -23,39 +21,22 @@ void UCaptureMachine::Start(FCaptureMachineProperties InProperties)
 {
 	m_TargetWindow = (HWND)InProperties.WindowIdentifier;
 	Properties = InProperties;
+}
 
-#if PLATFORM_WINDOWS
-	CaptureWorkerThread = new FWCWorkerThread([this] { return DoCapture(); }, 1.0f / (float)Properties.FrameRate);
-	CaptureThread = FRunnableThread::Create(CaptureWorkerThread, TEXT("UCaptureMachine CaptureThread"));
-#endif
+void UCaptureMachine::Tick(float DeltaTime)
+{
+	DoCapture();
 }
 
 void UCaptureMachine::Stop()
 {
 #if PLATFORM_WINDOWS
-
-	if (CaptureThread)
-	{
-		CaptureThread->Kill(true);
-		CaptureThread->WaitForCompletion();
-
-		delete CaptureThread;
-		CaptureThread = nullptr;
-	}
-
 	if (TextureTarget)
 	{
 		TextureTarget->ReleaseResource();
 		TextureTarget = nullptr;
 	}
-
-	if (CaptureWorkerThread)
-	{
-		delete CaptureWorkerThread;
-		CaptureWorkerThread = nullptr;
-	}
 #endif
-
 }
 
 
@@ -85,24 +66,28 @@ void UCaptureMachine::Dispose()
 		::DeleteDC(m_OriginalMemDC);
 		m_OriginalMemDC = nullptr;
 	}
-
 #endif
-
 }
 
 
 bool UCaptureMachine::DoCapture()
 {
 #if PLATFORM_WINDOWS
-	if (!m_TargetWindow || !TextureTarget)
+	if (!m_TargetWindow)
 	{
 		return true;
+	}
+
+	if (!TextureTarget)
+	{
+		ReCreateTexture();
 	}
 
 	if (Properties.CheckWindowSize)
 	{
 		const FIntVector2D oldWindowSize = m_WindowSize;
 		GetWindowSize(m_TargetWindow);
+
 		if (m_WindowSize != oldWindowSize)
 		{
 			ReCreateTexture();
@@ -114,7 +99,6 @@ bool UCaptureMachine::DoCapture()
 			return true;
 		}
 	}
-
 
 	if (Properties.CutShadow)
 	{
@@ -144,6 +128,7 @@ UTexture2D* UCaptureMachine::CreateTexture()
 
 	HDC foundDC = ::GetDC(m_TargetWindow);
 	m_MemDC = ::CreateCompatibleDC(foundDC);
+
 	if (Properties.CutShadow)
 	{
 		m_OriginalMemDC = ::CreateCompatibleDC(foundDC);
@@ -161,16 +146,13 @@ UTexture2D* UCaptureMachine::CreateTexture()
 void UCaptureMachine::UpdateTexture() const
 {
 #if PLATFORM_WINDOWS
-	AsyncTask(ENamedThreads::GameThread, [=]()
+	if (!TextureTarget)
 	{
-		if (!TextureTarget)
-		{
-			return;
-		}
+		return;
+	}
 
-		const auto Region = new FUpdateTextureRegion2D(0, 0, 0, 0, TextureTarget->GetSizeX(), TextureTarget->GetSizeY());
-		TextureTarget->UpdateTextureRegions(0, 1, Region, 4 * TextureTarget->GetSizeX(), 4, reinterpret_cast<uint8*>(m_BitmapBuffer));
-	});
+	const auto Region = new FUpdateTextureRegion2D(0, 0, 0, 0, TextureTarget->GetSizeX(), TextureTarget->GetSizeY());
+	TextureTarget->UpdateTextureRegions(0, 1, Region, 4 * TextureTarget->GetSizeX(), 4, reinterpret_cast<uint8*>(m_BitmapBuffer));
 #endif
 }
 
@@ -223,11 +205,9 @@ void UCaptureMachine::ReCreateTexture()
 
 	m_BitmapBuffer = new char[m_WindowSize.X * m_WindowSize.Y * 4];
 
-	AsyncTask(ENamedThreads::GameThread, [=]()
-	{
-		TextureTarget = UTexture2D::CreateTransient(m_WindowSize.X, m_WindowSize.Y, PF_B8G8R8A8);
-		TextureTarget->UpdateResource();
-	});
+
+	TextureTarget = UTexture2D::CreateTransient(m_WindowSize.X, m_WindowSize.Y, PF_B8G8R8A8);
+	TextureTarget->UpdateResource();
 
 	BITMAPINFO bmpInfo;
 	bmpInfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
@@ -248,5 +228,3 @@ void UCaptureMachine::ReCreateTexture()
 	}
 #endif
 }
-
-#pragma optimize("", on)

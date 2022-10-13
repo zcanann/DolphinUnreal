@@ -16,13 +16,18 @@ using HWND = void*;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FCaptureMachineChangeTexture, UTexture2D*, NewTexture);
 
+
 UCLASS(BlueprintType, Blueprintable)
-class UCaptureMachine : public UObject
+class UCaptureMachine : public UObject, public FTickableGameObject
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	UCaptureMachine();
+
+	void Tick(float DeltaTime) override;
+	bool IsTickable() const override { return true; }
+	TStatId GetStatId() const override { return TStatId(); }
 
 	virtual void Start(FCaptureMachineProperties InProperties);
 	virtual void Stop();
@@ -39,6 +44,9 @@ protected:
 
 
 public:
+	UPROPERTY()
+	FCaptureMachineProperties Properties;
+
 	UPROPERTY(BlueprintReadOnly, Category = SceneCapture)
 	class UTexture2D* TextureTarget;
 
@@ -46,9 +54,6 @@ public:
 	FCaptureMachineChangeTexture ChangeTexture;
 
 private:
-	UPROPERTY()
-	FCaptureMachineProperties Properties;
-
 	char* m_BitmapBuffer = nullptr;
 
 	HBITMAP m_hBmp = nullptr;
@@ -60,7 +65,4 @@ private:
 	FIntVector2D m_WindowSize;
 	FIntVector2D m_OriginalWindowSize;
 	FIntVector2D m_WindowOffset;
-
-	class FWCWorkerThread* CaptureWorkerThread = nullptr;
-	class FRunnableThread* CaptureThread = nullptr;
 };
