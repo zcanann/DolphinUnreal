@@ -47,6 +47,9 @@ public:
 	UFUNCTION(BlueprintPure)
 	bool IsRecording() const;
 
+	UFUNCTION(BlueprintPure)
+	int64 GetWindowIdentifier() const;
+
 	void RequestCreateSaveState(FString SaveName);
 	void RequestLoadSaveState(USavAsset* SavAsset);
 	void RequestPause();
@@ -83,6 +86,7 @@ private:
 
 	FString InstanceId;
 	FProcHandle DolphinProcHandle;
+	int64 WindowIdentifier = 0;
 
 	bool bIsRecordingInput = false;
 	bool bIsPaused = false;

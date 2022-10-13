@@ -26,16 +26,6 @@ struct FIntVector2D
 	}
 };
 
-UENUM(BlueprintType)
-enum class ETitleMatchingWindowSearch : uint8
-{
-	PerfectMatch,
-	ForwardMatch,
-	PartialMatch,
-	BackwardMatch,
-	RegularExpression
-};
-
 USTRUCT(BlueprintType)
 struct FCaptureMachineProperties 
 {
@@ -43,10 +33,7 @@ public:
 	GENERATED_USTRUCT_BODY()
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = WindowCapture2D)
-	FString CaptureTargetTitle = TEXT("WindowCapture2D");
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = WindowCapture2D)
-	ETitleMatchingWindowSearch TitleMatchingWindowSearch = ETitleMatchingWindowSearch::ForwardMatch;
+	int64 WindowIdentifier = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = WindowCapture2D)
 	int32 FrameRate = 30;
@@ -56,5 +43,4 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = WindowCapture2D)
 	bool CutShadow = true;
-
 };

@@ -4,6 +4,7 @@
 
 #include "Engine/Texture2D.h"
 
+#pragma optimize("", off)
 
 UWindowCaptureWidget::UWindowCaptureWidget(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -34,8 +35,7 @@ void UWindowCaptureWidget::BeginDestroy()
 	}
 }
 
-
-UTexture2D* UWindowCaptureWidget::Start()
+UTexture2D* UWindowCaptureWidget::Start(FCaptureMachineProperties Properties)
 {
 	if (CaptureMachine)
 	{
@@ -45,10 +45,8 @@ UTexture2D* UWindowCaptureWidget::Start()
 
 	CaptureMachine = NewObject<UCaptureMachine>(this);
 
-	CaptureMachine->Properties = Properties;
-
 	CaptureMachine->ChangeTexture.AddDynamic(this, &UWindowCaptureWidget::OnChangeTexture);
-	CaptureMachine->Start();
+	CaptureMachine->Start(Properties);
 
 	return CaptureMachine->CreateTexture();
 }
@@ -57,3 +55,5 @@ void UWindowCaptureWidget::OnChangeTexture(UTexture2D* _NewTexture)
 {
 	ChangeTexture.Broadcast(_NewTexture);
 }
+
+#pragma optimize("", on)

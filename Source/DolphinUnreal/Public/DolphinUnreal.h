@@ -16,6 +16,8 @@ public:
 
 	UDolphinInstance* CreateNewInstance();
 	void TerminateInstance(UDolphinInstance* InDolphinInstance);
+	void TrackInstance(UDolphinInstance* InDolphinInstance);
+	void UntrackInstance(UDolphinInstance* InDolphinInstance);
 	void SetDefaultDolphinInstance(UDolphinInstance* InDefaultDolphinInstance);
 	UDolphinInstance* GetDefaultDolphinInstance() const;
 	TArray<UDolphinInstance*> GetDolphinInstances() const;

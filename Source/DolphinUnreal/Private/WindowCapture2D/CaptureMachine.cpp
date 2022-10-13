@@ -13,12 +13,17 @@
 #include <dwmapi.h>
 #endif
 
+#pragma optimize("", off)
+
 UCaptureMachine::UCaptureMachine()
 {
 }
 
-void UCaptureMachine::Start()
+void UCaptureMachine::Start(FCaptureMachineProperties InProperties)
 {
+	m_TargetWindow = (HWND)InProperties.WindowIdentifier;
+	Properties = InProperties;
+
 #if PLATFORM_WINDOWS
 	CaptureWorkerThread = new FWCWorkerThread([this] { return DoCapture(); }, 1.0f / (float)Properties.FrameRate);
 	CaptureThread = FRunnableThread::Create(CaptureWorkerThread, TEXT("UCaptureMachine CaptureThread"));
@@ -89,8 +94,10 @@ void UCaptureMachine::Dispose()
 bool UCaptureMachine::DoCapture()
 {
 #if PLATFORM_WINDOWS
-	if (!m_TargetWindow) return true;
-	if (!TextureTarget) return true;
+	if (!m_TargetWindow || !TextureTarget)
+	{
+		return true;
+	}
 
 	if (Properties.CheckWindowSize)
 	{
@@ -102,7 +109,10 @@ bool UCaptureMachine::DoCapture()
 			ChangeTexture.Broadcast(TextureTarget);
 		}
 
-		if (!TextureTarget) return true;
+		if (!TextureTarget)
+		{
+			return true;
+		}
 	}
 
 
@@ -125,15 +135,10 @@ bool UCaptureMachine::DoCapture()
 UTexture2D* UCaptureMachine::CreateTexture()
 {
 #if PLATFORM_WINDOWS
-	m_TargetWindow = nullptr;
-
-	::EnumWindows([](HWND hwnd, LPARAM lParam) -> BOOL
-		{
-			UCaptureMachine* my = (UCaptureMachine*)lParam;
-			return my->FindTargetWindow(hwnd);
-		}, (LPARAM)this);
-
-	if (!m_TargetWindow) return nullptr;
+	if (!m_TargetWindow)
+	{
+		return nullptr;
+	}
 
 	GetWindowSize(m_TargetWindow);
 
@@ -153,62 +158,19 @@ UTexture2D* UCaptureMachine::CreateTexture()
 	return nullptr;
 }
 
-bool UCaptureMachine::FindTargetWindow(HWND hWnd)
-{
-#if PLATFORM_WINDOWS
-	__wchar_t windowTitle[1024];
-	GetWindowText(hWnd, windowTitle, 1024);
-	FString title(windowTitle);
-
-	if (title.IsEmpty()) return true;
-
-	bool isMatch = false;
-
-	switch (Properties.TitleMatchingWindowSearch)
-	{
-	case ETitleMatchingWindowSearch::PerfectMatch:
-		isMatch = title.Equals(Properties.CaptureTargetTitle, ESearchCase::IgnoreCase);
-		break;
-
-	case ETitleMatchingWindowSearch::ForwardMatch:
-		isMatch = title.StartsWith(Properties.CaptureTargetTitle, ESearchCase::IgnoreCase);
-		break;
-
-	case ETitleMatchingWindowSearch::PartialMatch:
-		isMatch = title.Contains(Properties.CaptureTargetTitle, ESearchCase::IgnoreCase);
-		break;
-
-	case ETitleMatchingWindowSearch::BackwardMatch:
-		isMatch = title.EndsWith(Properties.CaptureTargetTitle, ESearchCase::IgnoreCase);
-		break;
-
-	case ETitleMatchingWindowSearch::RegularExpression:
-		{
-			const FRegexPattern pattern = FRegexPattern(Properties.CaptureTargetTitle);
-			FRegexMatcher matcher(pattern, title);
-
-			isMatch = matcher.FindNext();
-		}
-		break;
-	}
-
-	if (isMatch)
-	{
-		m_TargetWindow = hWnd;
-		return false;
-	}
-#endif
-
-	return true;
-}
-
 void UCaptureMachine::UpdateTexture() const
 {
 #if PLATFORM_WINDOWS
-	if (!TextureTarget) return;
+	AsyncTask(ENamedThreads::GameThread, [=]()
+	{
+		if (!TextureTarget)
+		{
+			return;
+		}
 
-	const auto Region = new FUpdateTextureRegion2D(0, 0, 0, 0, TextureTarget->GetSizeX(), TextureTarget->GetSizeY());
-	TextureTarget->UpdateTextureRegions(0, 1, Region, 4 * TextureTarget->GetSizeX(), 4, reinterpret_cast<uint8*>(m_BitmapBuffer));
+		const auto Region = new FUpdateTextureRegion2D(0, 0, 0, 0, TextureTarget->GetSizeX(), TextureTarget->GetSizeY());
+		TextureTarget->UpdateTextureRegions(0, 1, Region, 4 * TextureTarget->GetSizeX(), 4, reinterpret_cast<uint8*>(m_BitmapBuffer));
+	});
 #endif
 }
 
@@ -261,9 +223,11 @@ void UCaptureMachine::ReCreateTexture()
 
 	m_BitmapBuffer = new char[m_WindowSize.X * m_WindowSize.Y * 4];
 
-
-	TextureTarget = UTexture2D::CreateTransient(m_WindowSize.X, m_WindowSize.Y, PF_B8G8R8A8);
-	TextureTarget->UpdateResource();
+	AsyncTask(ENamedThreads::GameThread, [=]()
+	{
+		TextureTarget = UTexture2D::CreateTransient(m_WindowSize.X, m_WindowSize.Y, PF_B8G8R8A8);
+		TextureTarget->UpdateResource();
+	});
 
 	BITMAPINFO bmpInfo;
 	bmpInfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
@@ -284,3 +248,5 @@ void UCaptureMachine::ReCreateTexture()
 	}
 #endif
 }
+
+#pragma optimize("", on)

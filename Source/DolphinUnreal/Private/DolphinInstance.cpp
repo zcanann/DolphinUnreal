@@ -31,6 +31,7 @@ void UDolphinInstance::Initialize(UIsoAsset* InIsoAsset, bool bStartPaused, bool
 
 UDolphinInstance::~UDolphinInstance()
 {
+    UDolphinUnrealBlueprintLibrary::UntrackDolpinInstance(this);
 }
 
 void UDolphinInstance::PausePIE(const bool bIsSimulating)
@@ -58,10 +59,15 @@ void UDolphinInstance::Tick(float DeltaTime)
 
 SERVER_FUNC_BODY(UDolphinInstance, OnInstanceConnected, params)
 {
+    WindowIdentifier = *reinterpret_cast<const int64*>(&params._windowIdentifier);
+
     if (GEngine)
     {
         GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Dolphin instance connected"));
     }
+
+    // Only start tracking the instance once IPC has been established
+    UDolphinUnrealBlueprintLibrary::TrackDolpinInstance(this);
 }
 
 SERVER_FUNC_BODY(UDolphinInstance, OnInstanceCommandCompleted, params)
@@ -256,6 +262,11 @@ bool UDolphinInstance::IsRecording() const
     return bIsRecordingInput;
 }
 
+int64 UDolphinInstance::GetWindowIdentifier() const
+{
+    return WindowIdentifier;
+}
+
 void UDolphinInstance::RequestPlayInputTable(UDataTable* FrameInputsTable)
 {
     if (FrameInputsTable == nullptr)
@@ -349,7 +360,7 @@ void UDolphinInstance::RequestTerminate()
     ipcData._call = DolphinInstanceIpcCall::DolphinInstance_Terminate;
     ipcSendToInstance(ipcData);
 
-    ConditionalBeginDestroy();
+    UDolphinUnrealBlueprintLibrary::TerminateDolpinInstance(this);
 }
 
 #pragma optimize("", on)

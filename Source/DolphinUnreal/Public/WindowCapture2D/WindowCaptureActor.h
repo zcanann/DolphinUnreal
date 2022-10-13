@@ -23,7 +23,7 @@ public:
 
 protected:
 	UFUNCTION(BlueprintCallable, Category = WindowCapture2D)
-	UTexture2D* Start();
+	UTexture2D* Start(FCaptureMachineProperties Properties);
 
 	UFUNCTION()
 	void OnChangeTexture(UTexture2D* NewTexture);
@@ -31,9 +31,6 @@ protected:
 public:	
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	virtual void BeginDestroy() override;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = WindowCapture2D)
-	FCaptureMachineProperties Properties;
 
 	UPROPERTY(BlueprintReadOnly, Category = SceneCapture)
 	class UTexture2D* TextureTarget;

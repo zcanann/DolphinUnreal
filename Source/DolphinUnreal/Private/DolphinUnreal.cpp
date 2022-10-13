@@ -31,8 +31,6 @@ UDolphinInstance* FDolphinUnrealModule::CreateNewInstance()
 {
 	UDolphinInstance* Instance = NewObject<UDolphinInstance>();
 
-	DolphinInstances.Add(Instance);
-
 	Instance->AddToRoot();
 
 	return Instance;
@@ -42,10 +40,20 @@ void FDolphinUnrealModule::TerminateInstance(UDolphinInstance* InDolphinInstance
 {
 	if (InDolphinInstance != nullptr)
 	{
-		DolphinInstances.Remove(InDolphinInstance);
+		FDolphinUnrealModule::UntrackInstance(InDolphinInstance);
+		InDolphinInstance->ConditionalBeginDestroy();
 		InDolphinInstance->RemoveFromRoot();
-		InDolphinInstance->RequestTerminate();
 	}
+}
+
+void FDolphinUnrealModule::TrackInstance(UDolphinInstance* InDolphinInstance)
+{
+	DolphinInstances.Add(InDolphinInstance);
+}
+
+void FDolphinUnrealModule::UntrackInstance(UDolphinInstance* InDolphinInstance)
+{
+	DolphinInstances.Remove(InDolphinInstance);
 }
 
 void FDolphinUnrealModule::SetDefaultDolphinInstance(UDolphinInstance* InDefaultDolphinInstance)

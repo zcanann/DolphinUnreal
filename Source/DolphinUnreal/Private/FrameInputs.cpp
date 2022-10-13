@@ -236,3 +236,5 @@ bool FFrameInputs::IsButtonToggled(EFrameInputType InEFrameInputType)
 		default: return false;
 	}
 }
+
+#undef LOCTEXT_NAMESPACE

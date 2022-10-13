@@ -24,7 +24,7 @@ class UCaptureMachine : public UObject
 public:	
 	UCaptureMachine();
 
-	virtual void Start();
+	virtual void Start(FCaptureMachineProperties InProperties);
 	virtual void Stop();
 	virtual void Dispose();
 
@@ -32,7 +32,6 @@ public:
 	UTexture2D* CreateTexture();
 
 protected:
-	bool FindTargetWindow(HWND hWnd);
 	void UpdateTexture() const;
 	void GetWindowSize(HWND hWnd);
 	void ReCreateTexture();
@@ -40,9 +39,6 @@ protected:
 
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = WindowCapture2D)
-	FCaptureMachineProperties Properties;
-
 	UPROPERTY(BlueprintReadOnly, Category = SceneCapture)
 	class UTexture2D* TextureTarget;
 
@@ -50,6 +46,9 @@ public:
 	FCaptureMachineChangeTexture ChangeTexture;
 
 private:
+	UPROPERTY()
+	FCaptureMachineProperties Properties;
+
 	char* m_BitmapBuffer = nullptr;
 
 	HBITMAP m_hBmp = nullptr;

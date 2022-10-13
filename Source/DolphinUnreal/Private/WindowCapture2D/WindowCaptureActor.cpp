@@ -4,6 +4,7 @@
 
 #include "Engine/Texture2D.h"
 
+#pragma optimize("", off)
 
 AWindowCaptureActor::AWindowCaptureActor()
 {
@@ -31,7 +32,7 @@ void AWindowCaptureActor::BeginDestroy()
 	}
 }
 
-UTexture2D* AWindowCaptureActor::Start()
+UTexture2D* AWindowCaptureActor::Start(FCaptureMachineProperties Properties)
 {
 	if (CaptureMachine)
 	{
@@ -41,10 +42,8 @@ UTexture2D* AWindowCaptureActor::Start()
 
 	CaptureMachine = NewObject<UCaptureMachine>(this);
 
-	CaptureMachine->Properties = Properties;
-
 	CaptureMachine->ChangeTexture.AddDynamic(this, &AWindowCaptureActor::OnChangeTexture);
-	CaptureMachine->Start();
+	CaptureMachine->Start(Properties);
 
 	return CaptureMachine->CreateTexture();
 }
@@ -53,3 +52,5 @@ void AWindowCaptureActor::OnChangeTexture(UTexture2D* _NewTexture)
 {
 	ChangeTexture.Broadcast(_NewTexture);
 }
+
+#pragma optimize("", on)
