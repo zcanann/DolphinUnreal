@@ -294,15 +294,13 @@ void UDolphinInstance::RequestPlayInputTable(UDataTable* FrameInputsTable)
 
 void UDolphinInstance::RequestPlayInputs(const TArray<FFrameInputs>& FrameInputs)
 {
-    DolphinInputRecording Recording;
+    CREATE_TO_INSTANCE_DATA(PlayInputs, ipcData, data)
 
     for (const FFrameInputs Next : FrameInputs)
     {
-        Recording.PushNext(FFrameInputs::ToDolphinControllerState(Next));
+        data->_inputRecording.PushNext(FFrameInputs::ToDolphinControllerState(Next));
     }
 
-    CREATE_TO_INSTANCE_DATA(PlayInputs, ipcData, data)
-    data->_inputRecording = Recording;
     ipcSendToInstance(ipcData);
 }
 

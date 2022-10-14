@@ -12,6 +12,7 @@
 UENUM(BlueprintType)
 enum class EFrameInputType : uint8
 {
+	Start,
 	A,
 	B,
 	X,
@@ -21,7 +22,6 @@ enum class EFrameInputType : uint8
 	DRight,
 	DUp,
 	DDown,
-	Start,
 	L,
 	R,
 	LTrigger,
@@ -49,6 +49,9 @@ public:
 	bool IsButtonToggled(EFrameInputType InFrameInputsType);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bButtonStart = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bButtonA = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -74,9 +77,6 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bButtonZ = false;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool bButtonStart = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bButtonL = false;

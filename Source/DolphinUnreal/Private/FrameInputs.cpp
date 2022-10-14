@@ -6,6 +6,7 @@ FFrameInputs FFrameInputs::FromDolphinControllerState(DolphinControllerState InD
 {
 	FFrameInputs Result;
 
+	Result.bButtonStart = InDolphinControllerState.Start;
 	Result.bButtonA = InDolphinControllerState.A;
 	Result.bButtonB = InDolphinControllerState.B;
 	Result.bButtonX = InDolphinControllerState.X;
@@ -35,6 +36,7 @@ DolphinControllerState FFrameInputs::ToDolphinControllerState(const FFrameInputs
 {
 	DolphinControllerState Result;
 
+	Result.Start = InFrameInputs.bButtonStart;
 	Result.A = InFrameInputs.bButtonA;
 	Result.B = InFrameInputs.bButtonB;
 	Result.X = InFrameInputs.bButtonX;
@@ -64,6 +66,7 @@ FString FFrameInputs::GetSimpleName(EFrameInputType EFrameInputType)
 {
 	switch (EFrameInputType)
 	{
+		case EFrameInputType::Start: return TEXT("S");
 		case EFrameInputType::A: return TEXT("A");
 		case EFrameInputType::B: return TEXT("B");
 		case EFrameInputType::X: return TEXT("X");
@@ -73,7 +76,6 @@ FString FFrameInputs::GetSimpleName(EFrameInputType EFrameInputType)
 		case EFrameInputType::DRight: return TEXT("DR");
 		case EFrameInputType::DUp: return TEXT("DU");
 		case EFrameInputType::DDown: return TEXT("DD");
-		case EFrameInputType::Start: return TEXT("S");
 		case EFrameInputType::L: return TEXT("L");
 		case EFrameInputType::R: return TEXT("R");
 		case EFrameInputType::LTrigger: return TEXT("LT");
@@ -93,6 +95,7 @@ FText FFrameInputs::GetToolTip(EFrameInputType EFrameInputType, int32 InFrame)
 
 	switch (EFrameInputType)
 	{
+		case EFrameInputType::Start: return FText::Format(LOCTEXT("ButtonB_ToolTip", "Start Press (Frame {0})"), { InFrame });
 		case EFrameInputType::A: return FText::Format(LOCTEXT("ButtonA_ToolTip", "A Press (Frame {0})"), { InFrame });
 		case EFrameInputType::B: return FText::Format(LOCTEXT("ButtonB_ToolTip", "B Press (Frame {0})"), { InFrame });
 		case EFrameInputType::X: return FText::Format(LOCTEXT("ButtonB_ToolTip", "X Press (Frame {0})"), { InFrame });
@@ -102,7 +105,6 @@ FText FFrameInputs::GetToolTip(EFrameInputType EFrameInputType, int32 InFrame)
 		case EFrameInputType::DRight: return FText::Format(LOCTEXT("ButtonB_ToolTip", "D-Pad Right Press (Frame {0})"), { InFrame });
 		case EFrameInputType::DUp: return FText::Format(LOCTEXT("ButtonB_ToolTip", "D-Pad Up Press (Frame {0})"), { InFrame });
 		case EFrameInputType::DDown: return FText::Format(LOCTEXT("ButtonB_ToolTip", "D-Pad Down Press (Frame {0})"), { InFrame });
-		case EFrameInputType::Start: return FText::Format(LOCTEXT("ButtonB_ToolTip", "Start Press (Frame {0})"), { InFrame });
 		case EFrameInputType::L: return FText::Format(LOCTEXT("ButtonB_ToolTip", "L Press (Frame {0})"), { InFrame });
 		case EFrameInputType::R: return FText::Format(LOCTEXT("ButtonB_ToolTip", "R Press (Frame {0})"), { InFrame });
 		case EFrameInputType::LTrigger: return FText::Format(LOCTEXT("ButtonLTrigger_ToolTip", "Left Trigger Analog (Frame {0})"), { InFrame });
@@ -119,6 +121,7 @@ bool FFrameInputs::IsFrameInputTypeButton(EFrameInputType InEFrameInputType)
 {
 	switch (InEFrameInputType)
 	{
+		case EFrameInputType::Start:
 		case EFrameInputType::A:
 		case EFrameInputType::B:
 		case EFrameInputType::X:
@@ -128,7 +131,6 @@ bool FFrameInputs::IsFrameInputTypeButton(EFrameInputType InEFrameInputType)
 		case EFrameInputType::DRight:
 		case EFrameInputType::DUp:
 		case EFrameInputType::DDown:
-		case EFrameInputType::Start:
 		case EFrameInputType::L:
 		case EFrameInputType::R:
 		{
@@ -152,6 +154,11 @@ void FFrameInputs::ToggleButton(EFrameInputType InEFrameInputType, bool bIsCheck
 	{
 		default:
 		{
+			case EFrameInputType::Start:
+			{
+				bButtonStart = bIsChecked;
+				break;
+			}
 			case EFrameInputType::A:
 			{
 				bButtonA = bIsChecked;
@@ -197,11 +204,6 @@ void FFrameInputs::ToggleButton(EFrameInputType InEFrameInputType, bool bIsCheck
 				bButtonDDown = bIsChecked;
 				break;
 			}
-			case EFrameInputType::Start:
-			{
-				bButtonStart = bIsChecked;
-				break;
-			}
 			case EFrameInputType::L:
 			{
 				bButtonL= bIsChecked;
@@ -221,6 +223,7 @@ bool FFrameInputs::IsButtonToggled(EFrameInputType InEFrameInputType)
 {
 	switch (InEFrameInputType)
 	{
+		case EFrameInputType::Start: return bButtonStart;
 		case EFrameInputType::A: return bButtonA;
 		case EFrameInputType::B: return bButtonB;
 		case EFrameInputType::X: return bButtonX;
@@ -230,7 +233,6 @@ bool FFrameInputs::IsButtonToggled(EFrameInputType InEFrameInputType)
 		case EFrameInputType::DRight: return bButtonDRight;
 		case EFrameInputType::DUp: return bButtonDUp;
 		case EFrameInputType::DDown: return bButtonDDown;
-		case EFrameInputType::Start: return bButtonStart;
 		case EFrameInputType::L: return bButtonL;
 		case EFrameInputType::R: return bButtonR;
 		default: return false;

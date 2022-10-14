@@ -4,8 +4,6 @@
 
 #include "Engine/Texture2D.h"
 
-#pragma optimize("", off)
-
 UWindowCaptureWidget::UWindowCaptureWidget(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
@@ -53,5 +51,3 @@ void UWindowCaptureWidget::OnChangeTexture(UTexture2D* _NewTexture)
 {
 	ChangeTexture.Broadcast(_NewTexture);
 }
-
-#pragma optimize("", on)
