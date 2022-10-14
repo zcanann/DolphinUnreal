@@ -100,15 +100,7 @@ bool UCaptureMachine::DoCapture()
 		}
 	}
 
-	if (Properties.CutShadow)
-	{
-		::PrintWindow(m_TargetWindow, m_OriginalMemDC, 2);
-		::BitBlt(m_MemDC, 0, 0, m_WindowSize.X, m_WindowSize.Y, m_OriginalMemDC, m_WindowOffset.X, m_WindowOffset.Y, SRCCOPY);
-	}
-	else
-	{
-		::PrintWindow(m_TargetWindow, m_MemDC, 2);
-	}
+	::PrintWindow(m_TargetWindow, m_MemDC, 2);
 
 	UpdateTexture();
 #endif
@@ -129,13 +121,7 @@ UTexture2D* UCaptureMachine::CreateTexture()
 	HDC foundDC = ::GetDC(m_TargetWindow);
 	m_MemDC = ::CreateCompatibleDC(foundDC);
 
-	if (Properties.CutShadow)
-	{
-		m_OriginalMemDC = ::CreateCompatibleDC(foundDC);
-	}
-
 	ReleaseDC(m_TargetWindow, foundDC);
-
 	ReCreateTexture();
 
 	return TextureTarget;
@@ -170,21 +156,9 @@ void UCaptureMachine::GetWindowSize(HWND hWnd)
 	RECT rect;
 	::GetWindowRect(hWnd, &rect);
 
-	if (Properties.CutShadow)
-	{
-		RECT dwmWindowRect;
-		::DwmGetWindowAttribute(hWnd, DWMWA_EXTENDED_FRAME_BOUNDS, &dwmWindowRect, sizeof(RECT));
-
-		m_OriginalWindowSize = FIntVector2D(rect.right - rect.left, rect.bottom - rect.top);
-		m_WindowSize = FIntVector2D(dwmWindowRect.right - dwmWindowRect.left, dwmWindowRect.bottom - dwmWindowRect.top);
-		m_WindowOffset = FIntVector2D(dwmWindowRect.left - rect.left, dwmWindowRect.top - rect.top);
-	}
-	else
-	{
-		m_OriginalWindowSize = FIntVector2D(rect.right - rect.left, rect.bottom - rect.top);
-		m_WindowSize = m_OriginalWindowSize;
-		m_WindowOffset = FIntVector2D(0, 0);
-	}
+	m_OriginalWindowSize = FIntVector2D(rect.right - rect.left, rect.bottom - rect.top);
+	m_WindowSize = m_OriginalWindowSize;
+	m_WindowOffset = FIntVector2D(0, 0);
 #endif
 }
 
@@ -220,11 +194,5 @@ void UCaptureMachine::ReCreateTexture()
 	m_hBmp = ::CreateDIBSection(NULL, &bmpInfo, DIB_RGB_COLORS, (void**)&m_BitmapBuffer, NULL, 0);
 
 	::SelectObject(m_MemDC, m_hBmp);
-
-	if (Properties.CutShadow)
-	{
-		m_hOriginalBmp = ::CreateCompatibleBitmap(m_MemDC, m_OriginalWindowSize.X, m_OriginalWindowSize.Y);
-		::SelectObject(m_OriginalMemDC, m_hOriginalBmp);
-	}
 #endif
 }

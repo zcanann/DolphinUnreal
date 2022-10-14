@@ -107,13 +107,14 @@ SERVER_FUNC_BODY(UDolphinInstance, OnInstanceTerminated, params)
 SERVER_FUNC_BODY(UDolphinInstance, OnInstanceRecordingStopped, params)
 {
     UDataTable* InputTable = NewObject<UDataTable>();
+    DolphinInputRecording Recording = std::move(params._inputRecording);
 
     InputTable->RowStruct = FFrameInputs::StaticStruct();
 
     // TODO: This is slow and takes too much memory. Better to not to add the rows to the data table at all, and append each row to the CSV iteratively.
-    for (const DolphinControllerState& Next : params._inputStates)
+    while(Recording.HasNext())
     {
-        FFrameInputs FrameInput = FFrameInputs::FromDolphinControllerState(Next);
+        FFrameInputs FrameInput = FFrameInputs::FromDolphinControllerState(Recording.PopNext());
         InputTable->AddRow(FName(FGuid::NewGuid().ToString()), FrameInput);
     }
 
@@ -293,14 +294,15 @@ void UDolphinInstance::RequestPlayInputTable(UDataTable* FrameInputsTable)
 
 void UDolphinInstance::RequestPlayInputs(const TArray<FFrameInputs>& FrameInputs)
 {
-    std::vector<DolphinControllerState> InputStates;
+    DolphinInputRecording Recording;
+
     for (const FFrameInputs Next : FrameInputs)
     {
-        InputStates.push_back(FFrameInputs::ToDolphinControllerState(Next));
+        Recording.PushNext(FFrameInputs::ToDolphinControllerState(Next));
     }
 
     CREATE_TO_INSTANCE_DATA(PlayInputs, ipcData, data)
-    data->_inputStates = InputStates;
+    data->_inputRecording = Recording;
     ipcSendToInstance(ipcData);
 }
 

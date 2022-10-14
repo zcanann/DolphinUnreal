@@ -40,7 +40,4 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = WindowCapture2D)
 	bool CheckWindowSize = false;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = WindowCapture2D)
-	bool CutShadow = true;
 };
