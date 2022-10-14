@@ -13,6 +13,8 @@
 #include <dwmapi.h>
 #endif
 
+#pragma optimize("", off)
+
 UCaptureMachine::UCaptureMachine()
 {
 }
@@ -25,6 +27,7 @@ void UCaptureMachine::Start(FCaptureMachineProperties InProperties)
 
 void UCaptureMachine::Tick(float DeltaTime)
 {
+	// TODO: Respect frame rate
 	DoCapture();
 }
 
@@ -38,7 +41,6 @@ void UCaptureMachine::Stop()
 	}
 #endif
 }
-
 
 void UCaptureMachine::Dispose()
 {
@@ -78,9 +80,17 @@ bool UCaptureMachine::DoCapture()
 		return true;
 	}
 
+	if (!m_MemDC)
+	{
+		HDC foundDC = ::GetDC(m_TargetWindow);
+		m_MemDC = ::CreateCompatibleDC(foundDC);
+
+		ReleaseDC(m_TargetWindow, foundDC);
+	}
+
 	if (!TextureTarget)
 	{
-		ReCreateTexture();
+		CreateNewTexture();
 	}
 
 	if (Properties.CheckWindowSize)
@@ -90,8 +100,7 @@ bool UCaptureMachine::DoCapture()
 
 		if (m_WindowSize != oldWindowSize)
 		{
-			ReCreateTexture();
-			ChangeTexture.Broadcast(TextureTarget);
+			CreateNewTexture();
 		}
 
 		if (!TextureTarget)
@@ -106,27 +115,6 @@ bool UCaptureMachine::DoCapture()
 #endif
 
 	return true;
-}
-
-UTexture2D* UCaptureMachine::CreateTexture()
-{
-#if PLATFORM_WINDOWS
-	if (!m_TargetWindow)
-	{
-		return nullptr;
-	}
-
-	GetWindowSize(m_TargetWindow);
-
-	HDC foundDC = ::GetDC(m_TargetWindow);
-	m_MemDC = ::CreateCompatibleDC(foundDC);
-
-	ReleaseDC(m_TargetWindow, foundDC);
-	ReCreateTexture();
-
-	return TextureTarget;
-#endif
-	return nullptr;
 }
 
 void UCaptureMachine::UpdateTexture() const
@@ -162,7 +150,7 @@ void UCaptureMachine::GetWindowSize(HWND hWnd)
 #endif
 }
 
-void UCaptureMachine::ReCreateTexture()
+void UCaptureMachine::CreateNewTexture()
 {
 #if PLATFORM_WINDOWS
 	if (m_hBmp)
@@ -182,6 +170,7 @@ void UCaptureMachine::ReCreateTexture()
 
 	TextureTarget = UTexture2D::CreateTransient(m_WindowSize.X, m_WindowSize.Y, PF_B8G8R8A8);
 	TextureTarget->UpdateResource();
+	ChangeTexture.Broadcast(TextureTarget);
 
 	BITMAPINFO bmpInfo;
 	bmpInfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
@@ -196,3 +185,5 @@ void UCaptureMachine::ReCreateTexture()
 	::SelectObject(m_MemDC, m_hBmp);
 #endif
 }
+
+#pragma optimize("", on)

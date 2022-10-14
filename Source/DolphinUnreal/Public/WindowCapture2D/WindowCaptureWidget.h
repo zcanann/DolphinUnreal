@@ -23,7 +23,7 @@ public:
 
 protected:
 	UFUNCTION(BlueprintCallable, Category = WindowCapture2D)
-	UTexture2D* Start(FCaptureMachineProperties Properties);
+	void Start(FCaptureMachineProperties Properties);
 
 	UFUNCTION()
 	void OnChangeTexture(UTexture2D* NewTexture);

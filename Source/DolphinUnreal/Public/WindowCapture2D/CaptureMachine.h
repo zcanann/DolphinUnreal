@@ -33,13 +33,10 @@ public:
 	virtual void Stop();
 	virtual void Dispose();
 
-	UFUNCTION(BlueprintPure, Category = WindowCapture2D)
-	UTexture2D* CreateTexture();
-
 protected:
 	void UpdateTexture() const;
 	void GetWindowSize(HWND hWnd);
-	void ReCreateTexture();
+	void CreateNewTexture();
 	bool DoCapture();
 
 
