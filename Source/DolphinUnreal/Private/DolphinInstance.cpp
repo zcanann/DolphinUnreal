@@ -322,13 +322,16 @@ void UDolphinInstance::RequestPlayInputTable(UDataTable* FrameInputsTable[4])
 
     for (int32 Index = 0; Index < 4; Index++)
     {
-        FrameInputsTable[Index]->GetAllRows(ContextString, FrameInputs[Index]);
-
-        for (const FFrameInputs* Next : FrameInputs[Index])
+        if (FrameInputsTable[Index] != nullptr)
         {
-            if (Next)
+            FrameInputsTable[Index]->GetAllRows(ContextString, FrameInputs[Index]);
+
+            for (const FFrameInputs* Next : FrameInputs[Index])
             {
-                FrameInputsValue[Index].Add(*Next);
+                if (Next)
+                {
+                    FrameInputsValue[Index].Add(*Next);
+                }
             }
         }
     }

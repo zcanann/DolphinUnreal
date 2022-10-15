@@ -25,6 +25,8 @@ public:
 	static const FName ModuleName;
 
 private:
+	void RegisterQuickSettingsMenu();
+
 	UPROPERTY()
 	TArray<UDolphinInstance*> DolphinInstances;
 

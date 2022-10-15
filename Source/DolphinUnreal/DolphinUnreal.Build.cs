@@ -76,6 +76,7 @@ public class DolphinUnreal : ModuleRules
                 "RenderCore",
 				"Slate",
 				"SlateCore",
+				"ToolMenus",
 				"UMG",
 				"UnrealEd",
 			}
