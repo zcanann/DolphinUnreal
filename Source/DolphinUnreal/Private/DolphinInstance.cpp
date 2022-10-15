@@ -16,8 +16,6 @@
 // STL
 #include <string>
 
-#pragma optimize("", off)
-
 UDolphinInstance::UDolphinInstance(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
     FEditorDelegates::PausePIE.AddUObject(this, &UDolphinInstance::PausePIE);
@@ -79,6 +77,10 @@ SERVER_FUNC_BODY(UDolphinInstance, OnInstanceHeartbeatAcknowledged, params)
 {
     bIsRecordingInput = params._isRecording;
     bIsPaused = params._isPaused;
+    ControllerStates[0] = FFrameInputs::FromDolphinControllerState(params._currentInputStates[0]);
+    ControllerStates[1] = FFrameInputs::FromDolphinControllerState(params._currentInputStates[1]);
+    ControllerStates[2] = FFrameInputs::FromDolphinControllerState(params._currentInputStates[2]);
+    ControllerStates[3] = FFrameInputs::FromDolphinControllerState(params._currentInputStates[3]);
 }
 
 SERVER_FUNC_BODY(UDolphinInstance, OnInstanceLogOutput, params)
@@ -107,18 +109,30 @@ SERVER_FUNC_BODY(UDolphinInstance, OnInstanceTerminated, params)
 SERVER_FUNC_BODY(UDolphinInstance, OnInstanceRecordingStopped, params)
 {
     UDataTable* InputTable = NewObject<UDataTable>();
-    DolphinInputRecording Recording = std::move(params._inputRecording);
+    FString ImportTimeStamp = FString::FromInt(FDateTime::Now().ToUnixTimestamp());
+    FString ImportGuid =  FGuid::NewGuid().ToString().Mid(0, 4);
 
-    InputTable->RowStruct = FFrameInputs::StaticStruct();
-
-    // TODO: This is slow and takes too much memory. Better to not to add the rows to the data table at all, and append each row to the CSV iteratively.
-    while(Recording.HasNext())
+    for (int32 Index = 0; Index < 4; Index++)
     {
-        FFrameInputs FrameInput = FFrameInputs::FromDolphinControllerState(Recording.PopNext());
-        InputTable->AddRow(FName(FGuid::NewGuid().ToString()), FrameInput);
-    }
+        DolphinInputRecording Recording = params._inputRecording[int(Index)];
 
-    FInputTableImporter::ImportInputTableAsAsset(*InputTable);
+        if (!Recording.HasNext())
+        {
+            continue;
+        }
+
+        InputTable->RowStruct = FFrameInputs::StaticStruct();
+
+        // Optimization: Write directly to CSV maybe, then import?
+        while (Recording.HasNext())
+        {
+            FFrameInputs FrameInput = FFrameInputs::FromDolphinControllerState(Recording.PopNext());
+            InputTable->AddRow(FName(FGuid::NewGuid().ToString()), FrameInput);
+        }
+
+        FString UniqueName = ImportTimeStamp + TEXT("_Controller") + FString::FromInt(Index) + TEXT("_") + ImportGuid;
+        FInputTableImporter::ImportInputTableAsAsset(UniqueName, *InputTable);
+    }
 }
 
 SERVER_FUNC_BODY(UDolphinInstance, OnInstanceSaveStateCreated, params)
@@ -242,11 +256,16 @@ bool UDolphinInstance::IsPaused() const
     return bIsPaused;
 }
 
-void UDolphinInstance::RequestStartRecording()
+void UDolphinInstance::RequestStartRecording(bool Unpause, bool RecordControllers[4])
 {
     bIsRecordingInput = true;
 
-    CREATE_TO_INSTANCE_DATA(StartRecordingInput, ipcData, data)
+    CREATE_TO_INSTANCE_DATA(StartRecordingInput, ipcData, data);
+    data->_unpauseInstance = Unpause;
+    data->_recordControllers[0] = RecordControllers[0];
+    data->_recordControllers[1] = RecordControllers[1];
+    data->_recordControllers[2] = RecordControllers[2];
+    data->_recordControllers[3] = RecordControllers[3];
     ipcSendToInstance(ipcData);
 }
 
@@ -263,12 +282,17 @@ bool UDolphinInstance::IsRecording() const
     return bIsRecordingInput;
 }
 
+FFrameInputs UDolphinInstance::GetControllerState(int32 Index) const
+{
+    return ControllerStates[FMath::Clamp(Index, 0, 3)];
+}
+
 int64 UDolphinInstance::GetWindowIdentifier() const
 {
     return WindowIdentifier;
 }
 
-void UDolphinInstance::RequestPlayInputTable(UDataTable* FrameInputsTable)
+void UDolphinInstance::RequestPlayInputTable(UDataTable* FrameInputsTable[4])
 {
     if (FrameInputsTable == nullptr)
     {
@@ -276,29 +300,36 @@ void UDolphinInstance::RequestPlayInputTable(UDataTable* FrameInputsTable)
         return;
     }
 
-    TArray<FFrameInputs*> FrameInputs;
+    TArray<FFrameInputs*> FrameInputs[4];
+    TArray<FFrameInputs> FrameInputsValue[4];
     FString ContextString = TEXT("PlayInputs");
 
-    FrameInputsTable->GetAllRows(ContextString, FrameInputs);
-
-    TArray<FFrameInputs> FrameInputsValue;
-    for (const FFrameInputs* Next : FrameInputs)
+    for (int32 Index = 0; Index < 4; Index++)
     {
-        if (Next)
+        FrameInputsTable[Index]->GetAllRows(ContextString, FrameInputs[Index]);
+
+        for (const FFrameInputs* Next : FrameInputs[Index])
         {
-            FrameInputsValue.Add(*Next);
+            if (Next)
+            {
+                FrameInputsValue[Index].Add(*Next);
+            }
         }
     }
+
     RequestPlayInputs(FrameInputsValue);
 }
 
-void UDolphinInstance::RequestPlayInputs(const TArray<FFrameInputs>& FrameInputs)
+void UDolphinInstance::RequestPlayInputs(const TArray<FFrameInputs> FrameInputs[4])
 {
     CREATE_TO_INSTANCE_DATA(PlayInputs, ipcData, data)
 
-    for (const FFrameInputs Next : FrameInputs)
+    for (int32 Index = 0; Index < 4; Index++)
     {
-        data->_inputRecording.PushNext(FFrameInputs::ToDolphinControllerState(Next));
+        for (const FFrameInputs Next : FrameInputs[Index])
+        {
+            data->_inputRecording[Index].PushNext(FFrameInputs::ToDolphinControllerState(Next));
+        }
     }
 
     ipcSendToInstance(ipcData);
@@ -311,11 +342,14 @@ void UDolphinInstance::RequestFrameAdvance(int32 NumberOfFrames)
     ipcSendToInstance(ipcData);
 }
 
-void UDolphinInstance::RequestFrameAdvanceWithInput(FFrameInputs FrameInputs, int32 NumberOfFrames)
+void UDolphinInstance::RequestFrameAdvanceWithInput(FFrameInputs FrameInputs[4], int32 NumberOfFrames)
 {
     CREATE_TO_INSTANCE_DATA(FrameAdvanceWithInput, ipcData, data)
     data->_numFrames = NumberOfFrames;
-    data->_inputState = FFrameInputs::ToDolphinControllerState(FrameInputs);
+    data->_inputState[0] = FFrameInputs::ToDolphinControllerState(FrameInputs[0]);
+    data->_inputState[1] = FFrameInputs::ToDolphinControllerState(FrameInputs[1]);
+    data->_inputState[2] = FFrameInputs::ToDolphinControllerState(FrameInputs[2]);
+    data->_inputState[3] = FFrameInputs::ToDolphinControllerState(FrameInputs[3]);
     ipcSendToInstance(ipcData);
 }
 
@@ -362,5 +396,3 @@ void UDolphinInstance::RequestTerminate()
 
     UDolphinUnrealBlueprintLibrary::TerminateDolpinInstance(this);
 }
-
-#pragma optimize("", on)

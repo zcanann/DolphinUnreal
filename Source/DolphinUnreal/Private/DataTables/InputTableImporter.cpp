@@ -7,17 +7,14 @@
 #include "Kismet/DataTableFunctionLibrary.h"
 #include "Misc/FileHelper.h"
 
-#pragma optimize("", off)
-
-bool FInputTableImporter::ImportInputTableAsAsset(const UDataTable& InDataTable)
+bool FInputTableImporter::ImportInputTableAsAsset(const FString& InUniqueName, const UDataTable& InDataTable)
 {
 	if (!InDataTable.RowStruct)
 	{
 		return false;
 	}
 
-	FString UniqueName = FGuid::NewGuid().ToString();
-	FString OutputCsvName = TEXT("InputTables/") + UniqueName + TEXT(".csv");
+	FString OutputCsvName = TEXT("InputTables/") + InUniqueName + TEXT(".csv");
 	FString InputTableOutputFile = FPaths::ConvertRelativePathToFull(FPaths::Combine(FPaths::ProjectContentDir(), OutputCsvName));
 	IPlatformFile& FileManager = FPlatformFileManager::Get().GetPlatformFile();
 	IFileHandle* FileHandle = FileManager.OpenWrite(*InputTableOutputFile);
@@ -127,5 +124,3 @@ void FInputTableImporter::AppendString(IFileHandle* FileHandle, const FString& I
 	uint8* RawBytes = (uint8*)TCHAR_TO_ANSI(*InString);
 	FileHandle->Write(RawBytes, InString.Len());
 }
-
-#pragma optimize("", on)

@@ -27,7 +27,8 @@ FText UK2Node_StartRecording::GetMenuCategory() const
 	return LOCTEXT("K2Node_StartRecording_Category", "Dolphin");
 }
 
-UK2Node_StartRecordingProxy* UK2Node_StartRecordingProxy::CreateProxyObjectForWait(UDolphinInstance* DolphinInstance)
+UK2Node_StartRecordingProxy* UK2Node_StartRecordingProxy::CreateProxyObjectForWait(UDolphinInstance* DolphinInstance, bool Unpause,
+	bool RecordController0, bool RecordController1, bool RecordController2, bool RecordController3)
 {
 	UK2Node_StartRecordingProxy* Proxy = NewObject<UK2Node_StartRecordingProxy>();
 	Proxy->SetFlags(RF_StrongRefOnFrame);
@@ -36,8 +37,9 @@ UK2Node_StartRecordingProxy* UK2Node_StartRecordingProxy::CreateProxyObjectForWa
 
 	if (DolphinInstance != nullptr)
 	{
+		bool RecordControllers[4] = { RecordController0, RecordController1, RecordController2, RecordController3 };
 		DolphinInstance->OnInstanceCommandCompleteEvent.AddUObject(Proxy, &UK2Node_StartRecordingProxy::OnInstanceReady);
-		DolphinInstance->RequestStartRecording();
+		DolphinInstance->RequestStartRecording(Unpause, RecordControllers);
 	}
 
 	return Proxy;

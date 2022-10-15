@@ -27,7 +27,8 @@ FText UK2Node_FrameAdvanceWithInputs::GetMenuCategory() const
 	return LOCTEXT("K2Node_FrameAdvanceWithInputs_Category", "Dolphin");
 }
 
-UK2Node_FrameAdvanceWithInputsProxy* UK2Node_FrameAdvanceWithInputsProxy::CreateProxyObjectForWait(UDolphinInstance* DolphinInstance, FFrameInputs FrameInputs, int32 NumberOfFrames)
+UK2Node_FrameAdvanceWithInputsProxy* UK2Node_FrameAdvanceWithInputsProxy::CreateProxyObjectForWait(UDolphinInstance* DolphinInstance,
+	FFrameInputs FrameInputsController0, FFrameInputs FrameInputsController1, FFrameInputs FrameInputsController2, FFrameInputs FrameInputsController3, int32 NumberOfFrames)
 {
 	UK2Node_FrameAdvanceWithInputsProxy* Proxy = NewObject<UK2Node_FrameAdvanceWithInputsProxy>();
 	Proxy->SetFlags(RF_StrongRefOnFrame);
@@ -36,6 +37,7 @@ UK2Node_FrameAdvanceWithInputsProxy* UK2Node_FrameAdvanceWithInputsProxy::Create
 
 	if (DolphinInstance != nullptr)
 	{
+		FFrameInputs FrameInputs[4] = { FrameInputsController0, FrameInputsController1, FrameInputsController2, FrameInputsController3 };
 		DolphinInstance->OnInstanceCommandCompleteEvent.AddUObject(Proxy, &UK2Node_FrameAdvanceWithInputsProxy::OnInstanceReady);
 		DolphinInstance->RequestFrameAdvanceWithInput(FrameInputs, NumberOfFrames);
 	}

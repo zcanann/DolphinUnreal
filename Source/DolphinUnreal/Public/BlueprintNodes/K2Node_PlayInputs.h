@@ -34,7 +34,8 @@ class UK2Node_PlayInputsProxy : public UObject
 
 public:
 	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"))
-	static UK2Node_PlayInputsProxy* CreateProxyObjectForWait(UDolphinInstance* DolphinInstance, TArray<FFrameInputs> FrameInputs);
+	static UK2Node_PlayInputsProxy* CreateProxyObjectForWait(UDolphinInstance* DolphinInstance, TArray<FFrameInputs> FrameInputsController0,
+		TArray<FFrameInputs> FrameInputsController1, TArray<FFrameInputs> FrameInputsController2, TArray<FFrameInputs> FrameInputsController3);
 	
 	UPROPERTY(BlueprintAssignable)
 	FDolphinPlayInputsMulticastDelegate OnSuccess;

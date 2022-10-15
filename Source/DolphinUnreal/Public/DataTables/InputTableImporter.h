@@ -8,7 +8,7 @@ class UDataTable;
 class FInputTableImporter
 {
 public:
-	static bool ImportInputTableAsAsset(const UDataTable& InDataTable);
+	static bool ImportInputTableAsAsset(const FString& InUniqueName, const UDataTable& InDataTable);
 
 private:
 	static bool WriteRow(IFileHandle* FileHandle, const UScriptStruct* InRowStruct, const void* InRowData, const FProperty* SkipProperty = nullptr);

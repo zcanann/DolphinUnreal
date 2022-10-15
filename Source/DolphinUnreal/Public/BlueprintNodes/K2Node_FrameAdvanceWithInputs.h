@@ -32,7 +32,8 @@ class UK2Node_FrameAdvanceWithInputsProxy : public UObject
 
 public:
 	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"))
-	static UK2Node_FrameAdvanceWithInputsProxy* CreateProxyObjectForWait(UDolphinInstance* DolphinInstance, FFrameInputs FrameInputs, int32 NumberOfFrames = 1);
+	static UK2Node_FrameAdvanceWithInputsProxy* CreateProxyObjectForWait(UDolphinInstance* DolphinInstance,
+		FFrameInputs FrameInputsController0, FFrameInputs FrameInputsController1, FFrameInputs FrameInputsController2, FFrameInputs FrameInputsController3, int32 NumberOfFrames = 1);
 	
 	UPROPERTY(BlueprintAssignable)
 	FDolphinFrameAdvanceWithInputsMulticastDelegate OnSuccess;

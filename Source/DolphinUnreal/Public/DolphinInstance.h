@@ -48,18 +48,21 @@ public:
 	bool IsRecording() const;
 
 	UFUNCTION(BlueprintPure)
+	FFrameInputs GetControllerState(int32 Index) const;
+
+	UFUNCTION(BlueprintPure)
 	int64 GetWindowIdentifier() const;
 
 	void RequestCreateSaveState(FString SaveName);
 	void RequestLoadSaveState(USavAsset* SavAsset);
 	void RequestPause();
 	void RequestResume();
-	void RequestStartRecording();
+	void RequestStartRecording(bool Unpause, bool RecordControllers[4]);
 	void RequestStopRecording();
-	void RequestPlayInputTable(UDataTable* FrameInputsTable);
-	void RequestPlayInputs(const TArray<FFrameInputs>& FrameInputs);
+	void RequestPlayInputTable(UDataTable* FrameInputsTable[4]);
+	void RequestPlayInputs(const TArray<FFrameInputs> FrameInputs[4]);
 	void RequestFrameAdvance(int32 NumberOfFrames);
-	void RequestFrameAdvanceWithInput(FFrameInputs FrameInputs, int32 NumberOfFrames = 1);
+	void RequestFrameAdvanceWithInput(FFrameInputs FrameInputs[4], int32 NumberOfFrames = 1);
 	void RequestFormatMemoryCard(EMemoryCardSlot MemoryCardSlot, EMemoryCardSize MemoryCardSize, EMemoryCardEncoding MemoryCardEncoding);
 	void RequestReadMemory(FDolphinUInt32 Address, const TArray<FDolphinInt32>& Offsets, int32 ByteCount);
 	void RequestWriteMemory(FDolphinUInt32 Address, const TArray<FDolphinInt32>& Offsets, const TArray<FDolphinUInt8>& Bytes);
@@ -91,4 +94,6 @@ private:
 	bool bIsRecordingInput = false;
 	bool bIsPaused = false;
 	uint64 NextCommandId = 0;
+
+	FFrameInputs ControllerStates[4];
 };

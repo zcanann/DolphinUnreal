@@ -32,7 +32,8 @@ class UK2Node_StartRecordingProxy : public UObject
 
 public:
 	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"))
-	static UK2Node_StartRecordingProxy* CreateProxyObjectForWait(UDolphinInstance* DolphinInstance);
+	static UK2Node_StartRecordingProxy* CreateProxyObjectForWait(UDolphinInstance* DolphinInstance, bool Unpause = true,
+		bool RecordController0 = true, bool RecordController1 = false, bool RecordController2 = false, bool RecordController3 = false);
 	
 	UPROPERTY(BlueprintAssignable)
 	FDolphinStartRecordingMulticastDelegate OnSuccess;
