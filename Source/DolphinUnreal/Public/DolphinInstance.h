@@ -50,6 +50,15 @@ public:
 	UFUNCTION(BlueprintPure)
 	FFrameInputs GetControllerState(int32 Index) const;
 
+	UFUNCTION(BlueprintCallable)
+	void SetControllerStateOverride(FFrameInputs ControllerState, int32 Index);
+
+	UFUNCTION(BlueprintCallable)
+	void SetShouldFrameAdvanceWithInput(bool bInShouldFrameAdvanceWithInputs);
+
+	UFUNCTION(BlueprintPure)
+	bool GetShouldFrameAdvanceWithInput() const;
+
 	UFUNCTION(BlueprintPure)
 	int64 GetWindowIdentifier() const;
 
@@ -93,7 +102,9 @@ private:
 
 	bool bIsRecordingInput = false;
 	bool bIsPaused = false;
+	bool bShouldFrameAdvanceWithInputs = false;
 	uint64 NextCommandId = 0;
 
 	FFrameInputs ControllerStates[4];
+	FFrameInputs ControllerStateOverrides[4];
 };

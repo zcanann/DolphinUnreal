@@ -287,6 +287,21 @@ FFrameInputs UDolphinInstance::GetControllerState(int32 Index) const
     return ControllerStates[FMath::Clamp(Index, 0, 3)];
 }
 
+void UDolphinInstance::SetControllerStateOverride(FFrameInputs ControllerState, int32 Index)
+{
+    ControllerStateOverrides[FMath::Clamp(Index, 0, 3)] = ControllerState;
+}
+
+void UDolphinInstance::SetShouldFrameAdvanceWithInput(bool bInShouldFrameAdvanceWithInputs)
+{
+    bShouldFrameAdvanceWithInputs = bInShouldFrameAdvanceWithInputs;
+}
+
+bool UDolphinInstance::GetShouldFrameAdvanceWithInput() const
+{
+    return bShouldFrameAdvanceWithInputs;
+}
+
 int64 UDolphinInstance::GetWindowIdentifier() const
 {
     return WindowIdentifier;
