@@ -51,7 +51,8 @@ void UDolphinInstance::Tick(float DeltaTime)
     updateIpcListen();
 
     // Send a heartbeat to the running instance
-    CREATE_TO_INSTANCE_DATA(Heartbeat, ipcData, data)
+    CREATE_TO_INSTANCE_DATA(Heartbeat, ipcData, data);
+    data->_shouldUseHardwareController = bShouldUseHardwareController;
     ipcSendToInstance(ipcData);
 }
 
@@ -77,10 +78,10 @@ SERVER_FUNC_BODY(UDolphinInstance, OnInstanceHeartbeatAcknowledged, params)
 {
     bIsRecordingInput = params._isRecording;
     bIsPaused = params._isPaused;
-    ControllerStates[0] = FFrameInputs::FromDolphinControllerState(params._currentInputStates[0]);
-    ControllerStates[1] = FFrameInputs::FromDolphinControllerState(params._currentInputStates[1]);
-    ControllerStates[2] = FFrameInputs::FromDolphinControllerState(params._currentInputStates[2]);
-    ControllerStates[3] = FFrameInputs::FromDolphinControllerState(params._currentInputStates[3]);
+    ControllerStates[0] = FFrameInputs::FromDolphinControllerState(params._hardwareInputStates[0]);
+    ControllerStates[1] = FFrameInputs::FromDolphinControllerState(params._hardwareInputStates[1]);
+    ControllerStates[2] = FFrameInputs::FromDolphinControllerState(params._hardwareInputStates[2]);
+    ControllerStates[3] = FFrameInputs::FromDolphinControllerState(params._hardwareInputStates[3]);
 }
 
 SERVER_FUNC_BODY(UDolphinInstance, OnInstanceLogOutput, params)
@@ -292,14 +293,14 @@ void UDolphinInstance::SetControllerStateOverride(FFrameInputs ControllerState, 
     ControllerStateOverrides[FMath::Clamp(Index, 0, 3)] = ControllerState;
 }
 
-void UDolphinInstance::SetShouldFrameAdvanceWithInput(bool bInShouldFrameAdvanceWithInputs)
+void UDolphinInstance::SetShouldUseHardwareController(bool bInShouldUseHardwareController)
 {
-    bShouldFrameAdvanceWithInputs = bInShouldFrameAdvanceWithInputs;
+    bShouldUseHardwareController = bInShouldUseHardwareController;
 }
 
-bool UDolphinInstance::GetShouldFrameAdvanceWithInput() const
+bool UDolphinInstance::GetShouldUseHardwareController() const
 {
-    return bShouldFrameAdvanceWithInputs;
+    return bShouldUseHardwareController;
 }
 
 int64 UDolphinInstance::GetWindowIdentifier() const
@@ -357,14 +358,13 @@ void UDolphinInstance::RequestFrameAdvance(int32 NumberOfFrames)
     ipcSendToInstance(ipcData);
 }
 
-void UDolphinInstance::RequestFrameAdvanceWithInput(FFrameInputs FrameInputs[4], int32 NumberOfFrames)
+void UDolphinInstance::RequestSetTasInput(FFrameInputs FrameInputs[4])
 {
-    CREATE_TO_INSTANCE_DATA(FrameAdvanceWithInput, ipcData, data)
-    data->_numFrames = NumberOfFrames;
-    data->_inputState[0] = FFrameInputs::ToDolphinControllerState(FrameInputs[0]);
-    data->_inputState[1] = FFrameInputs::ToDolphinControllerState(FrameInputs[1]);
-    data->_inputState[2] = FFrameInputs::ToDolphinControllerState(FrameInputs[2]);
-    data->_inputState[3] = FFrameInputs::ToDolphinControllerState(FrameInputs[3]);
+    CREATE_TO_INSTANCE_DATA(SetTasInput, ipcData, data)
+    data->_tasInputStates[0] = FFrameInputs::ToDolphinControllerState(FrameInputs[0]);
+    data->_tasInputStates[1] = FFrameInputs::ToDolphinControllerState(FrameInputs[1]);
+    data->_tasInputStates[2] = FFrameInputs::ToDolphinControllerState(FrameInputs[2]);
+    data->_tasInputStates[3] = FFrameInputs::ToDolphinControllerState(FrameInputs[3]);
     ipcSendToInstance(ipcData);
 }
 

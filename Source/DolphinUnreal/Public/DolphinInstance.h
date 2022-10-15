@@ -54,10 +54,10 @@ public:
 	void SetControllerStateOverride(FFrameInputs ControllerState, int32 Index);
 
 	UFUNCTION(BlueprintCallable)
-	void SetShouldFrameAdvanceWithInput(bool bInShouldFrameAdvanceWithInputs);
+	void SetShouldUseHardwareController(bool bInShouldUseHardwareController);
 
 	UFUNCTION(BlueprintPure)
-	bool GetShouldFrameAdvanceWithInput() const;
+	bool GetShouldUseHardwareController() const;
 
 	UFUNCTION(BlueprintPure)
 	int64 GetWindowIdentifier() const;
@@ -71,7 +71,7 @@ public:
 	void RequestPlayInputTable(UDataTable* FrameInputsTable[4]);
 	void RequestPlayInputs(const TArray<FFrameInputs> FrameInputs[4]);
 	void RequestFrameAdvance(int32 NumberOfFrames);
-	void RequestFrameAdvanceWithInput(FFrameInputs FrameInputs[4], int32 NumberOfFrames = 1);
+	void RequestSetTasInput(FFrameInputs FrameInputs[4]);
 	void RequestFormatMemoryCard(EMemoryCardSlot MemoryCardSlot, EMemoryCardSize MemoryCardSize, EMemoryCardEncoding MemoryCardEncoding);
 	void RequestReadMemory(FDolphinUInt32 Address, const TArray<FDolphinInt32>& Offsets, int32 ByteCount);
 	void RequestWriteMemory(FDolphinUInt32 Address, const TArray<FDolphinInt32>& Offsets, const TArray<FDolphinUInt8>& Bytes);
@@ -102,7 +102,7 @@ private:
 
 	bool bIsRecordingInput = false;
 	bool bIsPaused = false;
-	bool bShouldFrameAdvanceWithInputs = false;
+	bool bShouldUseHardwareController = false;
 	uint64 NextCommandId = 0;
 
 	FFrameInputs ControllerStates[4];
