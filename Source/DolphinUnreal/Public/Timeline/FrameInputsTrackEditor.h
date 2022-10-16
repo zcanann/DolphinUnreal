@@ -13,12 +13,14 @@
 #include "MovieSceneTrackEditor.h"
 #include "IContentBrowserSingleton.h"
 
+struct FAnimatedPropertyKey;
 struct FAssetData;
-class FAudioThumbnail;
+struct FBuildEditWidgetParams;
 class FMenuBuilder;
 class FSequencerSectionPainter;
-class USoundWave;
-class UMovieSceneAudioTrack;
+class UDataTable;
+class UMovieSceneTrack;
+class UFrameInputsTrack;
 
 /**
  * Tools for audio tracks
@@ -26,142 +28,28 @@ class UMovieSceneAudioTrack;
 class FFrameInputsTrackEditor : public FMovieSceneTrackEditor
 {
 public:
+	FFrameInputsTrackEditor(TSharedRef<ISequencer>InSequencer);
+	static TSharedRef<ISequencerTrackEditor> CreateTrackEditor(TSharedRef<ISequencer> InSequencer);
 
-	/**
-	 * Constructor
-	 *
-	 * @param InSequencer The sequencer instance to be used by this tool
-	 */
-	FFrameInputsTrackEditor(TSharedRef<ISequencer> InSequencer);
-
-	/** Virtual destructor. */
-	virtual ~FFrameInputsTrackEditor();
-
-	/**
-	 * Creates an instance of this class.  Called by a sequencer
-	 *
-	 * @param OwningSequencer The sequencer instance to be used by this tool
-	 * @return The new instance of this class
-	 */
-	static TSharedRef<ISequencerTrackEditor> CreateTrackEditor(TSharedRef<ISequencer> OwningSequencer);
-
-	/**
-	 * Get the list of all property types that this track editor animates.
-	 *
-	 * @return List of animated properties.
-	 */
 	static TArray<FAnimatedPropertyKey, TInlineAllocator<1>> GetAnimatedPropertyTypes();
 
-public:
-
-	// ISequencerTrackEditor interface
-
+	//Add our track to the add track menu
 	virtual void BuildAddTrackMenu(FMenuBuilder& MenuBuilder) override;
-	virtual void BuildObjectBindingTrackMenu(FMenuBuilder& MenuBuilder, const TArray<FGuid>& ObjectBindings, const UClass* ObjectClass) override;
-	virtual TSharedPtr<SWidget> BuildOutlinerEditWidget(const FGuid& ObjectBinding, UMovieSceneTrack* Track, const FBuildEditWidgetParams& Params) override;
-	virtual bool HandleAssetAdded(UObject* Asset, const FGuid& TargetObjectGuid) override;
+
+	//Draw the track entry itself (as this is an SWidget, it can be customized and additional button or labels can be added
+	virtual TSharedPtr<SWidget> BuildOutlinerEditWidget(const FGuid& ObjectBinding, UMovieSceneTrack* Track, const FBuildEditWidgetParams& Params);
+
 	virtual TSharedRef<ISequencerSection> MakeSectionInterface(UMovieSceneSection& SectionObject, UMovieSceneTrack& Track, FGuid ObjectBinding) override;
 	virtual bool SupportsType(TSubclassOf<UMovieSceneTrack> Type) const override;
 	virtual bool SupportsSequence(UMovieSceneSequence* InSequence) const override;
-	virtual const FSlateBrush* GetIconBrush() const override;
-	virtual bool IsResizable(UMovieSceneTrack* InTrack) const override;
-	virtual void Resize(float NewSize, UMovieSceneTrack* InTrack) override;
-	virtual bool OnAllowDrop(const FDragDropEvent& DragDropEvent, FSequencerDragDropParams& DragDropParams) override;
-	virtual FReply OnDrop(const FDragDropEvent& DragDropEvent, const FSequencerDragDropParams& DragDropParams) override;
 
-protected:
-
-	/** Delegate for AnimatablePropertyChanged in HandleAssetAdded for master sounds */
-	FKeyPropertyResult AddNewMasterSound(FFrameNumber KeyTime, class USoundBase* Sound, UMovieSceneAudioTrack* Track, int32 RowIndex);
-
-	/** Delegate for AnimatablePropertyChanged in HandleAssetAdded for attached sounds */
-	FKeyPropertyResult AddNewAttachedSound(FFrameNumber KeyTime, class USoundBase* Sound, UMovieSceneAudioTrack* Track, TArray<TWeakObjectPtr<UObject>> ObjectsToAttachTo);
+	static FReply AddNewTrack(UMovieSceneTrack* track, UMovieScene* focusedMovieScene);
 
 private:
+	TSharedRef<SWidget> BuildFrameInputsSubMenu(FOnAssetSelected OnAssetSelected, FOnAssetEnterPressed OnAssetEnterPressed);
 
-	/** Callback for executing the "Add Audio Track" menu entry. */
-	void HandleAddAudioTrackMenuEntryExecute();
-
-	/** Callback for executing the "Add Audio Track" menu entry on an actor */
-	void HandleAddAttachedAudioTrackMenuEntryExecute(FMenuBuilder& MenuBuilder, TArray<FGuid> ObjectBindings);
-
-	/** Audio sub menu */
-	TSharedRef<SWidget> BuildAudioSubMenu(FOnAssetSelected OnAssetSelected, FOnAssetEnterPressed OnAssetEnterPressed);
-
-	/** Audio asset selected */
-	void OnAudioAssetSelected(const FAssetData& AssetData, UMovieSceneTrack* Track);
-
-	/** Audio asset enter pressed */
-	void OnAudioAssetEnterPressed(const TArray<FAssetData>& AssetData, UMovieSceneTrack* Track);
-
-	/** Attached audio asset selected */
-	void OnAttachedAudioAssetSelected(const FAssetData& AssetData, TArray<FGuid> ObjectBindings);
-
-	/** Attached audio asset enter pressed */
+	void OnFrameInputsAssetSelected(const FAssetData& AssetData, UMovieSceneTrack* Track);
+	void OnFrameInputsAssetEnterPressed(const TArray<FAssetData>& AssetData, UMovieSceneTrack* Track);
+	void OnAttachedFrameInputsAssetSelected(const FAssetData& AssetData, TArray<FGuid> ObjectBindings);
 	void OnAttachedAudioEnterPressed(const TArray<FAssetData>& AssetData, TArray<FGuid> ObjectBindings);
-};
-
-
-/**
- * Class for audio sections, handles drawing of all waveform previews.
- */
-class FAudioSection
-	: public ISequencerSection
-	, public TSharedFromThis<FAudioSection>
-{
-public:
-
-	/** Constructor. */
-	FAudioSection(UMovieSceneSection& InSection, TWeakPtr<ISequencer> InSequencer);
-
-	/** Virtual destructor. */
-	virtual ~FAudioSection();
-
-public:
-
-	// ISequencerSection interface
-
-	virtual UMovieSceneSection* GetSectionObject() override;
-	virtual FText GetSectionTitle() const override;
-	virtual FText GetSectionToolTip() const override;
-	virtual float GetSectionHeight() const override;
-	virtual int32 OnPaintSection(FSequencerSectionPainter& Painter) const override;
-	virtual void Tick(const FGeometry& AllottedGeometry, const FGeometry& ParentGeometry, const double InCurrentTime, const float InDeltaTime) override;
-	virtual void BeginResizeSection() override;
-	virtual void ResizeSection(ESequencerSectionResizeMode ResizeMode, FFrameNumber ResizeTime) override;
-	virtual void BeginSlipSection() override;
-	virtual void SlipSection(FFrameNumber SlipTime) override;
-
-private:
-
-	/* Re-creates the texture used to preview the waveform. */
-	void RegenerateWaveforms(TRange<float> DrawRange, int32 XOffset, int32 XSize, const FColor& ColorTint, float DisplayScale);
-
-private:
-
-	/** The section we are visualizing. */
-	UMovieSceneSection& Section;
-
-	/** The waveform thumbnail render object. */
-	TSharedPtr<class FAudioThumbnail> WaveformThumbnail;
-
-	/** Stored data about the waveform to determine when it is invalidated. */
-	TRange<float> StoredDrawRange;
-	FFrameNumber StoredStartOffset;
-	int32 StoredXOffset;
-	int32 StoredXSize;
-	FColor StoredColor;
-	float StoredSectionHeight;
-	bool bStoredLooping;
-
-	/** Stored sound wave to determine when it is invalidated. */
-	TWeakObjectPtr<USoundWave> StoredSoundWave;
-
-	TWeakPtr<ISequencer> Sequencer;
-
-	/** Cached start offset value valid only during resize */
-	FFrameNumber InitialStartOffsetDuringResize;
-
-	/** Cached start time valid only during resize */
-	FFrameNumber InitialStartTimeDuringResize;
 };

@@ -3,132 +3,68 @@
 #include "Timeline/FrameInputsSection.h"
 #include "Timeline/FrameInputsTemplate.h"
 
-#include "Compilation/MovieSceneCompilerRules.h"
-#include "Evaluation/MovieSceneEvaluationTrack.h"
-#include "Compilation/IMovieSceneTemplateGenerator.h"
-#include "MovieScene.h"
-
 #define LOCTEXT_NAMESPACE "FrameInputsTrack"
 
-/* UFrameInputsTrack structors
- *****************************************************************************/
-
-UFrameInputsTrack::UFrameInputsTrack(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+UMovieSceneSection* UFrameInputsTrack::AddNewFrameInputsOnRow(UDataTable* FrameInputs, FFrameNumber Time, int32 RowIndex)
 {
-#if WITH_EDITORONLY_DATA
-	TrackTint = FColor(124, 15, 124, 65);
-#endif
+	check(FrameInputs);
 
-	SupportedBlendTypes.Add(EMovieSceneBlendType::Absolute);
+	FFrameRate FrameRate = GetTypedOuter<UMovieScene>()->GetTickResolution();
 
-	EvalOptions.bCanEvaluateNearestSection = true;
-	EvalOptions.bEvaluateInPreroll = true;
-}
+	float Duration = float(FrameInputs->GetRowMap().Num()); //  * FrameRate
 
+	// add the section
+	UFrameInputsSection* NewSection = NewObject<UFrameInputsSection>(this, NAME_None, RF_Transactional);
+	NewSection->InitialPlacementOnRow(Sections, Time, Duration, RowIndex); // TODO: Initial time
+	NewSection->DataTableAsset = FrameInputs;
 
-/* UFrameInputsTrack interface
- *****************************************************************************/
-
-/*
-UMovieSceneSection* UFrameInputsTrack::AddNewAnimation(FFrameNumber KeyTime, UGeometryCacheComponent* GeomCacheComp)
-{
-	UFrameInputsSection* NewSection = Cast<UFrameInputsSection>(CreateNewSection());
-	{
-		FFrameTime AnimationLength = GeomCacheComp->GetDuration()* GetTypedOuter<UMovieScene>()->GetTickResolution();
-		int32 IFrameNumber = AnimationLength.FrameNumber.Value + (int)(AnimationLength.GetSubFrame() + 0.5f) + 1;
-		NewSection->InitialPlacementOnRow(AnimationSections, KeyTime, IFrameNumber, INDEX_NONE);
-		
-		NewSection->Params.DataTableAsset = (GeomCacheComp->GetGeometryCache());
-	}
-
-	AddSection(*NewSection);
+	Sections.Add(NewSection);
 
 	return NewSection;
 }
-*/
 
-TArray<UMovieSceneSection*> UFrameInputsTrack::GetAnimSectionsAtTime(FFrameNumber Time)
+FText UFrameInputsTrack::GetDisplayName() const
 {
-	TArray<UMovieSceneSection*> Sections;
-	for (auto Section : AnimationSections)
-	{
-		if (Section->IsTimeWithinSection(Time))
-		{
-			Sections.Add(Section);
-		}
-	}
-
-	return Sections;
+	static FText TrackName = FText::FromString(FString(TEXT("Frame Inputs")));
+	return TrackName;
 }
 
-FMovieSceneEvalTemplatePtr UFrameInputsTrack::CreateTemplateForSection(const UMovieSceneSection& InSection) const
+FName UFrameInputsTrack::GetTrackName() const
 {
-	return FFrameInputsSectionTemplate(*CastChecked<UFrameInputsSection>(&InSection));
+	return UFrameInputsTrack::GetDataTrackName();
 }
 
-/* UMovieSceneTrack interface
- *****************************************************************************/
-
-
-const TArray<UMovieSceneSection*>& UFrameInputsTrack::GetAllSections() const
+const FName UFrameInputsTrack::GetDataTrackName()
 {
-	return AnimationSections;
+	static FName TheName = FName(*FString(TEXT("FrameInputsTrack")));
+	return TheName;
 }
 
-
-bool UFrameInputsTrack::SupportsType(TSubclassOf<UMovieSceneSection> SectionClass) const
+bool UFrameInputsTrack::IsEmpty() const
 {
-	return SectionClass == UFrameInputsSection::StaticClass();
+	return Sections.Num() == 0;
 }
 
 UMovieSceneSection* UFrameInputsTrack::CreateNewSection()
 {
-	return NewObject<UFrameInputsSection>(this, NAME_None, RF_Transactional);
+	UMovieSceneSection* Section = NewObject<UFrameInputsSection>(this, NAME_None, RF_Transactional);
+	Sections.Add(Section);
+	return Section;
 }
-
-
-void UFrameInputsTrack::RemoveAllAnimationData()
-{
-	AnimationSections.Empty();
-}
-
-
-bool UFrameInputsTrack::HasSection(const UMovieSceneSection& Section) const
-{
-	return AnimationSections.Contains(&Section);
-}
-
 
 void UFrameInputsTrack::AddSection(UMovieSceneSection& Section)
 {
-	AnimationSections.Add(&Section);
+	Sections.Add(&Section);
 }
-
 
 void UFrameInputsTrack::RemoveSection(UMovieSceneSection& Section)
 {
-	AnimationSections.Remove(&Section);
+	Sections.Remove(&Section);
 }
 
-void UFrameInputsTrack::RemoveSectionAt(int32 SectionIndex)
+const TArray<UMovieSceneSection*>& UFrameInputsTrack::GetAllSections() const
 {
-	AnimationSections.RemoveAt(SectionIndex);
+	return Sections;
 }
-
-
-bool UFrameInputsTrack::IsEmpty() const
-{
-	return AnimationSections.Num() == 0;
-}
-
-#if WITH_EDITORONLY_DATA
-
-FText UFrameInputsTrack::GetDefaultDisplayName() const
-{
-	return LOCTEXT("TrackName", "Frame Inputs");
-}
-
-#endif
 
 #undef LOCTEXT_NAMESPACE

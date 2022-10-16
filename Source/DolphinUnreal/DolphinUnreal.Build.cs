@@ -54,13 +54,13 @@ public class DolphinUnreal : ModuleRules
 			{
 			}
 		);
-		
-		PublicDependencyModuleNames.AddRange(
+
+        PublicDependencyModuleNames.AddRange(
 			new string[]
 			{
 				"Core",
 				"Projects",
-			}
+            }
 		);
 
 		PrivateDependencyModuleNames.AddRange(
