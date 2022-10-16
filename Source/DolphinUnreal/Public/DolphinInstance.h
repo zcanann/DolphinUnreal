@@ -99,17 +99,8 @@ protected:
 	SERVER_FUNC_OVERRIDE(OnInstanceMemoryWrite)
 	SERVER_FUNC_OVERRIDE(OnInstanceRenderGba)
 
-	UPROPERTY(BlueprintReadOnly, Category = Gba)
-	UTexture2D* Gba0Render;
-
-	UPROPERTY(BlueprintReadOnly, Category = Gba)
-	UTexture2D* Gba1Render;
-
-	UPROPERTY(BlueprintReadOnly, Category = Gba)
-	UTexture2D* Gba2Render;
-
-	UPROPERTY(BlueprintReadOnly, Category = Gba)
-	UTexture2D* Gba3Render;
+	UFUNCTION(BlueprintPure)
+	UTexture2D* GetGbaRender(int32 Index) const;
 
 private:
 	void LaunchInstance(UIsoAsset* InIsoAsset, bool bStartPaused, bool bBeginRecording);
@@ -124,7 +115,11 @@ private:
 	bool bShouldUseHardwareController = false;
 	uint64 NextCommandId = 0;
 
+	UPROPERTY()
+	UTexture2D* GbaRenders[4];
+
 	FFrameInputs ControllerStates[4];
 	FFrameInputs ControllerStateOverrides[4];
 	TArray<uint8> GbaFrameBuffers[4];
+	FUpdateTextureRegion2D TextureRegions[4];
 };

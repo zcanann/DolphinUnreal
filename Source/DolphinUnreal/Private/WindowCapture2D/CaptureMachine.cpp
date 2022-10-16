@@ -115,7 +115,7 @@ bool UCaptureMachine::DoCapture()
 	return true;
 }
 
-void UCaptureMachine::UpdateTexture() const
+void UCaptureMachine::UpdateTexture()
 {
 #if PLATFORM_WINDOWS
 	if (!TextureTarget)
@@ -123,8 +123,10 @@ void UCaptureMachine::UpdateTexture() const
 		return;
 	}
 
-	const auto Region = new FUpdateTextureRegion2D(0, 0, 0, 0, TextureTarget->GetSizeX(), TextureTarget->GetSizeY());
-	TextureTarget->UpdateTextureRegions(0, 1, Region, 4 * TextureTarget->GetSizeX(), 4, reinterpret_cast<uint8*>(m_BitmapBuffer));
+	TextureRegion.Width = TextureTarget->GetSizeX();
+	TextureRegion.Height = TextureTarget->GetSizeY();
+
+	TextureTarget->UpdateTextureRegions(0, 1, &TextureRegion, 4 * TextureTarget->GetSizeX(), 4, reinterpret_cast<uint8*>(m_BitmapBuffer));
 #endif
 }
 

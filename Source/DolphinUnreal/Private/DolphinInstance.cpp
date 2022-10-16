@@ -56,6 +56,16 @@ void UDolphinInstance::Tick(float DeltaTime)
     ipcSendToInstance(ipcData);
 }
 
+UTexture2D* UDolphinInstance::GetGbaRender(int32 Index) const
+{
+    if (Index >= 0 && Index < 4)
+    {
+        return GbaRenders[Index];
+    }
+
+    return nullptr;
+}
+
 SERVER_FUNC_BODY(UDolphinInstance, OnInstanceConnected, params)
 {
     WindowIdentifier = *reinterpret_cast<const int64*>(&params._windowIdentifier);
@@ -169,32 +179,22 @@ SERVER_FUNC_BODY(UDolphinInstance, OnInstanceMemoryWrite, params)
 
 SERVER_FUNC_BODY(UDolphinInstance, OnInstanceRenderGba, params)
 {
-    UTexture2D** TextureTargetPtr = nullptr;
     int32 ControllerIndex = params._controllerIndex;
 
-    switch (params._controllerIndex)
+    if (GbaRenders[ControllerIndex] == nullptr || GbaRenders[ControllerIndex]->GetSizeX() != params._width || GbaRenders[ControllerIndex]->GetSizeY() != params._height)
     {
-        case 0: TextureTargetPtr = &Gba0Render; break;
-        case 1: TextureTargetPtr = &Gba1Render; break;
-        case 2: TextureTargetPtr = &Gba2Render; break;
-        case 3: TextureTargetPtr = &Gba3Render; break;
-        default: return;
-    }
-
-    UTexture2D* Texture = *TextureTargetPtr;
-
-    if (*TextureTargetPtr == nullptr || (*TextureTargetPtr)->GetSizeX() != params._width || (*TextureTargetPtr)->GetSizeY() != params._height)
-    {
-        Texture = UTexture2D::CreateTransient(params._width, params._height, PF_B8G8R8A8);
-        OnGbaTextureChanged.Broadcast(params._controllerIndex, Texture);
+        GbaRenders[ControllerIndex] = UTexture2D::CreateTransient(params._width, params._height, PF_R8G8B8A8);
+        GbaRenders[ControllerIndex]->UpdateResource();
+        OnGbaTextureChanged.Broadcast(params._controllerIndex, GbaRenders[ControllerIndex]);
     }
 
     GbaFrameBuffers[ControllerIndex].SetNum(params._frameBuffer.size() * 4);
     FMemory::Memcpy(GbaFrameBuffers[ControllerIndex].GetData(), reinterpret_cast<const uint8*>(params._frameBuffer.data()), params._frameBuffer.size() * 4);
 
-    Texture->UpdateResource();
-    const FUpdateTextureRegion2D* Region = new FUpdateTextureRegion2D(0, 0, 0, 0, params._width, params._height);
-    Texture->UpdateTextureRegions(0, 1, Region, 4 * params._width, 4, GbaFrameBuffers[ControllerIndex].GetData());
+    TextureRegions[ControllerIndex].Width = params._width;
+    TextureRegions[ControllerIndex].Height = params._height;
+
+    GbaRenders[ControllerIndex]->UpdateTextureRegions(0, 1, &TextureRegions[ControllerIndex], 4 * params._width, 4, GbaFrameBuffers[ControllerIndex].GetData());
 }
 
 void UDolphinInstance::LaunchInstance(UIsoAsset* InIsoAsset, bool bStartPaused, bool bBeginRecording)

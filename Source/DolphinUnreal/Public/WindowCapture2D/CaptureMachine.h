@@ -14,6 +14,8 @@ using HWND = void*;
 #endif
 #include "CaptureMachine.generated.h"
 
+struct FUpdateTextureRegion2D;
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FCaptureMachineChangeTexture, UTexture2D*, NewTexture);
 
 UCLASS(BlueprintType, Blueprintable)
@@ -33,7 +35,7 @@ public:
 	virtual void Dispose();
 
 protected:
-	void UpdateTexture() const;
+	void UpdateTexture();
 	void GetWindowSize(HWND hWnd);
 	void CreateNewTexture();
 	bool DoCapture();
@@ -49,6 +51,8 @@ public:
 	FCaptureMachineChangeTexture ChangeTexture;
 
 private:
+	FUpdateTextureRegion2D TextureRegion;
+
 	char* m_BitmapBuffer = nullptr;
 
 	HBITMAP m_hBmp = nullptr;
