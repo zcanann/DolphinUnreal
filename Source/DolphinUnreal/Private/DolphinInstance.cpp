@@ -167,6 +167,36 @@ SERVER_FUNC_BODY(UDolphinInstance, OnInstanceMemoryWrite, params)
 {
 }
 
+SERVER_FUNC_BODY(UDolphinInstance, OnInstanceRenderGba, params)
+{
+    UTexture2D** TextureTargetPtr = nullptr;
+    int32 ControllerIndex = params._controllerIndex;
+
+    switch (params._controllerIndex)
+    {
+        case 0: TextureTargetPtr = &Gba0Render; break;
+        case 1: TextureTargetPtr = &Gba1Render; break;
+        case 2: TextureTargetPtr = &Gba2Render; break;
+        case 3: TextureTargetPtr = &Gba3Render; break;
+        default: return;
+    }
+
+    UTexture2D* Texture = *TextureTargetPtr;
+
+    if (*TextureTargetPtr == nullptr || (*TextureTargetPtr)->GetSizeX() != params._width || (*TextureTargetPtr)->GetSizeY() != params._height)
+    {
+        Texture = UTexture2D::CreateTransient(params._width, params._height, PF_B8G8R8A8);
+        OnGbaTextureChanged.Broadcast(params._controllerIndex, Texture);
+    }
+
+    GbaFrameBuffers[ControllerIndex].SetNum(params._frameBuffer.size() * 4);
+    FMemory::Memcpy(GbaFrameBuffers[ControllerIndex].GetData(), reinterpret_cast<const uint8*>(params._frameBuffer.data()), params._frameBuffer.size() * 4);
+
+    Texture->UpdateResource();
+    const FUpdateTextureRegion2D* Region = new FUpdateTextureRegion2D(0, 0, 0, 0, params._width, params._height);
+    Texture->UpdateTextureRegions(0, 1, Region, 4 * params._width, 4, GbaFrameBuffers[ControllerIndex].GetData());
+}
+
 void UDolphinInstance::LaunchInstance(UIsoAsset* InIsoAsset, bool bStartPaused, bool bBeginRecording)
 {
     static FString PluginContentDirectory = FPaths::ConvertRelativePathToFull(IPluginManager::Get().FindPlugin(TEXT("DolphinUnreal"))->GetContentDir());

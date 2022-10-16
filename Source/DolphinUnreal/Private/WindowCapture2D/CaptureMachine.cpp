@@ -13,8 +13,6 @@
 #include <dwmapi.h>
 #endif
 
-#pragma optimize("", off)
-
 UCaptureMachine::UCaptureMachine()
 {
 }
@@ -167,7 +165,6 @@ void UCaptureMachine::CreateNewTexture()
 
 	m_BitmapBuffer = new char[m_WindowSize.X * m_WindowSize.Y * 4];
 
-
 	TextureTarget = UTexture2D::CreateTransient(m_WindowSize.X, m_WindowSize.Y, PF_B8G8R8A8);
 	TextureTarget->UpdateResource();
 	ChangeTexture.Broadcast(TextureTarget);
@@ -185,5 +182,3 @@ void UCaptureMachine::CreateNewTexture()
 	::SelectObject(m_MemDC, m_hBmp);
 #endif
 }
-
-#pragma optimize("", on)

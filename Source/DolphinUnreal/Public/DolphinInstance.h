@@ -13,7 +13,10 @@
 
 class UIsoAsset;
 class USavAsset;
+class UTexture2D;
 struct FProcHandle;
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnGbaTextureChanged, int32, GbaIndex, UTexture2D*, NewTexture);
 
 UCLASS(BlueprintType)
 class UDolphinInstance : public UObject, public DolphinIpcHandlerBase, public FTickableGameObject
@@ -40,6 +43,9 @@ public:
 	FOnSaveStateCreated OnInstanceSaveStateCreated;
 	DECLARE_MULTICAST_DELEGATE_TwoParams(FOnMemoryReadArrayOfUBytes, UDolphinInstance*, TArray<FDolphinUInt8>);
 	FOnMemoryReadArrayOfUBytes OnInstanceMemoryRead;
+
+	UPROPERTY(BlueprintAssignable, Category = Gba)
+	FOnGbaTextureChanged OnGbaTextureChanged;
 
 	UFUNCTION(BlueprintPure)
 	bool IsPaused() const;
@@ -91,6 +97,19 @@ protected:
 	SERVER_FUNC_OVERRIDE(OnInstanceMemoryCardFormatted)
 	SERVER_FUNC_OVERRIDE(OnInstanceMemoryRead)
 	SERVER_FUNC_OVERRIDE(OnInstanceMemoryWrite)
+	SERVER_FUNC_OVERRIDE(OnInstanceRenderGba)
+
+	UPROPERTY(BlueprintReadOnly, Category = Gba)
+	UTexture2D* Gba0Render;
+
+	UPROPERTY(BlueprintReadOnly, Category = Gba)
+	UTexture2D* Gba1Render;
+
+	UPROPERTY(BlueprintReadOnly, Category = Gba)
+	UTexture2D* Gba2Render;
+
+	UPROPERTY(BlueprintReadOnly, Category = Gba)
+	UTexture2D* Gba3Render;
 
 private:
 	void LaunchInstance(UIsoAsset* InIsoAsset, bool bStartPaused, bool bBeginRecording);
@@ -107,4 +126,5 @@ private:
 
 	FFrameInputs ControllerStates[4];
 	FFrameInputs ControllerStateOverrides[4];
+	TArray<uint8> GbaFrameBuffers[4];
 };

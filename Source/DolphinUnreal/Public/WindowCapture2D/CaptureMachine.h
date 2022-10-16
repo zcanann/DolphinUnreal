@@ -16,7 +16,6 @@ using HWND = void*;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FCaptureMachineChangeTexture, UTexture2D*, NewTexture);
 
-
 UCLASS(BlueprintType, Blueprintable)
 class UCaptureMachine : public UObject, public FTickableGameObject
 {
@@ -38,7 +37,6 @@ protected:
 	void GetWindowSize(HWND hWnd);
 	void CreateNewTexture();
 	bool DoCapture();
-
 
 public:
 	UPROPERTY()
