@@ -192,12 +192,6 @@ void UDolphinInstance::LaunchInstance(UIsoAsset* InIsoAsset, bool bStartPaused, 
     uint32 OutProcessID = 0;
     uint32 PriorityModifier = 0;
 
-    /*
-    #include "Windows/AllowWindowsPlatformTypes.h"
-    #include <shellapi.h>
-    #include "Windows/HideWindowsPlatformTypes.h"
-    */
-    /*ShellExecute(NULL, TEXT("open"), *DolphinBinaryPath, *Params, *OptionalWorkingDirectory, SW_SHOWDEFAULT);*/
     DolphinProcHandle = FWindowsPlatformProcess::CreateProc(
         *DolphinBinaryPath,
         *Params,

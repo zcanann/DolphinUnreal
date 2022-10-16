@@ -9,6 +9,8 @@
 #include "Core.h"
 #include "Modules/ModuleManager.h"
 #include "Interfaces/IPluginManager.h"
+#include "ISequencerModule.h"
+#include "Timeline/FrameInputsTrackEditor.h"
 #include "ToolMenus.h"
 
 #include "DataTypes/DolphinDataTypesBlueprintLibrary.h"
@@ -26,11 +28,20 @@ void FDolphinUnrealModule::StartupModule()
 	FDolphinUnrealStyle::Register();
 	UDolphinDataTypesBlueprintLibrary::AutoFavoriteCommonDolphinFunctions();
 	RegisterQuickSettingsMenu();
+
+	ISequencerModule& SequencerModule = FModuleManager::Get().LoadModuleChecked<ISequencerModule>("Sequencer");
+	TrackEditorBindingHandle = SequencerModule.RegisterPropertyTrackEditor<FFrameInputsTrackEditor>();
 }
 
 void FDolphinUnrealModule::ShutdownModule()
 {
 	FDolphinUnrealStyle::Unregister();
+
+	ISequencerModule* SequencerModule = FModuleManager::GetModulePtr<ISequencerModule>("Sequencer");
+	if (SequencerModule)
+	{
+		SequencerModule->UnRegisterTrackEditor(TrackEditorBindingHandle);
+	}
 }
 
 UDolphinInstance* FDolphinUnrealModule::CreateNewInstance()

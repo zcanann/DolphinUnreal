@@ -14,12 +14,12 @@ UK2Node_PlayInputs::UK2Node_PlayInputs(const FObjectInitializer& ObjectInitializ
 
 FText UK2Node_PlayInputs::GetTooltipText() const
 {
-	return LOCTEXT("K2Node_PlayInputs_Tooltip", "Sends an input table to the Dolphin instance for playback");
+	return LOCTEXT("K2Node_PlayInputs_Tooltip", "Sends inputs to the Dolphin instance for playback");
 }
 
 FText UK2Node_PlayInputs::GetNodeTitle(ENodeTitleType::Type TitleType) const
 {
-	return LOCTEXT("K2Node_PlayInputs_Title", "Play Input Table");
+	return LOCTEXT("K2Node_PlayInputs_Title", "Play Inputs");
 }
 
 FText UK2Node_PlayInputs::GetMenuCategory() const

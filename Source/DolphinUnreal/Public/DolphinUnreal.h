@@ -32,4 +32,6 @@ private:
 
 	UPROPERTY()
 	UDolphinInstance* DefaultDolphinInstance = nullptr;
+
+	FDelegateHandle TrackEditorBindingHandle;
 };
