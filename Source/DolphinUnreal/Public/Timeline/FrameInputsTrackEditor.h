@@ -43,8 +43,6 @@ public:
 	virtual bool SupportsType(TSubclassOf<UMovieSceneTrack> Type) const override;
 	virtual bool SupportsSequence(UMovieSceneSequence* InSequence) const override;
 
-	static FReply AddNewTrack(UMovieSceneTrack* track, UMovieScene* focusedMovieScene);
-
 private:
 	TSharedRef<SWidget> BuildFrameInputsSubMenu(FOnAssetSelected OnAssetSelected, FOnAssetEnterPressed OnAssetEnterPressed);
 

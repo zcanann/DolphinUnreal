@@ -74,11 +74,8 @@ void FFrameInputsTrackEditor::BuildAddTrackMenu(FMenuBuilder& MenuBuilder)
 					// Create scoped transaction:
 					const FScopedTransaction(LOCTEXT("FPMCStringsTrackEditor_Transaction", "Add Frame Inputs Track"));
 
-
 					FocusedMovieScene->Modify();
 					UFrameInputsTrack* NewTrack = FocusedMovieScene->AddMasterTrack<UFrameInputsTrack>();
-					FFrameInputsTrackEditor::AddNewTrack(NewTrack, FocusedMovieScene);
-
 
 					// Notify SequencerAboutTransactions:
 					GetSequencer()->NotifyMovieSceneDataChanged(EMovieSceneDataChangeType::MovieSceneStructureItemAdded);
@@ -105,39 +102,6 @@ bool FFrameInputsTrackEditor::SupportsSequence(UMovieSceneSequence* InSequence) 
 	bValidClasses &= InSequence->GetClass()->IsChildOf(LevelSequencerClass);
 
 	return bValidClasses;
-}
-
-FReply FFrameInputsTrackEditor::AddNewTrack(UMovieSceneTrack* Track, UMovieScene* FocusedMovieScene)
-{
-	if (IsValid(FocusedMovieScene))
-	{
-		UFrameInputsTrack* FrameInputsTrack = Cast<UFrameInputsTrack>(Track);
-		if (IsValid(FrameInputsTrack))
-		{
-			// Transactions mark on track
-			Track->Modify();
-			TRange<FFrameNumber> SectionRange = FocusedMovieScene->GetPlaybackRange();
-			UMovieSceneSection* NewSection = Track->CreateNewSection();
-			UFrameInputsSection* DataSection = Cast<UFrameInputsSection>(NewSection);
-
-			if (IsValid(DataSection))
-			{
-				NewSection->SetRange(SectionRange);
-				for (TObjectIterator<UWorld> Itr; Itr; ++Itr)
-				{
-					UWorld* World = *Itr;
-					if (World->IsEditorWorld() && !World->IsTemplate())
-					{
-						FString LevelName = World->GetMapName();
-						LevelName.RemoveFromStart(World->StreamingLevelsPrefix);
-						// DataSection->FrameInputsTrackData.MapName = LevelName;
-					}
-				}
-			}
-		}
-	}
-
-	return FReply::Handled();
 }
 
 TSharedRef<ISequencerSection> FFrameInputsTrackEditor::MakeSectionInterface(UMovieSceneSection& SectionObject, UMovieSceneTrack& Track, FGuid ObjectBinding)
@@ -243,7 +207,7 @@ void FFrameInputsTrackEditor::OnAttachedFrameInputsAssetSelected(const FAssetDat
 
 	if (SelectedObject)
 	{
-		const FScopedTransaction Transaction(NSLOCTEXT("Sequencer", "AddAudio_Transaction", "Add Audio"));
+		const FScopedTransaction Transaction(NSLOCTEXT("Sequencer", "AddFrameInputs_Transaction", "Add Frame Inputs"));
 
 		for (FGuid ObjectBinding : ObjectBindings)
 		{

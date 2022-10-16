@@ -5,17 +5,19 @@
 
 #define LOCTEXT_NAMESPACE "FrameInputsTrack"
 
+#pragma optimize("", off)
+
 UMovieSceneSection* UFrameInputsTrack::AddNewFrameInputsOnRow(UDataTable* FrameInputs, FFrameNumber Time, int32 RowIndex)
 {
 	check(FrameInputs);
 
-	FFrameRate FrameRate = GetTypedOuter<UMovieScene>()->GetTickResolution();
+	FFrameRate TickResolution = GetTypedOuter<UMovieScene>()->GetTickResolution();
+	FFrameRate DisplayRate = GetTypedOuter<UMovieScene>()->GetDisplayRate();
 
-	float Duration = float(FrameInputs->GetRowMap().Num()); //  * FrameRate
+	int32 Duration = DisplayRate.Numerator == 0 ? 0 : (FrameInputs->GetRowMap().Num() * (TickResolution.Numerator / DisplayRate.Numerator));
 
-	// add the section
 	UFrameInputsSection* NewSection = NewObject<UFrameInputsSection>(this, NAME_None, RF_Transactional);
-	NewSection->InitialPlacementOnRow(Sections, Time, Duration, RowIndex); // TODO: Initial time
+	NewSection->InitialPlacementOnRow(Sections, Time, Duration, RowIndex);
 	NewSection->DataTableAsset = FrameInputs;
 
 	Sections.Add(NewSection);
@@ -68,3 +70,5 @@ const TArray<UMovieSceneSection*>& UFrameInputsTrack::GetAllSections() const
 }
 
 #undef LOCTEXT_NAMESPACE
+
+#pragma optimize("", on)
