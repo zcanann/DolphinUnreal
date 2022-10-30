@@ -17,10 +17,7 @@ class UDolphinUnrealBlueprintLibrary : public UBlueprintFunctionLibrary
 
 public:
 	UFUNCTION()
-	static UDolphinInstance* CreateDolphinInstance(bool bRegisterAsDefaultInstance = false);
-
-	UFUNCTION()
-	static UDolphinInstance* GetDolphinInstanceOrDefault(UDolphinInstance* DolphinInstance);
+	static UDolphinInstance* CreateDolphinInstance();
 
 	UFUNCTION()
 	static void TerminateDolpinInstance(UDolphinInstance* DolphinInstance);
@@ -30,9 +27,6 @@ public:
 
 	UFUNCTION()
 	static void UntrackDolpinInstance(UDolphinInstance* DolphinInstance);
-
-	UFUNCTION(BlueprintPure, meta = (DisplayName = "Get Default Dolphin Instance", Keywords = "Get Default Dolphin Instance"), Category = "Dolphin")
-	static UDolphinInstance* GetDefaultDolphinInstance();
 
 	UFUNCTION(BlueprintPure, meta = (DisplayName = "Get All Dolphin Instances", Keywords = "Get All Dolphin Instances"), Category = "Dolphin")
 	static TArray<UDolphinInstance*> GetDolphinInstances();

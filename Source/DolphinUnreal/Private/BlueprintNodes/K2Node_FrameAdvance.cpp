@@ -32,8 +32,6 @@ UK2Node_FrameAdvanceProxy* UK2Node_FrameAdvanceProxy::CreateProxyObjectForWait(U
 	UK2Node_FrameAdvanceProxy* Proxy = NewObject<UK2Node_FrameAdvanceProxy>();
 	Proxy->SetFlags(RF_StrongRefOnFrame);
 
-	DolphinInstance = UDolphinUnrealBlueprintLibrary::GetDolphinInstanceOrDefault(DolphinInstance);
-
 	if (DolphinInstance != nullptr)
 	{
 		DolphinInstance->OnInstanceCommandCompleteEvent.AddUObject(Proxy, &UK2Node_FrameAdvanceProxy::OnInstanceReady);

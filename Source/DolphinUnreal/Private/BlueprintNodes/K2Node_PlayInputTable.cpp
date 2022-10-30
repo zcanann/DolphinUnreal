@@ -33,8 +33,6 @@ UK2Node_PlayInputTableProxy* UK2Node_PlayInputTableProxy::CreateProxyObjectForWa
 	UK2Node_PlayInputTableProxy* Proxy = NewObject<UK2Node_PlayInputTableProxy>();
 	Proxy->SetFlags(RF_StrongRefOnFrame);
 
-	DolphinInstance = UDolphinUnrealBlueprintLibrary::GetDolphinInstanceOrDefault(DolphinInstance);
-
 	if (DolphinInstance != nullptr)
 	{
 		UDataTable* FrameInputsTable[4] = { FrameInputsTableController0, FrameInputsTableController1, FrameInputsTableController2, FrameInputsTableController3 };

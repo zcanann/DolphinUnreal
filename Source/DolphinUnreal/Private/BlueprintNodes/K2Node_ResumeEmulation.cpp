@@ -32,8 +32,6 @@ UK2Node_ResumeEmulationProxy* UK2Node_ResumeEmulationProxy::CreateProxyObjectFor
 	UK2Node_ResumeEmulationProxy* Proxy = NewObject<UK2Node_ResumeEmulationProxy>();
 	Proxy->SetFlags(RF_StrongRefOnFrame);
 
-	DolphinInstance = UDolphinUnrealBlueprintLibrary::GetDolphinInstanceOrDefault(DolphinInstance);
-
 	if (DolphinInstance != nullptr)
 	{
 		DolphinInstance->OnInstanceCommandCompleteEvent.AddUObject(Proxy, &UK2Node_ResumeEmulationProxy::OnInstanceReady);

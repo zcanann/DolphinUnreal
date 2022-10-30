@@ -7,6 +7,8 @@
 #include "DolphinUnrealBlueprintLibrary.h"
 #include "FrameInputs.h"
 
+#include "dolphin-ipc/external/jpeg-compressor/jpgd.h"
+
 // Engine includes
 #include "Interfaces/IPluginManager.h"
 #include "Misc/Guid.h"
@@ -22,9 +24,9 @@ UDolphinInstance::UDolphinInstance(const FObjectInitializer& ObjectInitializer) 
     FEditorDelegates::EndPIE.AddUObject(this, &UDolphinInstance::EndPIE);
 }
 
-void UDolphinInstance::Initialize(UIsoAsset* InIsoAsset, bool bStartPaused, bool bBeginRecording)
+void UDolphinInstance::Initialize(UIsoAsset* InIsoAsset)
 {
-    LaunchInstance(InIsoAsset, bStartPaused, bBeginRecording);
+    LaunchInstance(InIsoAsset);
 }
 
 UDolphinInstance::~UDolphinInstance()
@@ -159,10 +161,6 @@ SERVER_FUNC_BODY(UDolphinInstance, OnInstanceSaveStateCreated, params)
     OnInstanceSaveStateCreated.Broadcast(this, VirtualSavAsset);
 }
 
-SERVER_FUNC_BODY(UDolphinInstance, OnInstanceMemoryCardFormatted, params)
-{
-}
-
 SERVER_FUNC_BODY(UDolphinInstance, OnInstanceMemoryRead, params)
 {
     TArray<FDolphinUInt8> ArrayOfUBytes;
@@ -177,27 +175,75 @@ SERVER_FUNC_BODY(UDolphinInstance, OnInstanceMemoryWrite, params)
 {
 }
 
+inline uint32_t ConvertGbaColors(uint32_t argb)
+{
+    // Convert 0xBBRRGGAA => 0xRRGGBBAA
+    /*
+    return
+        ((argb & 0xFF000000) >> 16) |
+        ((argb & 0x00FF0000) << 8) |
+        ((argb & 0x0000FF00) << 8) |
+        ((argb & 0x000000FF));*/
+
+    // Not sure how to conver this. Default seems OKish.
+    return argb;
+}
+
 SERVER_FUNC_BODY(UDolphinInstance, OnInstanceRenderGba, params)
 {
     int32 ControllerIndex = params._controllerIndex;
 
     if (GbaRenders[ControllerIndex] == nullptr || GbaRenders[ControllerIndex]->GetSizeX() != params._width || GbaRenders[ControllerIndex]->GetSizeY() != params._height)
     {
+        // PF_B8G8R8A8
+        // PF_R8G8B8A8
+        // PF_A8R8G8B8
+        /*
+             m_core_info.height, QImage::Format_ARGB32)
+            .convertToFormat(QImage::Format_RGB32)
+            .rgbSwapped();
+         */
         GbaRenders[ControllerIndex] = UTexture2D::CreateTransient(params._width, params._height, PF_R8G8B8A8);
         GbaRenders[ControllerIndex]->UpdateResource();
         OnGbaTextureChanged.Broadcast(params._controllerIndex, GbaRenders[ControllerIndex]);
     }
 
-    GbaFrameBuffers[ControllerIndex].SetNum(params._frameBuffer.size() * 4);
-    FMemory::Memcpy(GbaFrameBuffers[ControllerIndex].GetData(), reinterpret_cast<const uint8*>(params._frameBuffer.data()), params._frameBuffer.size() * 4);
+    GbaFrameBuffers[ControllerIndex].SetNum(params._width* params._height * 4);
+
+    if (params._compressed)
+    {
+        static const int RequiredComps = 4; // 1 (grayscale), 3 (RGB), or 4 (RGBA)
+        int actualComps = 4;
+        int width = params._width;
+        int height = params._height;
+
+        // TODO: Optimization, in theory we should know how large the buffer is, and pass that in by ref, and avoid reallocating it unless the video buffer size changes
+        unsigned char* decompressedData = jpgd::decompress_jpeg_image_from_memory(reinterpret_cast<const unsigned char*>(params._frameBuffer.data()),
+            int(params._frameBuffer.size() * sizeof(unsigned int)), &width, &height, &actualComps, 3);
+
+        if (decompressedData != nullptr)
+        {
+            FMemory::Memcpy(GbaFrameBuffers[ControllerIndex].GetData(), decompressedData, params._frameBuffer.size() * 4);
+            free(decompressedData);
+        }
+    }
+    else
+    {
+        FMemory::Memcpy(GbaFrameBuffers[ControllerIndex].GetData(), params._frameBuffer.data(), params._frameBuffer.size() * 4);
+
+        for (int index = 0; index < params._frameBuffer.size(); index++)
+        {
+            unsigned int* DataPtr = (unsigned int*)GbaFrameBuffers[ControllerIndex].GetData();
+            DataPtr[index] = ConvertGbaColors(params._frameBuffer[index]);
+        }
+    }
 
     TextureRegions[ControllerIndex].Width = params._width;
     TextureRegions[ControllerIndex].Height = params._height;
-
     GbaRenders[ControllerIndex]->UpdateTextureRegions(0, 1, &TextureRegions[ControllerIndex], 4 * params._width, 4, GbaFrameBuffers[ControllerIndex].GetData());
 }
 
-void UDolphinInstance::LaunchInstance(UIsoAsset* InIsoAsset, bool bStartPaused, bool bBeginRecording)
+void UDolphinInstance::LaunchInstance(UIsoAsset* InIsoAsset)
 {
     static FString PluginContentDirectory = FPaths::ConvertRelativePathToFull(IPluginManager::Get().FindPlugin(TEXT("DolphinUnreal"))->GetContentDir());
     static FString ProjectContentDirectory = FPaths::ConvertRelativePathToFull(FPaths::ProjectContentDir());
@@ -205,9 +251,8 @@ void UDolphinInstance::LaunchInstance(UIsoAsset* InIsoAsset, bool bStartPaused, 
     InstanceId = FGuid::NewGuid().ToString();
     FString GamePath = InIsoAsset->Path;
     FString UserPath = FPaths::Combine(ProjectContentDirectory, "Dolphin");
-    FString StartPausedFlag = bStartPaused ? TEXT("-z") : TEXT("");
-    FString RecordingFlag = bBeginRecording ? TEXT("-r") : TEXT("");
-    FString Params = FString::Format(TEXT("\"{0}\" -u \"{1}\" -p win32 -i {2} {3} {4}"), { GamePath, UserPath, InstanceId, StartPausedFlag, RecordingFlag });
+    FString StartPausedFlag = TEXT("-z");
+    FString Params = FString::Format(TEXT("\"{0}\" -u \"{1}\" -p win32 -i {2} {3}"), { GamePath, UserPath, InstanceId, StartPausedFlag });
 
     FString DolphinBinaryFolder = FPaths::Combine(PluginContentDirectory, TEXT("Dolphin/"));
     FString DolphinBinaryPath = FPaths::Combine(DolphinBinaryFolder, TEXT("DolphinInstance.exe"));
@@ -235,13 +280,14 @@ void UDolphinInstance::LaunchInstance(UIsoAsset* InIsoAsset, bool bStartPaused, 
     );
 }
 
-void UDolphinInstance::RequestCreateSaveState(FString SaveName)
+void UDolphinInstance::RequestCreateSaveState(FString SaveName, bool bSaveMemoryCards)
 {
     static const FString ProjectContentDirectory = FPaths::ConvertRelativePathToFull(FPaths::ProjectContentDir());
     const FString FilePath = FPaths::Combine(ProjectContentDirectory, "SaveStates/", SaveName);
 
     CREATE_TO_INSTANCE_DATA(CreateSaveState, ipcData, data)
     data->_filePathNoExtension = std::string(TCHAR_TO_UTF8(*FilePath));
+    data->_saveMemoryCards = bSaveMemoryCards;
     ipcSendToInstance(ipcData);
 }
 
@@ -399,8 +445,8 @@ void UDolphinInstance::RequestFormatMemoryCard(EMemoryCardSlot MemoryCardSlot, E
 {
     CREATE_TO_INSTANCE_DATA(FormatMemoryCard, ipcData, data)
     data->_slot = (DolphinSlot)MemoryCardSlot;
-    data->_encoding = (ToInstanceParams_FormatMemoryCard::CardEncoding)MemoryCardEncoding;
-    data->_cardSize = (ToInstanceParams_FormatMemoryCard::CardSize)MemoryCardSize;
+    data->_encoding = (CardEncoding)MemoryCardEncoding;
+    data->_cardSize = (CardSize)MemoryCardSize;
     ipcSendToInstance(ipcData);
 }
 

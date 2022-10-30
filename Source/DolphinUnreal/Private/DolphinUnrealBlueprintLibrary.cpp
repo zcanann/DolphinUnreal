@@ -9,30 +9,12 @@ UDolphinUnrealBlueprintLibrary::UDolphinUnrealBlueprintLibrary(const FObjectInit
 {
 }
 
-UDolphinInstance* UDolphinUnrealBlueprintLibrary::CreateDolphinInstance(bool bRegisterAsDefaultInstance)
+UDolphinInstance* UDolphinUnrealBlueprintLibrary::CreateDolphinInstance()
 {
     FDolphinUnrealModule& DolphinUnreal = FModuleManager::GetModuleChecked<FDolphinUnrealModule>(FDolphinUnrealModule::ModuleName);
     UDolphinInstance* Instance = DolphinUnreal.CreateNewInstance();
 
-    if (bRegisterAsDefaultInstance)
-    {
-        DolphinUnreal.SetDefaultDolphinInstance(Instance);
-    }
-
     return Instance;
-}
-
-UDolphinInstance* UDolphinUnrealBlueprintLibrary::GetDefaultDolphinInstance()
-{
-    FDolphinUnrealModule& DolphinUnreal = FModuleManager::GetModuleChecked<FDolphinUnrealModule>(FDolphinUnrealModule::ModuleName);
-    UDolphinInstance* Instance =  DolphinUnreal.GetDefaultDolphinInstance();
-
-    return Instance;
-}
-
-UDolphinInstance* UDolphinUnrealBlueprintLibrary::GetDolphinInstanceOrDefault(UDolphinInstance* DolphinInstance)
-{
-    return DolphinInstance ? DolphinInstance : GetDefaultDolphinInstance();
 }
 
 void UDolphinUnrealBlueprintLibrary::TerminateDolpinInstance(UDolphinInstance* DolphinInstance)

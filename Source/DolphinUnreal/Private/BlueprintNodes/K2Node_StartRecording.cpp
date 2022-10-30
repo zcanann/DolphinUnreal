@@ -33,8 +33,6 @@ UK2Node_StartRecordingProxy* UK2Node_StartRecordingProxy::CreateProxyObjectForWa
 	UK2Node_StartRecordingProxy* Proxy = NewObject<UK2Node_StartRecordingProxy>();
 	Proxy->SetFlags(RF_StrongRefOnFrame);
 
-	DolphinInstance = UDolphinUnrealBlueprintLibrary::GetDolphinInstanceOrDefault(DolphinInstance);
-
 	if (DolphinInstance != nullptr)
 	{
 		bool RecordControllers[4] = { RecordController0, RecordController1, RecordController2, RecordController3 };

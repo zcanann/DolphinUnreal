@@ -25,7 +25,7 @@ class UDolphinInstance : public UObject, public DolphinIpcHandlerBase, public FT
 
 public:
 	UFUNCTION()
-	void Initialize(UIsoAsset* InIsoAsset, bool bStartPaused, bool bBeginRecording);
+	void Initialize(UIsoAsset* InIsoAsset);
 	virtual ~UDolphinInstance();
 
 	void PausePIE(const bool bIsSimulating);
@@ -68,7 +68,7 @@ public:
 	UFUNCTION(BlueprintPure)
 	int64 GetWindowIdentifier() const;
 
-	void RequestCreateSaveState(FString SaveName);
+	void RequestCreateSaveState(FString SaveName, bool bSaveMemoryCards);
 	void RequestLoadSaveState(USavAsset* SavAsset);
 	void RequestPause();
 	void RequestResume();
@@ -94,7 +94,6 @@ protected:
 	SERVER_FUNC_OVERRIDE(OnInstanceTerminated)
 	SERVER_FUNC_OVERRIDE(OnInstanceRecordingStopped)
 	SERVER_FUNC_OVERRIDE(OnInstanceSaveStateCreated)
-	SERVER_FUNC_OVERRIDE(OnInstanceMemoryCardFormatted)
 	SERVER_FUNC_OVERRIDE(OnInstanceMemoryRead)
 	SERVER_FUNC_OVERRIDE(OnInstanceMemoryWrite)
 	SERVER_FUNC_OVERRIDE(OnInstanceRenderGba)
@@ -103,7 +102,7 @@ protected:
 	UTexture2D* GetGbaRender(int32 Index) const;
 
 private:
-	void LaunchInstance(UIsoAsset* InIsoAsset, bool bStartPaused, bool bBeginRecording);
+	void LaunchInstance(UIsoAsset* InIsoAsset);
 	std::vector<int> ConvertPointerOffsets(const TArray<FDolphinInt32>& Offsets);
 
 	FString InstanceId;

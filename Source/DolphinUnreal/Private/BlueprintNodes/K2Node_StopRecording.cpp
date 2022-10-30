@@ -32,8 +32,6 @@ UK2Node_StopRecordingProxy* UK2Node_StopRecordingProxy::CreateProxyObjectForWait
 	UK2Node_StopRecordingProxy* Proxy = NewObject<UK2Node_StopRecordingProxy>();
 	Proxy->SetFlags(RF_StrongRefOnFrame);
 
-	DolphinInstance = UDolphinUnrealBlueprintLibrary::GetDolphinInstanceOrDefault(DolphinInstance);
-
 	if (DolphinInstance != nullptr)
 	{
 		DolphinInstance->OnInstanceCommandCompleteEvent.AddUObject(Proxy, &UK2Node_StopRecordingProxy::OnInstanceReady);

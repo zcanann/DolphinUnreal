@@ -18,8 +18,6 @@ public:
 	void TerminateInstance(UDolphinInstance* InDolphinInstance);
 	void TrackInstance(UDolphinInstance* InDolphinInstance);
 	void UntrackInstance(UDolphinInstance* InDolphinInstance);
-	void SetDefaultDolphinInstance(UDolphinInstance* InDefaultDolphinInstance);
-	UDolphinInstance* GetDefaultDolphinInstance() const;
 	TArray<UDolphinInstance*> GetDolphinInstances() const;
 
 	static const FName ModuleName;
@@ -29,9 +27,6 @@ private:
 
 	UPROPERTY()
 	TArray<UDolphinInstance*> DolphinInstances;
-
-	UPROPERTY()
-	UDolphinInstance* DefaultDolphinInstance = nullptr;
 
 	FDelegateHandle TrackEditorBindingHandle;
 };

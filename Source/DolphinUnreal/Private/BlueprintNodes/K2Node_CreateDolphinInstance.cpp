@@ -27,14 +27,14 @@ FText UK2Node_CreateDolphinInstance::GetMenuCategory() const
 	return LOCTEXT("K2Node_CreateDolphinInstance_Category", "Dolphin");
 }
 
-UK2Node_CreateDolphinInstanceProxy* UK2Node_CreateDolphinInstanceProxy::CreateProxyObjectForWait(bool bRegisterAsDefaultInstance, bool bStartPaused, bool bBeginRecording, UIsoAsset* IsoAsset)
+UK2Node_CreateDolphinInstanceProxy* UK2Node_CreateDolphinInstanceProxy::CreateProxyObjectForWait(UIsoAsset* IsoAsset)
 {
 	UK2Node_CreateDolphinInstanceProxy* Proxy = NewObject<UK2Node_CreateDolphinInstanceProxy>();
 	Proxy->SetFlags(RF_StrongRefOnFrame);
 
-	UDolphinInstance* Instance = UDolphinUnrealBlueprintLibrary::CreateDolphinInstance(bRegisterAsDefaultInstance);
+	UDolphinInstance* Instance = UDolphinUnrealBlueprintLibrary::CreateDolphinInstance();
 	Instance->OnInstanceCommandCompleteEvent.AddUObject(Proxy, &UK2Node_CreateDolphinInstanceProxy::OnInstanceReady);
-	Instance->Initialize(IsoAsset, bStartPaused, bBeginRecording);
+	Instance->Initialize(IsoAsset);
 
 	return Proxy;
 }

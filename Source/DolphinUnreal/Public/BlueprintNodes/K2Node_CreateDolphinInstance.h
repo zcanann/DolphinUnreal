@@ -33,7 +33,7 @@ class UK2Node_CreateDolphinInstanceProxy : public UObject
 
 public:
 	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"))
-	static UK2Node_CreateDolphinInstanceProxy* CreateProxyObjectForWait(bool bRegisterAsDefaultInstance, bool bStartPaused, bool bBeginRecording, UIsoAsset* IsoAsset);
+	static UK2Node_CreateDolphinInstanceProxy* CreateProxyObjectForWait(UIsoAsset* IsoAsset);
 	
 	UPROPERTY(BlueprintAssignable)
 	FDolphinCreateInstanceMulticastDelegate OnSuccess;

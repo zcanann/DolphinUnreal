@@ -32,8 +32,6 @@ UK2Node_TerminateProxy* UK2Node_TerminateProxy::CreateProxyObjectForWait(UDolphi
 	UK2Node_TerminateProxy* Proxy = NewObject<UK2Node_TerminateProxy>();
 	Proxy->SetFlags(RF_StrongRefOnFrame);
 
-	DolphinInstance = UDolphinUnrealBlueprintLibrary::GetDolphinInstanceOrDefault(DolphinInstance);
-
 	if (DolphinInstance != nullptr)
 	{
 		DolphinInstance->OnInstanceCommandCompleteEvent.AddUObject(Proxy, &UK2Node_TerminateProxy::OnInstanceReady);

@@ -32,8 +32,6 @@ UK2Node_FormatMemoryCardProxy* UK2Node_FormatMemoryCardProxy::CreateProxyObjectF
 	UK2Node_FormatMemoryCardProxy* Proxy = NewObject<UK2Node_FormatMemoryCardProxy>();
 	Proxy->SetFlags(RF_StrongRefOnFrame);
 
-	DolphinInstance = UDolphinUnrealBlueprintLibrary::GetDolphinInstanceOrDefault(DolphinInstance);
-
 	if (DolphinInstance != nullptr)
 	{
 		DolphinInstance->OnInstanceCommandCompleteEvent.AddUObject(Proxy, &UK2Node_FormatMemoryCardProxy::OnInstanceReady);

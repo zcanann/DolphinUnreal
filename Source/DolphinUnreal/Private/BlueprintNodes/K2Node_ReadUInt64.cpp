@@ -34,8 +34,6 @@ UK2Node_ReadUInt64Proxy* UK2Node_ReadUInt64Proxy::CreateProxyObjectForWait(UDolp
 	Proxy->SetFlags(RF_StrongRefOnFrame);
 	Proxy->bSuccess = false;
 
-	DolphinInstance = UDolphinUnrealBlueprintLibrary::GetDolphinInstanceOrDefault(DolphinInstance);
-
 	if (DolphinInstance != nullptr)
 	{
 		DolphinInstance->OnInstanceCommandCompleteEvent.AddUObject(Proxy, &UK2Node_ReadUInt64Proxy::OnInstanceReady);

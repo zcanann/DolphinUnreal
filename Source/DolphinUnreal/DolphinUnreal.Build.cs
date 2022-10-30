@@ -36,7 +36,6 @@ public class DolphinUnreal : ModuleRules
 			},
 			new string[]
 			{
-				"ThirdParty/DolphinAPI/dolphin-ipc/external/cpp-ipc/lib/Release/ipc.lib",
 				"ThirdParty/DolphinAPI/Build/x64/Release/DolphinIPC.lib",
 			}
 		);

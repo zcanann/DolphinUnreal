@@ -33,8 +33,6 @@ UK2Node_PlayInputsProxy* UK2Node_PlayInputsProxy::CreateProxyObjectForWait(UDolp
 	UK2Node_PlayInputsProxy* Proxy = NewObject<UK2Node_PlayInputsProxy>();
 	Proxy->SetFlags(RF_StrongRefOnFrame);
 
-	DolphinInstance = UDolphinUnrealBlueprintLibrary::GetDolphinInstanceOrDefault(DolphinInstance);
-
 	if (DolphinInstance != nullptr)
 	{
 		TArray<FFrameInputs> FrameInputs[4] = { FrameInputsController0, FrameInputsController1, FrameInputsController2, FrameInputsController3 };

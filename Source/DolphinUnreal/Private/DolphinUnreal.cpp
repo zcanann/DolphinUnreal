@@ -73,16 +73,6 @@ void FDolphinUnrealModule::UntrackInstance(UDolphinInstance* InDolphinInstance)
 	DolphinInstances.Remove(InDolphinInstance);
 }
 
-void FDolphinUnrealModule::SetDefaultDolphinInstance(UDolphinInstance* InDefaultDolphinInstance)
-{
-	DefaultDolphinInstance = InDefaultDolphinInstance;
-}
-
-UDolphinInstance* FDolphinUnrealModule::GetDefaultDolphinInstance() const
-{
-	return DefaultDolphinInstance;
-}
-
 TArray<UDolphinInstance*> FDolphinUnrealModule::GetDolphinInstances() const
 {
 	return DolphinInstances;

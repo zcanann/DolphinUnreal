@@ -27,18 +27,16 @@ FText UK2Node_CreateSaveState::GetMenuCategory() const
 	return LOCTEXT("K2Node_CreateSaveState_Category", "Dolphin");
 }
 
-UK2Node_CreateSaveStateProxy* UK2Node_CreateSaveStateProxy::CreateProxyObjectForWait(UDolphinInstance* DolphinInstance, FString SaveName)
+UK2Node_CreateSaveStateProxy* UK2Node_CreateSaveStateProxy::CreateProxyObjectForWait(UDolphinInstance* DolphinInstance, FString SaveName, bool bSaveMemoryCards)
 {
 	UK2Node_CreateSaveStateProxy* Proxy = NewObject<UK2Node_CreateSaveStateProxy>();
 	Proxy->SetFlags(RF_StrongRefOnFrame);
-
-	DolphinInstance = UDolphinUnrealBlueprintLibrary::GetDolphinInstanceOrDefault(DolphinInstance);
 
 	if (DolphinInstance != nullptr)
 	{
 		DolphinInstance->OnInstanceCommandCompleteEvent.AddUObject(Proxy, &UK2Node_CreateSaveStateProxy::OnInstanceReady);
 		DolphinInstance->OnInstanceSaveStateCreated.AddUObject(Proxy, &UK2Node_CreateSaveStateProxy::OnInstanceSaveStateCreated);
-		DolphinInstance->RequestCreateSaveState(SaveName);
+		DolphinInstance->RequestCreateSaveState(SaveName, bSaveMemoryCards);
 	}
 
 	return Proxy;
