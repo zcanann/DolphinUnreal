@@ -33,7 +33,8 @@ class UK2Node_LoadSaveStateProxy : public UObject
 
 public:
 	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"))
-	static UK2Node_LoadSaveStateProxy* CreateProxyObjectForWait(UDolphinInstance* DolphinInstance, USavAsset* SavAsset);
+	static UK2Node_LoadSaveStateProxy* CreateProxyObjectForWait(UDolphinInstance* DolphinInstance, USavAsset* SavAsset,
+		UGciAsset* OptionalMemoryCardSlotAAsset, UGciAsset* OptionalMemoryCardSlotBAsset);
 	
 	UPROPERTY(BlueprintAssignable)
 	FDolphinLoadSaveStateMulticastDelegate OnSuccess;

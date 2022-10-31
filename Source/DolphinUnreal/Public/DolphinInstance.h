@@ -11,6 +11,7 @@
 
 #include "DolphinInstance.generated.h"
 
+class UGciAsset;
 class UIsoAsset;
 class USavAsset;
 class UTexture2D;
@@ -69,7 +70,8 @@ public:
 	int64 GetWindowIdentifier() const;
 
 	void RequestCreateSaveState(FString SaveName, bool bSaveMemoryCards);
-	void RequestLoadSaveState(USavAsset* SavAsset);
+	void RequestLoadSaveState(USavAsset* SavAsset, UGciAsset* OptionalMemoryCardSlotAAsset, UGciAsset* OptionalMemoryCardSlotBAsset);
+	void RequestLoadMemoryCardData(UGciAsset* OptionalMemoryCardSlotAAsset, UGciAsset* OptionalMemoryCardSlotBAsset);
 	void RequestPause();
 	void RequestResume();
 	void RequestStartRecording(bool Unpause, bool RecordControllers[4]);

@@ -285,13 +285,13 @@ void UDolphinInstance::RequestCreateSaveState(FString SaveName, bool bSaveMemory
     static const FString ProjectContentDirectory = FPaths::ConvertRelativePathToFull(FPaths::ProjectContentDir());
     const FString FilePath = FPaths::Combine(ProjectContentDirectory, "SaveStates/", SaveName);
 
-    CREATE_TO_INSTANCE_DATA(CreateSaveState, ipcData, data)
+    CREATE_TO_INSTANCE_DATA(CreateSaveState, ipcData, data);
     data->_filePathNoExtension = std::string(TCHAR_TO_UTF8(*FilePath));
     data->_saveMemoryCards = bSaveMemoryCards;
     ipcSendToInstance(ipcData);
 }
 
-void UDolphinInstance::RequestLoadSaveState(USavAsset* SavAsset)
+void UDolphinInstance::RequestLoadSaveState(USavAsset* SavAsset, UGciAsset* OptionalMemoryCardSlotAAsset, UGciAsset* OptionalMemoryCardSlotBAsset)
 {
     if (SavAsset == nullptr)
     {
@@ -299,10 +299,25 @@ void UDolphinInstance::RequestLoadSaveState(USavAsset* SavAsset)
         return;
     }
 
-    const FString FilePath = SavAsset->Path;
+    const FString SaveFilePath = SavAsset->Path;
+    const FString MemoryCardAFilePath = OptionalMemoryCardSlotAAsset == nullptr ? TEXT("") : OptionalMemoryCardSlotAAsset->Path;
+    const FString MemoryCardBFilePath = OptionalMemoryCardSlotBAsset == nullptr ? TEXT("") : OptionalMemoryCardSlotBAsset->Path;
 
-    CREATE_TO_INSTANCE_DATA(LoadSaveState, ipcData, data)
-    data->_filePath = std::string(TCHAR_TO_UTF8(*FilePath));
+    CREATE_TO_INSTANCE_DATA(LoadSaveState, ipcData, data);
+    data->_saveFilePath = std::string(TCHAR_TO_UTF8(*SaveFilePath));
+    data->_optionalMemoryCardDataAPath = std::string(TCHAR_TO_UTF8(*MemoryCardAFilePath));
+    data->_optionalMemoryCardDataBPath = std::string(TCHAR_TO_UTF8(*MemoryCardBFilePath));
+    ipcSendToInstance(ipcData);
+}
+
+void UDolphinInstance::RequestLoadMemoryCardData(UGciAsset* OptionalMemoryCardSlotAAsset, UGciAsset* OptionalMemoryCardSlotBAsset)
+{
+    const FString MemoryCardAFilePath = OptionalMemoryCardSlotAAsset == nullptr ? TEXT("") : OptionalMemoryCardSlotAAsset->Path;
+    const FString MemoryCardBFilePath = OptionalMemoryCardSlotBAsset == nullptr ? TEXT("") : OptionalMemoryCardSlotBAsset->Path;
+
+    CREATE_TO_INSTANCE_DATA(LoadMemoryCardData, ipcData, data);
+    data->_optionalMemoryCardDataAPath = std::string(TCHAR_TO_UTF8(*MemoryCardAFilePath));
+    data->_optionalMemoryCardDataBPath = std::string(TCHAR_TO_UTF8(*MemoryCardBFilePath));
     ipcSendToInstance(ipcData);
 }
 
@@ -310,7 +325,7 @@ void UDolphinInstance::RequestPause()
 {
     bIsPaused = true;
 
-    CREATE_TO_INSTANCE_DATA(PauseEmulation, ipcData, data)
+    CREATE_TO_INSTANCE_DATA(PauseEmulation, ipcData, data);
     ipcSendToInstance(ipcData);
 }
 
@@ -318,7 +333,7 @@ void UDolphinInstance::RequestResume()
 {
     bIsPaused = false;
 
-    CREATE_TO_INSTANCE_DATA(ResumeEmulation, ipcData, data)
+    CREATE_TO_INSTANCE_DATA(ResumeEmulation, ipcData, data);
     ipcSendToInstance(ipcData);
 }
 
@@ -344,7 +359,7 @@ void UDolphinInstance::RequestStopRecording()
 {
     bIsRecordingInput = false;
 
-    CREATE_TO_INSTANCE_DATA(StopRecordingInput, ipcData, data)
+    CREATE_TO_INSTANCE_DATA(StopRecordingInput, ipcData, data);
     ipcSendToInstance(ipcData);
 }
 
@@ -411,7 +426,7 @@ void UDolphinInstance::RequestPlayInputTable(UDataTable* FrameInputsTable[4])
 
 void UDolphinInstance::RequestPlayInputs(const TArray<FFrameInputs> FrameInputs[4])
 {
-    CREATE_TO_INSTANCE_DATA(PlayInputs, ipcData, data)
+    CREATE_TO_INSTANCE_DATA(PlayInputs, ipcData, data);
 
     for (int32 Index = 0; Index < 4; Index++)
     {
@@ -426,14 +441,14 @@ void UDolphinInstance::RequestPlayInputs(const TArray<FFrameInputs> FrameInputs[
 
 void UDolphinInstance::RequestFrameAdvance(int32 NumberOfFrames)
 {
-    CREATE_TO_INSTANCE_DATA(FrameAdvance, ipcData, data)
+    CREATE_TO_INSTANCE_DATA(FrameAdvance, ipcData, data);
     data->_numFrames = NumberOfFrames;
     ipcSendToInstance(ipcData);
 }
 
 void UDolphinInstance::RequestSetTasInput(FFrameInputs FrameInputs[4])
 {
-    CREATE_TO_INSTANCE_DATA(SetTasInput, ipcData, data)
+    CREATE_TO_INSTANCE_DATA(SetTasInput, ipcData, data);
     data->_tasInputStates[0] = FFrameInputs::ToDolphinControllerState(FrameInputs[0]);
     data->_tasInputStates[1] = FFrameInputs::ToDolphinControllerState(FrameInputs[1]);
     data->_tasInputStates[2] = FFrameInputs::ToDolphinControllerState(FrameInputs[2]);
@@ -443,7 +458,7 @@ void UDolphinInstance::RequestSetTasInput(FFrameInputs FrameInputs[4])
 
 void UDolphinInstance::RequestFormatMemoryCard(EMemoryCardSlot MemoryCardSlot, EMemoryCardSize MemoryCardSize, EMemoryCardEncoding MemoryCardEncoding)
 {
-    CREATE_TO_INSTANCE_DATA(FormatMemoryCard, ipcData, data)
+    CREATE_TO_INSTANCE_DATA(FormatMemoryCard, ipcData, data);
     data->_slot = (DolphinSlot)MemoryCardSlot;
     data->_encoding = (CardEncoding)MemoryCardEncoding;
     data->_cardSize = (CardSize)MemoryCardSize;
@@ -452,7 +467,7 @@ void UDolphinInstance::RequestFormatMemoryCard(EMemoryCardSlot MemoryCardSlot, E
 
 void UDolphinInstance::RequestReadMemory(FDolphinUInt32 Address, const TArray<FDolphinInt32>& Offsets, int32 ByteCount)
 {
-    CREATE_TO_INSTANCE_DATA(ReadMemory, ipcData, data)
+    CREATE_TO_INSTANCE_DATA(ReadMemory, ipcData, data);
     data->_address = Address.Value;
     data->_pointerOffsets = ConvertPointerOffsets(Offsets);
     data->_numberOfBytes = ByteCount;
@@ -478,7 +493,7 @@ std::vector<int> UDolphinInstance::ConvertPointerOffsets(const TArray<FDolphinIn
 
 void UDolphinInstance::RequestTerminate()
 {
-    CREATE_TO_INSTANCE_DATA(Terminate, ipcData, data)
+    CREATE_TO_INSTANCE_DATA(Terminate, ipcData, data);
     ipcData._call = DolphinInstanceIpcCall::DolphinInstance_Terminate;
     ipcSendToInstance(ipcData);
 

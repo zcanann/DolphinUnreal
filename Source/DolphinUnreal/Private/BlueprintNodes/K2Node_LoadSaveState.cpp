@@ -1,5 +1,6 @@
 #include "BlueprintNodes/K2Node_LoadSaveState.h"
 
+#include "AssetTypes/Gci/GciAsset.h"
 #include "AssetTypes/Sav/SavAsset.h"
 #include "DolphinUnrealBlueprintLibrary.h"
 
@@ -28,7 +29,8 @@ FText UK2Node_LoadSaveState::GetMenuCategory() const
 	return LOCTEXT("K2Node_LoadSaveState_Category", "Dolphin");
 }
 
-UK2Node_LoadSaveStateProxy* UK2Node_LoadSaveStateProxy::CreateProxyObjectForWait(UDolphinInstance* DolphinInstance, USavAsset* SavAsset)
+UK2Node_LoadSaveStateProxy* UK2Node_LoadSaveStateProxy::CreateProxyObjectForWait(UDolphinInstance* DolphinInstance, USavAsset* SavAsset,
+	UGciAsset* OptionalMemoryCardSlotAAsset, UGciAsset* OptionalMemoryCardSlotBAsset)
 {
 	UK2Node_LoadSaveStateProxy* Proxy = NewObject<UK2Node_LoadSaveStateProxy>();
 	Proxy->SetFlags(RF_StrongRefOnFrame);
@@ -36,7 +38,7 @@ UK2Node_LoadSaveStateProxy* UK2Node_LoadSaveStateProxy::CreateProxyObjectForWait
 	if (DolphinInstance != nullptr)
 	{
 		DolphinInstance->OnInstanceCommandCompleteEvent.AddUObject(Proxy, &UK2Node_LoadSaveStateProxy::OnInstanceReady);
-		DolphinInstance->RequestLoadSaveState(SavAsset);
+		DolphinInstance->RequestLoadSaveState(SavAsset, OptionalMemoryCardSlotAAsset, OptionalMemoryCardSlotBAsset);
 	}
 
 	return Proxy;
