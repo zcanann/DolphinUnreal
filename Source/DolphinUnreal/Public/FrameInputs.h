@@ -33,6 +33,21 @@ enum class EFrameInputType : uint8
 };
 ENUM_RANGE_BY_FIRST_AND_LAST(EFrameInputType, EFrameInputType::A, EFrameInputType::CStickY);
 
+UENUM(BlueprintType, meta = (Bitflags, UseEnumValuesAsMaskValuesInEditor = "true"))
+enum class EGameCubeEvents : uint8
+{
+	None = 0 UMETA(Hidden),
+	OpenDiscCover = 1,
+	DiscChange = 2,
+	ConsoleReset = 4,
+	ChangeControllerGC = 8,
+	ChangeControllerGBA = 16,
+	ChangeControllerWii = 32,
+	ChangeControllerBongos = 64,
+};
+ENUM_CLASS_FLAGS(EGameCubeEvents);
+ENUM_RANGE_BY_FIRST_AND_LAST(EGameCubeEvents, EGameCubeEvents::None, EGameCubeEvents::ChangeControllerBongos);
+
 USTRUCT(BlueprintType)
 struct FFrameInputs : public FTableRowBase
 {
@@ -85,18 +100,6 @@ public:
 	bool bButtonR = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool bDiscChange = false;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool bConsoleReset = false;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool bIsControllerConnected = false;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool bOriginReset = false;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	uint8 TriggerLeft = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -113,6 +116,15 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	uint8 CStickY = 128;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bOriginReset = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bIsControllerConnected = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (Bitmask, BitmaskEnum = EGameCubeEvents))
+	int32 GameCubeEvents = 0;
 };
 
 FORCEINLINE FArchive& operator <<(FArchive& Ar, FFrameInputs& InFrameInputs)
@@ -140,10 +152,9 @@ FORCEINLINE FArchive& operator <<(FArchive& Ar, FFrameInputs& InFrameInputs)
 	Ar << InFrameInputs.CStickX;
 	Ar << InFrameInputs.CStickY;
 
-	Ar << InFrameInputs.bDiscChange;
-	Ar << InFrameInputs.bConsoleReset;
-	Ar << InFrameInputs.bIsControllerConnected;
 	Ar << InFrameInputs.bOriginReset;
+	Ar << InFrameInputs.bIsControllerConnected;
+	Ar << InFrameInputs.GameCubeEvents;
 
 	return Ar;
 }

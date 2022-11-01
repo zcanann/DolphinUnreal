@@ -24,10 +24,9 @@ FFrameInputs FFrameInputs::FromDolphinControllerState(DolphinControllerState InD
 	Result.MainStickY = InDolphinControllerState.AnalogStickY;
 	Result.CStickX = InDolphinControllerState.CStickX;
 	Result.CStickY = InDolphinControllerState.CStickY;
-	Result.bDiscChange = InDolphinControllerState.Disc;
-	Result.bConsoleReset = InDolphinControllerState.Reset;
-	Result.bIsControllerConnected = InDolphinControllerState.IsConnected;
 	Result.bOriginReset = InDolphinControllerState.GetOrigin;
+	Result.bIsControllerConnected = InDolphinControllerState.IsConnected;
+	Result.GameCubeEvents = (int32)InDolphinControllerState.GameCubeEvents;
 
 	return Result;
 }
@@ -54,10 +53,9 @@ DolphinControllerState FFrameInputs::ToDolphinControllerState(const FFrameInputs
 	Result.AnalogStickY = InFrameInputs.MainStickY;
 	Result.CStickX = InFrameInputs.CStickX;
 	Result.CStickY = InFrameInputs.CStickY;
-	Result.Disc = InFrameInputs.bDiscChange;
-	Result.Reset = InFrameInputs.bConsoleReset;
-	Result.IsConnected = InFrameInputs.bIsControllerConnected;
 	Result.GetOrigin = InFrameInputs.bOriginReset;
+	Result.IsConnected = InFrameInputs.bIsControllerConnected;
+	Result.GameCubeEvents = (GameCubeEventFlags)InFrameInputs.GameCubeEvents;
 
 	return Result;
 }
