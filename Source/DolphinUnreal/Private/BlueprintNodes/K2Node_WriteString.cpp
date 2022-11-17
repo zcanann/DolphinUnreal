@@ -15,12 +15,12 @@ UK2Node_WriteString::UK2Node_WriteString(const FObjectInitializer& ObjectInitial
 
 FText UK2Node_WriteString::GetTooltipText() const
 {
-	return LOCTEXT("K2Node_WriteString_Tooltip", "Writes a string from the specified (or default) Dolphin instance.");
+	return LOCTEXT("K2Node_WriteString_Tooltip", "Writes a string to the specified (or default) Dolphin instance.");
 }
 
 FText UK2Node_WriteString::GetNodeTitle(ENodeTitleType::Type TitleType) const
 {
-	return LOCTEXT("K2Node_WriteString_Title", "Write String from Memory");
+	return LOCTEXT("K2Node_WriteString_Title", "Write String to Memory");
 }
 
 FText UK2Node_WriteString::GetMenuCategory() const
@@ -36,7 +36,7 @@ UK2Node_WriteStringProxy* UK2Node_WriteStringProxy::CreateProxyObjectForWait(UDo
 
 	if (DolphinInstance != nullptr)
 	{
-		DolphinInstance->OnInstanceCommandCompleteEvent.AddUObject(Proxy, &UK2Node_WriteStringProxy::OnInstanceWritey);
+		DolphinInstance->OnInstanceCommandCompleteEvent.AddUObject(Proxy, &UK2Node_WriteStringProxy::OnInstanceReady);
 		DolphinInstance->OnInstanceMemoryWrite.AddUObject(Proxy, &UK2Node_WriteStringProxy::OnInstanceMemoryWrite);
 		DolphinInstance->RequestWriteMemory(Address, Offsets, UDolphinDataTypesBlueprintLibrary::StringToUInt8Array(Value));
 	}
@@ -48,30 +48,24 @@ UK2Node_WriteStringProxy::UK2Node_WriteStringProxy(const FObjectInitializer& Obj
 {
 }
 
-void UK2Node_WriteStringProxy::OnInstanceMemoryWrite(UDolphinInstance* InInstance, TArray<FDolphinUInt8> InValue)
+void UK2Node_WriteStringProxy::OnInstanceMemoryWrite(UDolphinInstance* InInstance, bool bInSuccess)
 {
 	if (InInstance)
 	{
 		InInstance->OnInstanceMemoryWrite.RemoveAll(this);
 	}
 
-	TArray<uint8> Bytes = UDolphinDataTypesBlueprintLibrary::CastUInt8ArrayToUnrealUInt8Array(InValue);
-	Value.Empty();
-	for (const uint8 Byte : Bytes)
-	{
-		Value += TCHAR(Byte);
-	}
-	bSuccess = true;
+	bSuccess = bInSuccess;
 }
 
-void UK2Node_WriteStringProxy::OnInstanceWritey(UDolphinInstance* InInstance, uint64 CommandId)
+void UK2Node_WriteStringProxy::OnInstanceReady(UDolphinInstance* InInstance, uint64 CommandId)
 {
 	if (InInstance)
 	{
 		InInstance->OnInstanceCommandCompleteEvent.RemoveAll(this);
 	}
 
-	OnSuccess.Broadcast(InInstance, Value, bSuccess);
+	OnSuccess.Broadcast(InInstance, bSuccess);
 }
 
 #undef LOCTEXT_NAMESPACE

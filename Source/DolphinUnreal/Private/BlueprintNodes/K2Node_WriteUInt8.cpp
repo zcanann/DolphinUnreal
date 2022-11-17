@@ -15,12 +15,12 @@ UK2Node_WriteUInt8::UK2Node_WriteUInt8(const FObjectInitializer& ObjectInitializ
 
 FText UK2Node_WriteUInt8::GetTooltipText() const
 {
-	return LOCTEXT("K2Node_WriteUInt8_Tooltip", "Writes an uint8 from the specified (or default) Dolphin instance.");
+	return LOCTEXT("K2Node_WriteUInt8_Tooltip", "Writes an uint8 to the specified (or default) Dolphin instance.");
 }
 
 FText UK2Node_WriteUInt8::GetNodeTitle(ENodeTitleType::Type TitleType) const
 {
-	return LOCTEXT("K2Node_WriteUInt8_Title", "Write UInt8 from Memory");
+	return LOCTEXT("K2Node_WriteUInt8_Title", "Write UInt8 to Memory");
 }
 
 FText UK2Node_WriteUInt8::GetMenuCategory() const
@@ -36,7 +36,7 @@ UK2Node_WriteUInt8Proxy* UK2Node_WriteUInt8Proxy::CreateProxyObjectForWait(UDolp
 
 	if (DolphinInstance != nullptr)
 	{
-		DolphinInstance->OnInstanceCommandCompleteEvent.AddUObject(Proxy, &UK2Node_WriteUInt8Proxy::OnInstanceWritey);
+		DolphinInstance->OnInstanceCommandCompleteEvent.AddUObject(Proxy, &UK2Node_WriteUInt8Proxy::OnInstanceReady);
 		DolphinInstance->OnInstanceMemoryWrite.AddUObject(Proxy, &UK2Node_WriteUInt8Proxy::OnInstanceMemoryWrite);
 		DolphinInstance->RequestWriteMemory(Address, Offsets, UDolphinDataTypesBlueprintLibrary::MakeUInt8ArrayFromUInt8(Value.Value));
 	}
@@ -48,29 +48,24 @@ UK2Node_WriteUInt8Proxy::UK2Node_WriteUInt8Proxy(const FObjectInitializer& Objec
 {
 }
 
-void UK2Node_WriteUInt8Proxy::OnInstanceMemoryWrite(UDolphinInstance* InInstance, TArray<FDolphinUInt8> InValue)
+void UK2Node_WriteUInt8Proxy::OnInstanceMemoryWrite(UDolphinInstance* InInstance, bool bInSuccess)
 {
 	if (InInstance)
 	{
 		InInstance->OnInstanceMemoryWrite.RemoveAll(this);
 	}
 
-	if (InValue.Num() == sizeof(double))
-	{
-		Value = InValue[0];
-	}
-
-	bSuccess = true;
+	bSuccess = bInSuccess;
 }
 
-void UK2Node_WriteUInt8Proxy::OnInstanceWritey(UDolphinInstance* InInstance, uint64 CommandId)
+void UK2Node_WriteUInt8Proxy::OnInstanceReady(UDolphinInstance* InInstance, uint64 CommandId)
 {
 	if (InInstance)
 	{
 		InInstance->OnInstanceCommandCompleteEvent.RemoveAll(this);
 	}
 
-	OnSuccess.Broadcast(InInstance, Value, bSuccess);
+	OnSuccess.Broadcast(InInstance, bSuccess);
 }
 
 #undef LOCTEXT_NAMESPACE

@@ -15,12 +15,12 @@ UK2Node_WriteFloat::UK2Node_WriteFloat(const FObjectInitializer& ObjectInitializ
 
 FText UK2Node_WriteFloat::GetTooltipText() const
 {
-	return LOCTEXT("K2Node_WriteFloat_Tooltip", "Writes an float from the specified (or default) Dolphin instance.");
+	return LOCTEXT("K2Node_WriteFloat_Tooltip", "Writes an float to the specified (or default) Dolphin instance.");
 }
 
 FText UK2Node_WriteFloat::GetNodeTitle(ENodeTitleType::Type TitleType) const
 {
-	return LOCTEXT("K2Node_WriteFloat_Title", "Write Float from Memory");
+	return LOCTEXT("K2Node_WriteFloat_Title", "Write Float to Memory");
 }
 
 FText UK2Node_WriteFloat::GetMenuCategory() const
@@ -36,7 +36,7 @@ UK2Node_WriteFloatProxy* UK2Node_WriteFloatProxy::CreateProxyObjectForWait(UDolp
 
 	if (DolphinInstance != nullptr)
 	{
-		DolphinInstance->OnInstanceCommandCompleteEvent.AddUObject(Proxy, &UK2Node_WriteFloatProxy::OnInstanceWritey);
+		DolphinInstance->OnInstanceCommandCompleteEvent.AddUObject(Proxy, &UK2Node_WriteFloatProxy::OnInstanceReady);
 		DolphinInstance->OnInstanceMemoryWrite.AddUObject(Proxy, &UK2Node_WriteFloatProxy::OnInstanceMemoryWrite);
 		DolphinInstance->RequestWriteMemory(Address, Offsets, UDolphinDataTypesBlueprintLibrary::MakeUInt8ArrayFromFloat(Value.Value));
 	}
@@ -48,29 +48,24 @@ UK2Node_WriteFloatProxy::UK2Node_WriteFloatProxy(const FObjectInitializer& Objec
 {
 }
 
-void UK2Node_WriteFloatProxy::OnInstanceMemoryWrite(UDolphinInstance* InInstance, TArray<FDolphinUInt8> InValue)
+void UK2Node_WriteFloatProxy::OnInstanceMemoryWrite(UDolphinInstance* InInstance, bool bInSuccess)
 {
 	if (InInstance)
 	{
 		InInstance->OnInstanceMemoryWrite.RemoveAll(this);
 	}
 
-	if (InValue.Num() == sizeof(float))
-	{
-		Value = UDolphinDataTypesBlueprintLibrary::MakeFloatFromBytes(InValue[0], InValue[1], InValue[2], InValue[3], true);
-	}
-
-	bSuccess = true;
+	bSuccess = bInSuccess;
 }
 
-void UK2Node_WriteFloatProxy::OnInstanceWritey(UDolphinInstance* InInstance, uint64 CommandId)
+void UK2Node_WriteFloatProxy::OnInstanceReady(UDolphinInstance* InInstance, uint64 CommandId)
 {
 	if (InInstance)
 	{
 		InInstance->OnInstanceCommandCompleteEvent.RemoveAll(this);
 	}
 
-	OnSuccess.Broadcast(InInstance, Value, bSuccess);
+	OnSuccess.Broadcast(InInstance, bSuccess);
 }
 
 #undef LOCTEXT_NAMESPACE

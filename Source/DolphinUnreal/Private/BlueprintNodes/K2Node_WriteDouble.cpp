@@ -15,12 +15,12 @@ UK2Node_WriteDouble::UK2Node_WriteDouble(const FObjectInitializer& ObjectInitial
 
 FText UK2Node_WriteDouble::GetTooltipText() const
 {
-	return LOCTEXT("K2Node_WriteDouble_Tooltip", "Writes an double from the specified (or default) Dolphin instance.");
+	return LOCTEXT("K2Node_WriteDouble_Tooltip", "Writes an double to the specified (or default) Dolphin instance.");
 }
 
 FText UK2Node_WriteDouble::GetNodeTitle(ENodeTitleType::Type TitleType) const
 {
-	return LOCTEXT("K2Node_WriteDouble_Title", "Write Double from Memory");
+	return LOCTEXT("K2Node_WriteDouble_Title", "Write Double to Memory");
 }
 
 FText UK2Node_WriteDouble::GetMenuCategory() const
@@ -36,7 +36,7 @@ UK2Node_WriteDoubleProxy* UK2Node_WriteDoubleProxy::CreateProxyObjectForWait(UDo
 
 	if (DolphinInstance != nullptr)
 	{
-		DolphinInstance->OnInstanceCommandCompleteEvent.AddUObject(Proxy, &UK2Node_WriteDoubleProxy::OnInstanceWritey);
+		DolphinInstance->OnInstanceCommandCompleteEvent.AddUObject(Proxy, &UK2Node_WriteDoubleProxy::OnInstanceReady);
 		DolphinInstance->OnInstanceMemoryWrite.AddUObject(Proxy, &UK2Node_WriteDoubleProxy::OnInstanceMemoryWrite);
 		DolphinInstance->RequestWriteMemory(Address, Offsets, UDolphinDataTypesBlueprintLibrary::MakeUInt8ArrayFromDouble(Value.Value));
 	}
@@ -48,29 +48,24 @@ UK2Node_WriteDoubleProxy::UK2Node_WriteDoubleProxy(const FObjectInitializer& Obj
 {
 }
 
-void UK2Node_WriteDoubleProxy::OnInstanceMemoryWrite(UDolphinInstance* InInstance, TArray<FDolphinUInt8> InValue)
+void UK2Node_WriteDoubleProxy::OnInstanceMemoryWrite(UDolphinInstance* InInstance, bool bInSuccess)
 {
 	if (InInstance)
 	{
 		InInstance->OnInstanceMemoryWrite.RemoveAll(this);
 	}
 
-	if (InValue.Num() == sizeof(double))
-	{
-		Value = UDolphinDataTypesBlueprintLibrary::MakeDoubleFromBytes(InValue[0], InValue[1], InValue[2], InValue[3], InValue[4], InValue[5], InValue[6], InValue[7], true);
-	}
-
-	bSuccess = true;
+	bSuccess = bInSuccess;
 }
 
-void UK2Node_WriteDoubleProxy::OnInstanceWritey(UDolphinInstance* InInstance, uint64 CommandId)
+void UK2Node_WriteDoubleProxy::OnInstanceReady(UDolphinInstance* InInstance, uint64 CommandId)
 {
 	if (InInstance)
 	{
 		InInstance->OnInstanceCommandCompleteEvent.RemoveAll(this);
 	}
 
-	OnSuccess.Broadcast(InInstance, Value, bSuccess);
+	OnSuccess.Broadcast(InInstance, bSuccess);
 }
 
 #undef LOCTEXT_NAMESPACE

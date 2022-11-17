@@ -26,7 +26,7 @@ class UK2Node_WriteInt32 : public UK2Node_BaseAsyncTask
 class UDolphinInstance;
 class USavAsset;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FDolphinWriteInt32MulticastDelegate, UDolphinInstance*, DolphinInstance, FDolphinInt32, Value, bool, bSuccess);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FDolphinWriteInt32MulticastDelegate, UDolphinInstance*, DolphinInstance, bool, bSuccess);
 
 UCLASS(meta = (HideThen))
 class UK2Node_WriteInt32Proxy : public UObject
@@ -41,11 +41,8 @@ public:
 	FDolphinWriteInt32MulticastDelegate OnSuccess;
 
 private:
-	void OnInstanceMemoryWrite(UDolphinInstance* InInstance, TArray<FDolphinUInt8> InValue);
-	void OnInstanceWritey(UDolphinInstance* InInstance, uint64 CommandId);
-
-	UPROPERTY()
-	FDolphinInt32 Value;
+	void OnInstanceMemoryWrite(UDolphinInstance* InInstance, bool bInSuccess);
+	void OnInstanceReady(UDolphinInstance* InInstance, uint64 CommandId);
 
 	UPROPERTY()
 	bool bSuccess = false;

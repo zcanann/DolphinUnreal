@@ -15,12 +15,12 @@ UK2Node_WriteInt16::UK2Node_WriteInt16(const FObjectInitializer& ObjectInitializ
 
 FText UK2Node_WriteInt16::GetTooltipText() const
 {
-	return LOCTEXT("K2Node_WriteInt16_Tooltip", "Writes an int16 from the specified (or default) Dolphin instance.");
+	return LOCTEXT("K2Node_WriteInt16_Tooltip", "Writes an int16 to the specified (or default) Dolphin instance.");
 }
 
 FText UK2Node_WriteInt16::GetNodeTitle(ENodeTitleType::Type TitleType) const
 {
-	return LOCTEXT("K2Node_WriteInt16_Title", "Write Int16 from Memory");
+	return LOCTEXT("K2Node_WriteInt16_Title", "Write Int16 to Memory");
 }
 
 FText UK2Node_WriteInt16::GetMenuCategory() const
@@ -36,7 +36,7 @@ UK2Node_WriteInt16Proxy* UK2Node_WriteInt16Proxy::CreateProxyObjectForWait(UDolp
 
 	if (DolphinInstance != nullptr)
 	{
-		DolphinInstance->OnInstanceCommandCompleteEvent.AddUObject(Proxy, &UK2Node_WriteInt16Proxy::OnInstanceWritey);
+		DolphinInstance->OnInstanceCommandCompleteEvent.AddUObject(Proxy, &UK2Node_WriteInt16Proxy::OnInstanceReady);
 		DolphinInstance->OnInstanceMemoryWrite.AddUObject(Proxy, &UK2Node_WriteInt16Proxy::OnInstanceMemoryWrite);
 		DolphinInstance->RequestWriteMemory(Address, Offsets, UDolphinDataTypesBlueprintLibrary::MakeUInt8ArrayFromInt16(Value.Value));
 	}
@@ -48,29 +48,24 @@ UK2Node_WriteInt16Proxy::UK2Node_WriteInt16Proxy(const FObjectInitializer& Objec
 {
 }
 
-void UK2Node_WriteInt16Proxy::OnInstanceMemoryWrite(UDolphinInstance* InInstance, TArray<FDolphinUInt8> InValue)
+void UK2Node_WriteInt16Proxy::OnInstanceMemoryWrite(UDolphinInstance* InInstance, bool bInSuccess)
 {
 	if (InInstance)
 	{
 		InInstance->OnInstanceMemoryWrite.RemoveAll(this);
 	}
 
-	if (InValue.Num() == sizeof(int16))
-	{
-		Value = UDolphinDataTypesBlueprintLibrary::MakeInt16FromBytes(InValue[0], InValue[1], true);
-	}
-
-	bSuccess = true;
+	bSuccess = bInSuccess;
 }
 
-void UK2Node_WriteInt16Proxy::OnInstanceWritey(UDolphinInstance* InInstance, uint64 CommandId)
+void UK2Node_WriteInt16Proxy::OnInstanceReady(UDolphinInstance* InInstance, uint64 CommandId)
 {
 	if (InInstance)
 	{
 		InInstance->OnInstanceCommandCompleteEvent.RemoveAll(this);
 	}
 
-	OnSuccess.Broadcast(InInstance, Value, bSuccess);
+	OnSuccess.Broadcast(InInstance, bSuccess);
 }
 
 #undef LOCTEXT_NAMESPACE

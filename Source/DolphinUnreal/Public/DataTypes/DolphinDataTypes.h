@@ -57,6 +57,24 @@ struct FDolphinInt8
 #pragma pack(push,1)
 
 USTRUCT(BlueprintType)
+struct FDolphinInt8Array
+{
+	GENERATED_BODY()
+		
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<FDolphinInt8> Values;
+
+	FDolphinInt8Array() { }
+	FDolphinInt8Array(TArray<FDolphinInt8> InValues) : Values(InValues) { }
+};
+
+#pragma pack(pop)
+#undef PACKED
+
+#define PACKED
+#pragma pack(push,1)
+
+USTRUCT(BlueprintType)
 struct FDolphinInt16
 {
 	GENERATED_BODY()
@@ -80,7 +98,7 @@ struct FDolphinInt32
 {
 	GENERATED_BODY()
 
-		int32 Value;
+	int32 Value;
 
 	operator int32() const { return Value; }
 
@@ -124,6 +142,24 @@ struct FDolphinUInt8
 
 	FDolphinUInt8() { this->Value = 0; }
 	FDolphinUInt8(const uint8& Value) { this->Value = Value; }
+};
+
+#pragma pack(pop)
+#undef PACKED
+
+#define PACKED
+#pragma pack(push,1)
+
+USTRUCT(BlueprintType)
+struct FDolphinUInt8Array
+{
+	GENERATED_BODY()
+		
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<FDolphinUInt8> Values;
+
+	FDolphinUInt8Array() { }
+	FDolphinUInt8Array(TArray<FDolphinUInt8> InValues) : Values(InValues) { }
 };
 
 #pragma pack(pop)

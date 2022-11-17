@@ -18,6 +18,8 @@
 // STL
 #include <string>
 
+#pragma optimize("", off)
+
 UDolphinInstance::UDolphinInstance(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
     FEditorDelegates::PausePIE.AddUObject(this, &UDolphinInstance::PausePIE);
@@ -173,6 +175,7 @@ SERVER_FUNC_BODY(UDolphinInstance, OnInstanceMemoryRead, params)
 
 SERVER_FUNC_BODY(UDolphinInstance, OnInstanceMemoryWrite, params)
 {
+    OnInstanceMemoryWrite.Broadcast(this, params._success);
 }
 
 inline uint32_t ConvertGbaColors(uint32_t argb)
@@ -476,7 +479,18 @@ void UDolphinInstance::RequestReadMemory(FDolphinUInt32 Address, const TArray<FD
 
 void UDolphinInstance::RequestWriteMemory(FDolphinUInt32 Address, const TArray<FDolphinInt32>& Offsets, const TArray<FDolphinUInt8>& Bytes)
 {
-    // TODO
+    std::vector<unsigned char> Data;
+
+    for (const FDolphinUInt8& Next : Bytes)
+    {
+        Data.push_back(Next.Value);
+    }
+
+    CREATE_TO_INSTANCE_DATA(WriteMemory, ipcData, data);
+    data->_address = Address.Value;
+    data->_pointerOffsets = ConvertPointerOffsets(Offsets);
+    data->_bytes = Data;
+    ipcSendToInstance(ipcData);
 }
 
 std::vector<int> UDolphinInstance::ConvertPointerOffsets(const TArray<FDolphinInt32>& Offsets)
@@ -499,3 +513,5 @@ void UDolphinInstance::RequestTerminate()
 
     UDolphinUnrealBlueprintLibrary::TerminateDolpinInstance(this);
 }
+
+#pragma optimize("", on)
