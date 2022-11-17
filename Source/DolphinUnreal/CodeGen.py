@@ -190,11 +190,36 @@ def generatePrimitiveMakeForDataType(dataType, unrealPrimitive):
         '\t\treturn static_cast<' + castPrimitive + '>(Value);\n' + \
         '\t}\n\n'
 
+def generateArrayMakeHeaderFromDataType(dataType):
+    dataTypeKeywords = dataTypeTable[dataType]['keywords']
+    return '\tUFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Make UInt8 Array from Dolphin ' + dataType + \
+        '", meta = (Keywords = "Make Create ' + dataTypeKeywords + ' from Array of Bytes int8 uint8 char"))\n'
+
+def generateArrayOfBytesMakeForDataType(dataType, unrealPrimitive):
+    castPrimitive = dataTypeTable[dataType]['primitive']
+    numBytes = dataTypeTable[dataType]['bytes']
+    
+    functionName = 'MakeUInt8ArrayFrom' + dataType
+    generateFavoriteForFunctionName(functionName)
+    
+    return generateArrayMakeHeaderFromDataType(dataType) + \
+        '\tstatic TArray<FDolphinUInt8> ' + functionName + '(FDolphin' + dataType + ' Value)\n' + \
+        '\t{\n' + \
+        '\t\tTArray<FDolphinUInt8> Result;\n' + \
+        '\t\tchar* NextByte = reinterpret_cast<char*>(&Value.Value);\n' + \
+        '\t\tfor (int32 Index = 0; Index < ' + str(numBytes) + '; Index++)\n' + \
+        '\t\t{\n' + \
+        '\t\t\tResult.Add(MakeUInt8(*NextByte));\n' + \
+        '\t\t\tNextByte++;\n' + \
+        '\t\t}\n' + \
+        '\t\treturn Result;\n' + \
+        '\t}\n\n'
+
 def generateArrayMakeHeader(dataType):
     dataTypeKeywords = dataTypeTable[dataType]['keywords']
     return '\tUFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Make Dolphin ' + dataType + \
         ' from Bytes", meta = (Keywords = "Make Create ' + dataTypeKeywords + ' from Array of Bytes int8 uint8 char"))\n'
-        
+
 def generateArrayMakeForDataType(dataType, unrealPrimitive):
     castPrimitive = dataTypeTable[dataType]['primitive']
     numBytes = dataTypeTable[dataType]['bytes']
@@ -249,6 +274,7 @@ def generateHexMakeForDataType(dataType, unrealPrimitive):
 def generateMakesForDataType(dataType, unrealPrimitive):
     return generatePrimitiveMakeForDataType(dataType, unrealPrimitive) + \
         generateHexMakeForDataType(dataType, unrealPrimitive) + \
+        generateArrayOfBytesMakeForDataType(dataType, unrealPrimitive) + \
         generateArrayMakeForDataType(dataType, unrealPrimitive)
 
 def generateMakeForAllDataTypes():

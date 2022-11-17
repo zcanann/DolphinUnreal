@@ -40,13 +40,22 @@ enum class EGameCubeEvents : uint8
 	OpenDiscCover = 1,
 	DiscChange = 2,
 	ConsoleReset = 4,
-	ChangeControllerGC = 8,
-	ChangeControllerGBA = 16,
-	ChangeControllerWii = 32,
-	ChangeControllerBongos = 64,
 };
 ENUM_CLASS_FLAGS(EGameCubeEvents);
-ENUM_RANGE_BY_FIRST_AND_LAST(EGameCubeEvents, EGameCubeEvents::None, EGameCubeEvents::ChangeControllerBongos);
+
+UENUM(BlueprintType)
+enum class EControllerChangeEvent : uint8
+{
+	None,
+	ChangeControllerNoDevice,
+	ChangeControllerGC,
+	ChangeControllerGBA,
+	ChangeControllerBongos,
+	ChangeControllerSteering,
+	ChangeControllerDanceMat,
+	ChangeControllerKeyboard,
+};
+ENUM_RANGE_BY_FIRST_AND_LAST(EControllerChangeEvent, EControllerChangeEvent::None, EControllerChangeEvent::ChangeControllerKeyboard);
 
 USTRUCT(BlueprintType)
 struct FFrameInputs : public FTableRowBase
@@ -123,6 +132,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bIsControllerConnected = false;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	EControllerChangeEvent ControllerChangeEvent = EControllerChangeEvent::None;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (Bitmask, BitmaskEnum = EGameCubeEvents))
 	int32 GameCubeEvents = 0;
 };
@@ -154,6 +166,7 @@ FORCEINLINE FArchive& operator <<(FArchive& Ar, FFrameInputs& InFrameInputs)
 
 	Ar << InFrameInputs.bOriginReset;
 	Ar << InFrameInputs.bIsControllerConnected;
+	Ar << InFrameInputs.ControllerChangeEvent;
 	Ar << InFrameInputs.GameCubeEvents;
 
 	return Ar;

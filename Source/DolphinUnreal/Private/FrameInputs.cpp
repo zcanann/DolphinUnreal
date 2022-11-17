@@ -55,7 +55,7 @@ DolphinControllerState FFrameInputs::ToDolphinControllerState(const FFrameInputs
 	Result.CStickY = InFrameInputs.CStickY;
 	Result.GetOrigin = InFrameInputs.bOriginReset;
 	Result.IsConnected = InFrameInputs.bIsControllerConnected;
-	Result.GameCubeEvents = (GameCubeEventFlags)InFrameInputs.GameCubeEvents;
+	Result.GameCubeEvents = (DolphinControllerState::GameCubeEventFlags)InFrameInputs.GameCubeEvents;
 
 	return Result;
 }

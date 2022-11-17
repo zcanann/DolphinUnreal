@@ -31,31 +31,41 @@ public:
 		
 		AddFunctionToFavorites(DolphinDataTypesBlueprintLibrary->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, MakeUInt8)));
 		AddFunctionToFavorites(DolphinDataTypesBlueprintLibrary->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, MakeUInt8FromHexString)));
+		AddFunctionToFavorites(DolphinDataTypesBlueprintLibrary->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, MakeUInt8ArrayFromUInt8)));
 		AddFunctionToFavorites(DolphinDataTypesBlueprintLibrary->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, MakeUInt16)));
 		AddFunctionToFavorites(DolphinDataTypesBlueprintLibrary->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, MakeUInt16FromHexString)));
+		AddFunctionToFavorites(DolphinDataTypesBlueprintLibrary->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, MakeUInt8ArrayFromUInt16)));
 		AddFunctionToFavorites(DolphinDataTypesBlueprintLibrary->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, MakeUInt16FromBytes)));
 		AddFunctionToFavorites(DolphinDataTypesBlueprintLibrary->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, MakeUInt32)));
 		AddFunctionToFavorites(DolphinDataTypesBlueprintLibrary->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, MakeUInt32FromHexString)));
+		AddFunctionToFavorites(DolphinDataTypesBlueprintLibrary->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, MakeUInt8ArrayFromUInt32)));
 		AddFunctionToFavorites(DolphinDataTypesBlueprintLibrary->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, MakeUInt32FromBytes)));
 		AddFunctionToFavorites(DolphinDataTypesBlueprintLibrary->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, MakeUInt64)));
 		AddFunctionToFavorites(DolphinDataTypesBlueprintLibrary->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, MakeUInt64FromHexString)));
+		AddFunctionToFavorites(DolphinDataTypesBlueprintLibrary->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, MakeUInt8ArrayFromUInt64)));
 		AddFunctionToFavorites(DolphinDataTypesBlueprintLibrary->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, MakeUInt64FromBytes)));
 		AddFunctionToFavorites(DolphinDataTypesBlueprintLibrary->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, MakeInt8)));
 		AddFunctionToFavorites(DolphinDataTypesBlueprintLibrary->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, MakeInt8FromHexString)));
+		AddFunctionToFavorites(DolphinDataTypesBlueprintLibrary->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, MakeUInt8ArrayFromInt8)));
 		AddFunctionToFavorites(DolphinDataTypesBlueprintLibrary->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, MakeInt16)));
 		AddFunctionToFavorites(DolphinDataTypesBlueprintLibrary->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, MakeInt16FromHexString)));
+		AddFunctionToFavorites(DolphinDataTypesBlueprintLibrary->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, MakeUInt8ArrayFromInt16)));
 		AddFunctionToFavorites(DolphinDataTypesBlueprintLibrary->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, MakeInt16FromBytes)));
 		AddFunctionToFavorites(DolphinDataTypesBlueprintLibrary->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, MakeInt32)));
 		AddFunctionToFavorites(DolphinDataTypesBlueprintLibrary->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, MakeInt32FromHexString)));
+		AddFunctionToFavorites(DolphinDataTypesBlueprintLibrary->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, MakeUInt8ArrayFromInt32)));
 		AddFunctionToFavorites(DolphinDataTypesBlueprintLibrary->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, MakeInt32FromBytes)));
 		AddFunctionToFavorites(DolphinDataTypesBlueprintLibrary->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, MakeInt64)));
 		AddFunctionToFavorites(DolphinDataTypesBlueprintLibrary->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, MakeInt64FromHexString)));
+		AddFunctionToFavorites(DolphinDataTypesBlueprintLibrary->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, MakeUInt8ArrayFromInt64)));
 		AddFunctionToFavorites(DolphinDataTypesBlueprintLibrary->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, MakeInt64FromBytes)));
 		AddFunctionToFavorites(DolphinDataTypesBlueprintLibrary->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, MakeFloat)));
 		AddFunctionToFavorites(DolphinDataTypesBlueprintLibrary->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, MakeFloatFromHexString)));
+		AddFunctionToFavorites(DolphinDataTypesBlueprintLibrary->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, MakeUInt8ArrayFromFloat)));
 		AddFunctionToFavorites(DolphinDataTypesBlueprintLibrary->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, MakeFloatFromBytes)));
 		AddFunctionToFavorites(DolphinDataTypesBlueprintLibrary->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, MakeDouble)));
 		AddFunctionToFavorites(DolphinDataTypesBlueprintLibrary->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, MakeDoubleFromHexString)));
+		AddFunctionToFavorites(DolphinDataTypesBlueprintLibrary->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, MakeUInt8ArrayFromDouble)));
 		AddFunctionToFavorites(DolphinDataTypesBlueprintLibrary->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, MakeDoubleFromBytes)));
 		AddFunctionToFavorites(DolphinDataTypesBlueprintLibrary->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_UInt8SubtractUInt8)));
 		AddFunctionToFavorites(DolphinDataTypesBlueprintLibrary->FindFunctionByName(GET_FUNCTION_NAME_CHECKED(UDolphinDataTypesBlueprintLibrary, Dolphin_UInt8AddUInt8)));
@@ -184,6 +194,18 @@ public:
 		return TArray<FDolphinInt32> { FDolphinInt32(FParse::HexNumber(*CleanHexString(A, 4))), FDolphinInt32(FParse::HexNumber(*CleanHexString(B, 4))) };
 	}
 
+	static TArray<FDolphinUInt8> StringToUInt8Array(FString InString)
+	{
+		TArray<FDolphinUInt8> Result;
+
+		for (int32 StrIdx = 0; StrIdx < InString.Len(); StrIdx++)
+		{
+			Result.Add(InString[StrIdx]);
+		}
+
+		return Result;
+	}
+
 	//////////////////////////////////////////////////////////////////////////////////
     //                                     MAKE                                     //
     //////////////////////////////////////////////////////////////////////////////////
@@ -201,6 +223,19 @@ public:
 		return *reinterpret_cast<uint8*>(Bytes.GetData());
 	}
 
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Make UInt8 Array from Dolphin UInt8", meta = (Keywords = "Make Create unsigned uint8 char byte ubyte from Array of Bytes int8 uint8 char"))
+	static TArray<FDolphinUInt8> MakeUInt8ArrayFromUInt8(FDolphinUInt8 Value)
+	{
+		TArray<FDolphinUInt8> Result;
+		char* NextByte = reinterpret_cast<char*>(&Value.Value);
+		for (int32 Index = 0; Index < 1; Index++)
+		{
+			Result.Add(MakeUInt8(*NextByte));
+			NextByte++;
+		}
+		return Result;
+	}
+
 	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Make Dolphin UInt16", meta = (Keywords = "Make Create unsigned uint16 short ushort"))
 	static FDolphinUInt16 MakeUInt16(int32 Value)
 	{
@@ -212,6 +247,19 @@ public:
 	{
 		TArray<uint8> Bytes = CreateArrayFromHex(HexString, 2);
 		return *reinterpret_cast<uint16*>(Bytes.GetData());
+	}
+
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Make UInt8 Array from Dolphin UInt16", meta = (Keywords = "Make Create unsigned uint16 short ushort from Array of Bytes int8 uint8 char"))
+	static TArray<FDolphinUInt8> MakeUInt8ArrayFromUInt16(FDolphinUInt16 Value)
+	{
+		TArray<FDolphinUInt8> Result;
+		char* NextByte = reinterpret_cast<char*>(&Value.Value);
+		for (int32 Index = 0; Index < 2; Index++)
+		{
+			Result.Add(MakeUInt8(*NextByte));
+			NextByte++;
+		}
+		return Result;
 	}
 
 	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Make Dolphin UInt16 from Bytes", meta = (Keywords = "Make Create unsigned uint16 short ushort from Array of Bytes int8 uint8 char"))
@@ -236,6 +284,19 @@ public:
 		return *reinterpret_cast<uint32*>(Bytes.GetData());
 	}
 
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Make UInt8 Array from Dolphin UInt32", meta = (Keywords = "Make Create unsigned uint32 int uint integer from Array of Bytes int8 uint8 char"))
+	static TArray<FDolphinUInt8> MakeUInt8ArrayFromUInt32(FDolphinUInt32 Value)
+	{
+		TArray<FDolphinUInt8> Result;
+		char* NextByte = reinterpret_cast<char*>(&Value.Value);
+		for (int32 Index = 0; Index < 4; Index++)
+		{
+			Result.Add(MakeUInt8(*NextByte));
+			NextByte++;
+		}
+		return Result;
+	}
+
 	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Make Dolphin UInt32 from Bytes", meta = (Keywords = "Make Create unsigned uint32 int uint integer from Array of Bytes int8 uint8 char"))
 	static FDolphinUInt32 MakeUInt32FromBytes(uint8 Byte1, uint8 Byte2, uint8 Byte3, uint8 Byte4, bool bFirstByteIsLeastSignificant = true)
 	{
@@ -256,6 +317,19 @@ public:
 	{
 		TArray<uint8> Bytes = CreateArrayFromHex(HexString, 8);
 		return *reinterpret_cast<uint64*>(Bytes.GetData());
+	}
+
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Make UInt8 Array from Dolphin UInt64", meta = (Keywords = "Make Create unsigned uint64 long int ulong integer from Array of Bytes int8 uint8 char"))
+	static TArray<FDolphinUInt8> MakeUInt8ArrayFromUInt64(FDolphinUInt64 Value)
+	{
+		TArray<FDolphinUInt8> Result;
+		char* NextByte = reinterpret_cast<char*>(&Value.Value);
+		for (int32 Index = 0; Index < 8; Index++)
+		{
+			Result.Add(MakeUInt8(*NextByte));
+			NextByte++;
+		}
+		return Result;
 	}
 
 	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Make Dolphin UInt64 from Bytes", meta = (Keywords = "Make Create unsigned uint64 long int ulong integer from Array of Bytes int8 uint8 char"))
@@ -280,6 +354,19 @@ public:
 		return *reinterpret_cast<int8*>(Bytes.GetData());
 	}
 
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Make UInt8 Array from Dolphin Int8", meta = (Keywords = "Make Create signed int8 char byte from Array of Bytes int8 uint8 char"))
+	static TArray<FDolphinUInt8> MakeUInt8ArrayFromInt8(FDolphinInt8 Value)
+	{
+		TArray<FDolphinUInt8> Result;
+		char* NextByte = reinterpret_cast<char*>(&Value.Value);
+		for (int32 Index = 0; Index < 1; Index++)
+		{
+			Result.Add(MakeUInt8(*NextByte));
+			NextByte++;
+		}
+		return Result;
+	}
+
 	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Make Dolphin Int16", meta = (Keywords = "Make Create signed int16 short"))
 	static FDolphinInt16 MakeInt16(int32 Value)
 	{
@@ -291,6 +378,19 @@ public:
 	{
 		TArray<uint8> Bytes = CreateArrayFromHex(HexString, 2);
 		return *reinterpret_cast<int16*>(Bytes.GetData());
+	}
+
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Make UInt8 Array from Dolphin Int16", meta = (Keywords = "Make Create signed int16 short from Array of Bytes int8 uint8 char"))
+	static TArray<FDolphinUInt8> MakeUInt8ArrayFromInt16(FDolphinInt16 Value)
+	{
+		TArray<FDolphinUInt8> Result;
+		char* NextByte = reinterpret_cast<char*>(&Value.Value);
+		for (int32 Index = 0; Index < 2; Index++)
+		{
+			Result.Add(MakeUInt8(*NextByte));
+			NextByte++;
+		}
+		return Result;
 	}
 
 	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Make Dolphin Int16 from Bytes", meta = (Keywords = "Make Create signed int16 short from Array of Bytes int8 uint8 char"))
@@ -315,6 +415,19 @@ public:
 		return *reinterpret_cast<int32*>(Bytes.GetData());
 	}
 
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Make UInt8 Array from Dolphin Int32", meta = (Keywords = "Make Create signed int32 int int integer from Array of Bytes int8 uint8 char"))
+	static TArray<FDolphinUInt8> MakeUInt8ArrayFromInt32(FDolphinInt32 Value)
+	{
+		TArray<FDolphinUInt8> Result;
+		char* NextByte = reinterpret_cast<char*>(&Value.Value);
+		for (int32 Index = 0; Index < 4; Index++)
+		{
+			Result.Add(MakeUInt8(*NextByte));
+			NextByte++;
+		}
+		return Result;
+	}
+
 	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Make Dolphin Int32 from Bytes", meta = (Keywords = "Make Create signed int32 int int integer from Array of Bytes int8 uint8 char"))
 	static FDolphinInt32 MakeInt32FromBytes(uint8 Byte1, uint8 Byte2, uint8 Byte3, uint8 Byte4, bool bFirstByteIsLeastSignificant = true)
 	{
@@ -335,6 +448,19 @@ public:
 	{
 		TArray<uint8> Bytes = CreateArrayFromHex(HexString, 8);
 		return *reinterpret_cast<int64*>(Bytes.GetData());
+	}
+
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Make UInt8 Array from Dolphin Int64", meta = (Keywords = "Make Create signed int64 long int integer from Array of Bytes int8 uint8 char"))
+	static TArray<FDolphinUInt8> MakeUInt8ArrayFromInt64(FDolphinInt64 Value)
+	{
+		TArray<FDolphinUInt8> Result;
+		char* NextByte = reinterpret_cast<char*>(&Value.Value);
+		for (int32 Index = 0; Index < 8; Index++)
+		{
+			Result.Add(MakeUInt8(*NextByte));
+			NextByte++;
+		}
+		return Result;
 	}
 
 	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Make Dolphin Int64 from Bytes", meta = (Keywords = "Make Create signed int64 long int integer from Array of Bytes int8 uint8 char"))
@@ -359,6 +485,19 @@ public:
 		return *reinterpret_cast<float*>(Bytes.GetData());
 	}
 
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Make UInt8 Array from Dolphin Float", meta = (Keywords = "Make Create float decimal single single-precision from Array of Bytes int8 uint8 char"))
+	static TArray<FDolphinUInt8> MakeUInt8ArrayFromFloat(FDolphinFloat Value)
+	{
+		TArray<FDolphinUInt8> Result;
+		char* NextByte = reinterpret_cast<char*>(&Value.Value);
+		for (int32 Index = 0; Index < 4; Index++)
+		{
+			Result.Add(MakeUInt8(*NextByte));
+			NextByte++;
+		}
+		return Result;
+	}
+
 	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Make Dolphin Float from Bytes", meta = (Keywords = "Make Create float decimal single single-precision from Array of Bytes int8 uint8 char"))
 	static FDolphinFloat MakeFloatFromBytes(uint8 Byte1, uint8 Byte2, uint8 Byte3, uint8 Byte4, bool bFirstByteIsLeastSignificant = true)
 	{
@@ -379,6 +518,19 @@ public:
 	{
 		TArray<uint8> Bytes = CreateArrayFromHex(HexString, 8);
 		return *reinterpret_cast<double*>(Bytes.GetData());
+	}
+
+	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Make UInt8 Array from Dolphin Double", meta = (Keywords = "Make Create double decimal double-precision float from Array of Bytes int8 uint8 char"))
+	static TArray<FDolphinUInt8> MakeUInt8ArrayFromDouble(FDolphinDouble Value)
+	{
+		TArray<FDolphinUInt8> Result;
+		char* NextByte = reinterpret_cast<char*>(&Value.Value);
+		for (int32 Index = 0; Index < 8; Index++)
+		{
+			Result.Add(MakeUInt8(*NextByte));
+			NextByte++;
+		}
+		return Result;
 	}
 
 	UFUNCTION(Category = "Dolphin|Dolphin Data Types", BlueprintPure, DisplayName = "Make Dolphin Double from Bytes", meta = (Keywords = "Make Create double decimal double-precision float from Array of Bytes int8 uint8 char"))

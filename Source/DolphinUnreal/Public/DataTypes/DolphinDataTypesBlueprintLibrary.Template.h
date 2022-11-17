@@ -53,6 +53,18 @@ public:
 		return TArray<FDolphinInt32> { FDolphinInt32(FParse::HexNumber(*CleanHexString(A, 4))), FDolphinInt32(FParse::HexNumber(*CleanHexString(B, 4))) };
 	}
 
+	static TArray<FDolphinUInt8> StringToUInt8Array(FString InString)
+	{
+		TArray<FDolphinUInt8> Result;
+
+		for (int32 StrIdx = 0; StrIdx < InString.Len(); StrIdx++)
+		{
+			Result.Add(InString[StrIdx]);
+		}
+
+		return Result;
+	}
+
 	{{MAKE}}
 	{{CAST}}
 	{{OPERATORS}}

@@ -44,6 +44,8 @@ public:
 	FOnSaveStateCreated OnInstanceSaveStateCreated;
 	DECLARE_MULTICAST_DELEGATE_TwoParams(FOnMemoryReadArrayOfUBytes, UDolphinInstance*, TArray<FDolphinUInt8>);
 	FOnMemoryReadArrayOfUBytes OnInstanceMemoryRead;
+	DECLARE_MULTICAST_DELEGATE_TwoParams(FOnMemoryWriteArrayOfUBytes, UDolphinInstance*, TArray<FDolphinUInt8>);
+	FOnMemoryWriteArrayOfUBytes OnInstanceMemoryWrite;
 
 	UPROPERTY(BlueprintAssignable, Category = Gba)
 	FOnGbaTextureChanged OnGbaTextureChanged;
