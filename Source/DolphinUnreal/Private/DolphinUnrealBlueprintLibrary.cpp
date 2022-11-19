@@ -17,10 +17,10 @@ UDolphinInstance* UDolphinUnrealBlueprintLibrary::CreateDolphinInstance()
     return Instance;
 }
 
-void UDolphinUnrealBlueprintLibrary::TerminateDolpinInstance(UDolphinInstance* DolphinInstance)
+void UDolphinUnrealBlueprintLibrary::DisposeDolphinUnrealInstance(UDolphinInstance* DolphinInstance)
 {
     FDolphinUnrealModule& DolphinUnreal = FModuleManager::GetModuleChecked<FDolphinUnrealModule>(FDolphinUnrealModule::ModuleName);
-    DolphinUnreal.TerminateInstance(DolphinInstance);
+    DolphinUnreal.DisposeInstance(DolphinInstance);
 }
 
 void UDolphinUnrealBlueprintLibrary::TrackDolpinInstance(UDolphinInstance* DolphinInstance)

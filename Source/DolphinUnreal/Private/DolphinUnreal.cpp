@@ -53,7 +53,7 @@ UDolphinInstance* FDolphinUnrealModule::CreateNewInstance()
 	return Instance;
 }
 
-void FDolphinUnrealModule::TerminateInstance(UDolphinInstance* InDolphinInstance)
+void FDolphinUnrealModule::DisposeInstance(UDolphinInstance* InDolphinInstance)
 {
 	if (InDolphinInstance != nullptr)
 	{

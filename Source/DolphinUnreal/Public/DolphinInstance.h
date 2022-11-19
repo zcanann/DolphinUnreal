@@ -85,7 +85,7 @@ public:
 	void RequestFormatMemoryCard(EMemoryCardSlot MemoryCardSlot, EMemoryCardSize MemoryCardSize, EMemoryCardEncoding MemoryCardEncoding);
 	void RequestReadMemory(FDolphinUInt32 Address, const TArray<FDolphinInt32>& Offsets, int32 ByteCount);
 	void RequestWriteMemory(FDolphinUInt32 Address, const TArray<FDolphinInt32>& Offsets, const TArray<FDolphinUInt8>& Bytes);
-	void RequestTerminate();
+	void RequestTerminate(bool bAggressive);
 
 	UFUNCTION()
 	uint64 GetNextCommandId() const { return NextCommandId; }

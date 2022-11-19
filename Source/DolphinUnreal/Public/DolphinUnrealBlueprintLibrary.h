@@ -20,7 +20,7 @@ public:
 	static UDolphinInstance* CreateDolphinInstance();
 
 	UFUNCTION()
-	static void TerminateDolpinInstance(UDolphinInstance* DolphinInstance);
+	static void DisposeDolphinUnrealInstance(UDolphinInstance* DolphinInstance);
 
 	UFUNCTION()
 	static void TrackDolpinInstance(UDolphinInstance* DolphinInstance);

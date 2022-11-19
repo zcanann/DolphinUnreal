@@ -32,9 +32,9 @@ class UK2Node_PlayInputsProxy : public UObject
 	GENERATED_UCLASS_BODY()
 
 public:
-	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"))
-	static UK2Node_PlayInputsProxy* CreateProxyObjectForWait(UDolphinInstance* DolphinInstance, TArray<FFrameInputs> FrameInputsController0,
-		TArray<FFrameInputs> FrameInputsController1, TArray<FFrameInputs> FrameInputsController2, TArray<FFrameInputs> FrameInputsController3);
+	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true", AutoCreateRefTerm = "FrameInputsController0,FrameInputsController1,FrameInputsController2,FrameInputsController3"))
+	static UK2Node_PlayInputsProxy* CreateProxyObjectForWait(UDolphinInstance* DolphinInstance, const TArray<FFrameInputs>& FrameInputsController0,
+		const TArray<FFrameInputs>& FrameInputsController1, const TArray<FFrameInputs>& FrameInputsController2, const TArray<FFrameInputs>& FrameInputsController3);
 	
 	UPROPERTY(BlueprintAssignable)
 	FDolphinPlayInputsMulticastDelegate OnSuccess;

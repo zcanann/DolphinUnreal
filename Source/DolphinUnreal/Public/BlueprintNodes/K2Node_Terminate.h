@@ -23,7 +23,7 @@ class UK2Node_Terminate : public UK2Node_BaseAsyncTask
 
 class UDolphinInstance;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDolphinTerminateMulticastDelegate, UDolphinInstance*, DolphinInstance);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDolphinTerminateMulticastDelegate);
 
 UCLASS(meta = (HideThen))
 class UK2Node_TerminateProxy : public UObject
@@ -32,7 +32,7 @@ class UK2Node_TerminateProxy : public UObject
 
 public:
 	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"))
-	static UK2Node_TerminateProxy* CreateProxyObjectForWait(UDolphinInstance* DolphinInstance);
+	static UK2Node_TerminateProxy* CreateProxyObjectForWait(UDolphinInstance* DolphinInstance, bool bAggressive);
 	
 	UPROPERTY(BlueprintAssignable)
 	FDolphinTerminateMulticastDelegate OnSuccess;

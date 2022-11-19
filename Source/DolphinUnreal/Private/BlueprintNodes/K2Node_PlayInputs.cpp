@@ -27,8 +27,8 @@ FText UK2Node_PlayInputs::GetMenuCategory() const
 	return LOCTEXT("K2Node_PlayInputs_Category", "Dolphin");
 }
 
-UK2Node_PlayInputsProxy* UK2Node_PlayInputsProxy::CreateProxyObjectForWait(UDolphinInstance* DolphinInstance, TArray<FFrameInputs> FrameInputsController0,
-	TArray<FFrameInputs> FrameInputsController1, TArray<FFrameInputs> FrameInputsController2, TArray<FFrameInputs> FrameInputsController3)
+UK2Node_PlayInputsProxy* UK2Node_PlayInputsProxy::CreateProxyObjectForWait(UDolphinInstance* DolphinInstance, const TArray<FFrameInputs>& FrameInputsController0,
+	const TArray<FFrameInputs>& FrameInputsController1, const TArray<FFrameInputs>& FrameInputsController2, const TArray<FFrameInputs>& FrameInputsController3)
 {
 	UK2Node_PlayInputsProxy* Proxy = NewObject<UK2Node_PlayInputsProxy>();
 	Proxy->SetFlags(RF_StrongRefOnFrame);

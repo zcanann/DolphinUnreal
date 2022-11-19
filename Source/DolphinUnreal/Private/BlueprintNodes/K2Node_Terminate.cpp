@@ -27,15 +27,29 @@ FText UK2Node_Terminate::GetMenuCategory() const
 	return LOCTEXT("K2Node_Terminate_Category", "Dolphin");
 }
 
-UK2Node_TerminateProxy* UK2Node_TerminateProxy::CreateProxyObjectForWait(UDolphinInstance* DolphinInstance)
+UK2Node_TerminateProxy* UK2Node_TerminateProxy::CreateProxyObjectForWait(UDolphinInstance* DolphinInstance, bool bAggressive)
 {
 	UK2Node_TerminateProxy* Proxy = NewObject<UK2Node_TerminateProxy>();
 	Proxy->SetFlags(RF_StrongRefOnFrame);
 
 	if (DolphinInstance != nullptr)
 	{
-		DolphinInstance->OnInstanceCommandCompleteEvent.AddUObject(Proxy, &UK2Node_TerminateProxy::OnInstanceReady);
-		DolphinInstance->RequestTerminate();
+		// Assume successful immediately with aggressive termination. Slight delay to work with wait nodes.
+		if (bAggressive)
+		{
+			FTimerHandle TimerHandler;
+			GEngine->GameViewport->GetWorld()->GetTimerManager().SetTimer(TimerHandler, [Proxy]()
+			{
+				Proxy->OnInstanceReady(nullptr, -1);
+			}, 0.01f, false);
+		}
+		else
+		{
+			// Otherwise wait for the Terminate IPC callback
+			DolphinInstance->OnInstanceCommandCompleteEvent.AddUObject(Proxy, &UK2Node_TerminateProxy::OnInstanceReady);
+		}
+
+		DolphinInstance->RequestTerminate(bAggressive);
 	}
 
 	return Proxy;
@@ -52,7 +66,7 @@ void UK2Node_TerminateProxy::OnInstanceReady(UDolphinInstance* InInstance, uint6
 		InInstance->OnInstanceCommandCompleteEvent.RemoveAll(this);
 	}
 
-	OnSuccess.Broadcast(InInstance);
+	OnSuccess.Broadcast();
 }
 
 #undef LOCTEXT_NAMESPACE

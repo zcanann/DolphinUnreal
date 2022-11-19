@@ -130,7 +130,7 @@ public:
 	bool bOriginReset = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool bIsControllerConnected = false;
+	bool bIsControllerConnected = true;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	EControllerChangeEvent ControllerChangeEvent = EControllerChangeEvent::None;

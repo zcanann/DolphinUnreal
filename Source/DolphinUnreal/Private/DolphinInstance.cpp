@@ -42,7 +42,7 @@ void UDolphinInstance::PausePIE(const bool bIsSimulating)
 
 void UDolphinInstance::EndPIE(const bool bIsSimulating)
 {
-    RequestTerminate();
+    RequestTerminate(true);
 }
 
 void UDolphinInstance::Tick(float DeltaTime)
@@ -505,13 +505,20 @@ std::vector<int> UDolphinInstance::ConvertPointerOffsets(const TArray<FDolphinIn
     return PointerOffsets;
 }
 
-void UDolphinInstance::RequestTerminate()
+void UDolphinInstance::RequestTerminate(bool bAggressive)
 {
-    CREATE_TO_INSTANCE_DATA(Terminate, ipcData, data);
-    ipcData._call = DolphinInstanceIpcCall::DolphinInstance_Terminate;
-    ipcSendToInstance(ipcData);
+    if (bAggressive)
+    {
+        FWindowsPlatformProcess::TerminateProc(DolphinProcHandle, true);
+    }
+    else
+    {
+        CREATE_TO_INSTANCE_DATA(Terminate, ipcData, data);
+        ipcData._call = DolphinInstanceIpcCall::DolphinInstance_Terminate;
+        ipcSendToInstance(ipcData);
+    }
 
-    UDolphinUnrealBlueprintLibrary::TerminateDolpinInstance(this);
+    UDolphinUnrealBlueprintLibrary::DisposeDolphinUnrealInstance(this);
 }
 
 #pragma optimize("", on)

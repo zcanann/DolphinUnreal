@@ -15,7 +15,7 @@ public:
 	virtual void ShutdownModule() override;
 
 	UDolphinInstance* CreateNewInstance();
-	void TerminateInstance(UDolphinInstance* InDolphinInstance);
+	void DisposeInstance(UDolphinInstance* InDolphinInstance);
 	void TrackInstance(UDolphinInstance* InDolphinInstance);
 	void UntrackInstance(UDolphinInstance* InDolphinInstance);
 	TArray<UDolphinInstance*> GetDolphinInstances() const;
