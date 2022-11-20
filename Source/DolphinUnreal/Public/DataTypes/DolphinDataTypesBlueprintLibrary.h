@@ -230,7 +230,19 @@ public:
 			ResultB.Add(FDolphinUInt8(FDolphinUInt8(FParse::HexNumber(*CleanHexString(RawBytesB[Index], 1)))));
 		}
 
-		return TArray<FDolphinUInt8Array> { FDolphinUInt8Array(ResultA), FDolphinUInt8Array(ResultB) };
+		TArray<FDolphinUInt8Array> Results;
+
+		if (!ResultA.IsEmpty())
+		{
+			Results.Add(ResultA);
+		}
+
+		if (!ResultB.IsEmpty())
+		{
+			Results.Add(ResultB);
+		}
+
+		return Results;
 	}
 
 	static TArray<FDolphinUInt8> StringToUInt8Array(FString InString)
